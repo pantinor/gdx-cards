@@ -26,11 +26,16 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 
 public class Cards extends SimpleGame {
@@ -69,6 +74,8 @@ public class Cards extends SimpleGame {
 	Label opptInfoLabel;
 	
 	ImageButton skipTurnButton;
+	Button showOpptCardsButton;
+
 	
 	Label[] topStrengthLabels = new Label[5];
 	Label[] bottomStrengthLabels = new Label[5];
@@ -158,10 +165,10 @@ public class Cards extends SimpleGame {
 		playerInfoLabel.setPosition(80 + 10 + 120, 280);
 		opptInfoLabel.setPosition(80 + 10 + 120, 5);
 		
-		greenfont = new BitmapFont(true);
+		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), true);
 		greenfont.setColor(Color.valueOf("105410"));
 		
-		redfont = new BitmapFont(true);
+		redfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),true);
 		redStyle = new Label.LabelStyle(redfont, Color.RED);
 		greenStyle = new Label.LabelStyle(redfont, Color.GREEN);
 
@@ -181,6 +188,29 @@ public class Cards extends SimpleGame {
 		});
 		skipTurnButton.setPosition(10, 125);
 		stage.addActor(skipTurnButton);
+		
+		
+		
+		showOpptCardsButton = new Button(skin);
+		showOpptCardsButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				String title = getPlayerDescription(opponent.getPlayerInfo());
+				final OpponentCardWindow window = new OpponentCardWindow(title, opponent.getPlayerInfo(), Cards.this, skin);
+				
+				TextButton close = new TextButton("X", skin);
+				close.addListener(new ChangeListener() {
+					public void changed (ChangeEvent event, Actor actor) {
+						window.remove();
+					}
+				});
+				window.getButtonTable().add(close).height(window.getPadTop());
+				window.setPosition(20, 20);
+				stage.addActor(window);
+				return true;
+			}
+		});
+		showOpptCardsButton.setPosition(60, 125);
+		stage.addActor(showOpptCardsButton);
 		
 		
 		int x = 420;

@@ -92,7 +92,9 @@ public class BattleRoundThread implements Runnable {
 			}
 			
 			
-			
+			//start computer turn
+			startOfTurnCheck(true, opponent);
+
 		
 			CardImage opptSummons = null;
 
@@ -102,7 +104,7 @@ public class BattleRoundThread implements Runnable {
 				
 				CardImage opptPick = null;
 				do {
-					opptPick = oi.pickRandomEnabledCard();
+					opptPick = oi.pickBestEnabledCard();
 				} while (opptPick == null);
 				
 				if (!opptPick.getCard().isSpell()) {
@@ -177,6 +179,9 @@ public class BattleRoundThread implements Runnable {
 				oi.enableDisableCards(type);
 			}
 			
+			//start of turn for player
+			startOfTurnCheck(false, player);
+			
 		} catch (GameOverException e) {
 			game.handleGameOver();
 		} catch (Exception e) {
@@ -187,6 +192,29 @@ public class BattleRoundThread implements Runnable {
 		
 		System.out.println("TurnThread done");
 
+		
+	}
+	
+	
+	private void startOfTurnCheck(boolean isComputer, PlayerImage player) {
+		
+		CardImage[] cards = isComputer?game.getTopSlotCards():game.getBottomSlotCards();
+
+		
+		for (int index = 0;index<6;index++) {
+			CardImage ci = cards[index];
+			if (ci == null) continue;
+			
+			if (ci.getCard().getName().equalsIgnoreCase("masterhealer")) {
+				player.incrementLife(3, game);
+				for (int j = 0;j<6;j++) {
+					CardImage ci2 = cards[j];
+					if (ci2 == null) continue;
+					ci2.incrementLife(3, game);
+				}
+			}
+			
+		}
 		
 	}
 		

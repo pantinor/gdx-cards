@@ -16,6 +16,5 @@ public class OrcChieftain extends BaseCreature {
 
 	public void onAttack() {
 		super.onAttack();
-		enhanceAttackNeighboring(true, 2);
 	}
 }

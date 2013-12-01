@@ -34,7 +34,7 @@ public class CardSetup {
 		CardSetup cs = new CardSetup();
 		cs.parseCards();
 		
-		Card result = cs.getCardByName("MagicRabbit");
+		Card result = cs.getCardByName("GoblinBerserker");
         System.out.println(result.toString());
         
     	List<Card> set = cs.getCardsByType(CardType.FIRE);
@@ -160,8 +160,13 @@ public class CardSetup {
                     	cost = Integer.parseInt(getAttrText( n1, "cost1" ));
                     }
                     c.setCost(cost);
+                    
+                    Boolean wall = Boolean.parseBoolean(getAttrText( n1, "wall" ));
+                    c.setWall(wall);
 
                     cardSet.add(c);
+                    
+                    //System.out.println(c);
                     
                     if (c.isSpell()) {
                     	spellCards.add(c);
@@ -213,6 +218,19 @@ public class CardSetup {
 	}
 	
 	public List<Card> getCardsByType(CardType type, int maxNumber) {
+		
+		List<Card> result = new ArrayList<Card>();
+		//debugging
+		if (type == CardType.FIRE) {
+			result.add(getCardByName("OrcChieftain"));
+			result.add(getCardByName("GoblinBerserker"));
+			result.add(getCardByName("Armageddon"));
+			result.add(getCardByName("FireElemental"));
+			return result;
+		}
+		
+		
+		
 		return getCardsByType(type, maxNumber, cardSet);
 	}
 

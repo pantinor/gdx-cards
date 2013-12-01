@@ -12,6 +12,5 @@ public class MinotaurCommander extends BaseCreature {
 
 	public void onAttack() {
 		super.onAttack();
-		enhanceAttackAll(true, 1);
 	}
 }

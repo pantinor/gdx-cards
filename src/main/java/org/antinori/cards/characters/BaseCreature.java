@@ -35,29 +35,63 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		
 		ownerPlayer.decrementStrength(card.getType(), card.getCost());
 		
-		do {
-			if (card.getName().equalsIgnoreCase("firedrake")) {
-				break;
-			}
+
 			
 			int nl = slotIndex - 1;
 			int nr = slotIndex + 1;
 			
-			if (nl >= 0 && 
-					teamCards[nl] != null && 
-					teamCards[nl].getCard().getName().equalsIgnoreCase("merfolkoverlord")) {
-				onAttack(); 
-				break;
+			String name = this.card.getName();
+			
+			if (name.equalsIgnoreCase("minotaurcommander")) {
+				enhanceAttackAll(true, 1);
 			}
 			
-			if (nr <= 5 && 
-					teamCards[nr] != null && 
-					teamCards[nr].getCard().getName().equalsIgnoreCase("merfolkoverlord")) {
-				onAttack();
-				break;
+			for (int index = 0;index<6;index++) {
+				if (index == slotIndex) continue;
+				CardImage ci = teamCards[index];
+				if (ci == null) continue;
+				if (ci.getCard().getName().equalsIgnoreCase("minotaurcommander")) {
+					this.card.incrementAttack(1);
+				}
 			}
 
-		} while (false);
+			
+			if (nl >= 0 && teamCards[nl] != null) { 
+				
+				String leftNeighbor = teamCards[nl].getCard().getName();
+				
+				if (leftNeighbor.equalsIgnoreCase("merfolkoverlord")) {
+					onAttack(); 
+				}
+				
+				if (leftNeighbor.equalsIgnoreCase("orcchieftain")) {
+					this.card.incrementAttack(2);
+				}
+				
+				if (name.equalsIgnoreCase("orcchieftain")) {
+					teamCards[nl].getCard().incrementAttack(2);
+				}
+
+			}
+			
+			if (nr <= 5 && teamCards[nr] != null) { 
+				
+				String rightNeighbor = teamCards[nr].getCard().getName();
+				
+				if (rightNeighbor.equalsIgnoreCase("merfolkoverlord")) {
+					onAttack(); 
+				}
+				
+				if (rightNeighbor.equalsIgnoreCase("orcchieftain")) {
+					this.card.incrementAttack(2);
+				}
+				
+				if (name.equalsIgnoreCase("orcchieftain")) {
+					teamCards[nr].getCard().incrementAttack(2);
+				}
+
+			}
+
 
 		
 	}
@@ -112,6 +146,37 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 	
 	public void onDying() {
+		
+		int nl = slotIndex - 1;
+		int nr = slotIndex + 1;
+		
+		String name = this.card.getName();
+		
+		if (name.equalsIgnoreCase("minotaurcommander")) {
+			enhanceAttackAll(true, -1);
+		}
+		
+		if (nl >= 0 && teamCards[nl] != null) { 
+			
+			if (name.equalsIgnoreCase("orcchieftain")) {
+				teamCards[nl].getCard().decrementAttack(2);
+			}
+			if (name.equalsIgnoreCase("minotaurcommander")) {
+				teamCards[nl].getCard().decrementAttack(1);
+			}
+
+		}
+		
+		if (nr <= 5 && teamCards[nr] != null) { 
+			
+			if (name.equalsIgnoreCase("orcchieftain")) {
+				teamCards[nr].getCard().decrementAttack(2);
+			}
+			if (name.equalsIgnoreCase("minotaurcommander")) {
+				teamCards[nr].getCard().decrementAttack(1);
+			}
+
+		}
 		
 	}
 

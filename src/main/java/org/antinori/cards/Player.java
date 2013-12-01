@@ -6,6 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 
 public class Player {
+	
+	public static CardType[] TYPES = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, CardType.OTHER};
 		
 	String imgName;
 	Specializations playerClass;
@@ -178,11 +180,39 @@ public class Player {
 		return cards;
 	}
 	
+	public CardImage pickBestEnabledCard() {
+		CardImage pick = null;
+		for (CardType type : TYPES) {
+			CardImage c = pickBestEnabledCard(type);
+			if (c == null) continue;
+			if (pick == null) {
+				pick = c;
+			} else if (c.getCard().getCost() > pick.getCard().getCost()) {
+				pick = c;
+			}
+		}
+		return pick;
+	}
+	
+	public CardImage pickBestEnabledCard(CardType type) {
+		CardImage card = null;
+		List<CardImage> cards = getCards(type);
+		int highest_cost = 0;
+		for (CardImage c : cards) {
+			if (!c.isEnabled()) 
+				continue;
+			if (c.getCard().getCost() > highest_cost) {
+				highest_cost = c.getCard().getCost();
+				card = c;
+			}
+		}
+		return card;
+	}
+	
 	public CardImage pickRandomEnabledCard() {
-		CardType[] types = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, CardType.SPIRIT};
 		Dice dice = new Dice(1,5);
 		int roll = dice.roll();
-		CardType type = types[roll - 1];
+		CardType type = TYPES[roll - 1];
 		return pickRandomEnabledCard(type);
 	}
 	

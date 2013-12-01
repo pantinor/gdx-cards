@@ -11,10 +11,11 @@ public class Card {
 	CardType type;
 	boolean spell = false;
 	boolean targetable = false;
+	boolean wall = false;
 
 	@Override
 	public String toString() {
-		return String.format("%s type=%s attack=%s life=%s cost=%s spell=%s desc%s", cardname, type, attack, life, cost, spell, desc);
+		return String.format("%s type=%s attack=%s life=%s cost=%s spell=%s wall=%s desc%s", cardname, type, attack, life, cost, spell, wall, desc);
 		//return String.format("<card cardname=\"%s\" type=\"%s\" name=\"%s\" attack=\"%s\" life=\"%s\" cost=\"%s\" spell=\"%s\" desc=\"%s\" />", cardname, type, name, attack, life, cost, spell, desc);
 	}
 
@@ -31,6 +32,7 @@ public class Card {
 		c.setCost(this.cost);
 		c.setDesc(this.desc);
 		c.setSpell(this.spell);
+		c.setWall(this.wall);
 		c.setTargetable(this.targetable);
 		return c;
 	}
@@ -61,6 +63,15 @@ public class Card {
 
 	public void setAttack(int attack) {
 		this.attack = attack;
+	}
+	
+	public void incrementAttack(int inc) {
+		if (wall) return;
+		this.attack += inc;
+	}
+	public void decrementAttack(int dec) {
+		if (wall) return;
+		this.attack -= dec;
 	}
 
 	public void setLife(int life) {
@@ -104,6 +115,14 @@ public class Card {
 
 	public void setTargetable(boolean targetable) {
 		this.targetable = targetable;
+	}
+
+	public boolean isWall() {
+		return wall;
+	}
+
+	public void setWall(boolean wall) {
+		this.wall = wall;
 	}
 
 	

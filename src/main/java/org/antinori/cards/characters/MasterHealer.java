@@ -5,13 +5,15 @@ import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 
 public class MasterHealer extends BaseCreature {
-public MasterHealer(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {
-super(game, card, cardImage, isComputer, slotIndex);
-}
-public void onSummoned() {
-super.onSummoned();
-}
-public void onAttack() {
-super.onAttack();
-}
+	public MasterHealer(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {
+		super(game, card, cardImage, isComputer, slotIndex);
+	}
+
+	public void onSummoned() {
+		super.onSummoned();
+	}
+
+	public void onAttack() {
+		super.onAttack();
+	}
 }

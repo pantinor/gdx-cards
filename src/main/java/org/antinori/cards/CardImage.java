@@ -101,6 +101,12 @@ public class CardImage extends Actor {
 		card.setLife(life - value);
 		game.animateDamageText(value, getX() + 66, getY() + 69, getX() + 66, getY() + 10 );
 	}
+	
+	public void incrementLife(int value, Cards game) {
+		int life = card.getLife();
+		card.setLife(life + value);
+		game.animateHealingText(value, getX() + 66, getY() + 69, getX() + 66, getY() + 10 );
+	}
 		
 	public boolean isEnabled() {
 		return enabled;

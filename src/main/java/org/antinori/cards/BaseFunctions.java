@@ -93,8 +93,7 @@ public class BaseFunctions {
 			if (index < 0 || index > 5 || index == slotIndex) continue;
 			CardImage ci = ownerSide?teamCards[index]:enemyCards[index];
 			if (ci == null) continue;
-			int attack = ci.getCard().getAttack();
-			ci.getCard().setAttack(attack + value);
+			ci.getCard().incrementAttack(value);
 		}
 	}
 		

@@ -18,7 +18,7 @@ public class CardPredicate implements Predicate {
 	public boolean evaluate(Object o) {
 		Card c = (Card) o;
 		if (this.name != null) 
-			return c.getName().equals(this.name);
+			return c.getName().equalsIgnoreCase(this.name);
 		if (this.type != null) 
 			return c.getType().equals(this.type);
 		return false;
