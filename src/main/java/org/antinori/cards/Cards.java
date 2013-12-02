@@ -27,15 +27,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 
 public class Cards extends SimpleGame {
@@ -105,6 +103,7 @@ public class Cards extends SimpleGame {
 	private boolean activeTurn = false;
 	
 	private boolean gameOver = false;
+	private boolean opptCardsShown = false;
 
 	
 	public static void main(String[] args) {
@@ -154,21 +153,21 @@ public class Cards extends SimpleGame {
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprBg = new Sprite(background, 0, 0, background.getWidth(), background.getHeight());
 		
-		player = new PlayerImage(faceCardAtlas.createSprite("face60"), portraitramka, greenfont, null, 80, 180);
-		opponent = new PlayerImage(faceCardAtlas.createSprite("face1"), portraitramka, greenfont, null, 80, 0);
+		player = new PlayerImage(faceCardAtlas.createSprite("face60"), portraitramka, greenfont, null, 80, ydown(300));
+		opponent = new PlayerImage(faceCardAtlas.createSprite("face1"), portraitramka, greenfont, null, 80, ydown(125));
 		
-		font = new BitmapFont(Gdx.files.classpath("default.fnt"), true);
+		font = new BitmapFont(Gdx.files.classpath("default.fnt"), false);
 		Label.LabelStyle ls = new Label.LabelStyle(font, Color.WHITE);
 		
 		playerInfoLabel = new Label(Specializations.Cleric.getTitle(), ls);
 		opptInfoLabel = new Label(Specializations.Cleric.getTitle(), ls);
-		playerInfoLabel.setPosition(80 + 10 + 120, 280);
-		opptInfoLabel.setPosition(80 + 10 + 120, 5);
+		playerInfoLabel.setPosition(80 + 10 + 120, ydown(300));
+		opptInfoLabel.setPosition(80 + 10 + 120, ydown(30));
 		
-		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), true);
+		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), false);
 		greenfont.setColor(Color.valueOf("105410"));
 		
-		redfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),true);
+		redfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),false);
 		redStyle = new Label.LabelStyle(redfont, Color.RED);
 		greenStyle = new Label.LabelStyle(redfont, Color.GREEN);
 
@@ -186,7 +185,7 @@ public class Cards extends SimpleGame {
 				return true;
 			}
 		});
-		skipTurnButton.setPosition(10, 125);
+		skipTurnButton.setPosition(30, ydown(150));
 		stage.addActor(skipTurnButton);
 		
 		
@@ -194,6 +193,9 @@ public class Cards extends SimpleGame {
 		showOpptCardsButton = new Button(skin);
 		showOpptCardsButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (opptCardsShown) return true;
+				opptCardsShown = true;
+
 				String title = getPlayerDescription(opponent.getPlayerInfo());
 				final OpponentCardWindow window = new OpponentCardWindow(title, opponent.getPlayerInfo(), Cards.this, skin);
 				
@@ -201,20 +203,21 @@ public class Cards extends SimpleGame {
 				close.addListener(new ChangeListener() {
 					public void changed (ChangeEvent event, Actor actor) {
 						window.remove();
+						opptCardsShown = false;
 					}
 				});
 				window.getButtonTable().add(close).height(window.getPadTop());
-				window.setPosition(20, 20);
+				window.setPosition(200, 100);
 				stage.addActor(window);
 				return true;
 			}
 		});
-		showOpptCardsButton.setPosition(60, 125);
+		showOpptCardsButton.setPosition(80, ydown(150));
 		stage.addActor(showOpptCardsButton);
 		
 		
 		int x = 420;
-		int y = 317;
+		int y = ydown(337);
 		int incr = 103;
 		for (int i=0;i<5;i++) {
 			bottomStrengthLabels[i] = new Label(getPlayerStrength(player.playerInfo, CardType.OTHER), ls);
@@ -222,7 +225,7 @@ public class Cards extends SimpleGame {
 			stage.addActor(bottomStrengthLabels[i]);
 		}
 		x = 420;
-		y = 5;
+		y = ydown(25);
 		for (int i=0;i<5;i++) {
 			topStrengthLabels[i] = new Label(getPlayerStrength(opponent.playerInfo, CardType.OTHER), ls);
 			topStrengthLabels[i].setPosition(x+=incr, y);
@@ -230,7 +233,7 @@ public class Cards extends SimpleGame {
 		}
 
 
-		cdi = new CardDescriptionImage(20, 360);
+		cdi = new CardDescriptionImage(20, ydown(512));
 		cdi.setFont(greenfont);
 		
 		stage.addActor(player);
@@ -242,12 +245,16 @@ public class Cards extends SimpleGame {
 		sl = new SlotListener();
 		li = new MouseOverCardListener();
 		
-		addSlotImages(330,40, false);
-		addSlotImages(330,160, true);
+		addSlotImages(330,ydown(170), false);
+		addSlotImages(330,ydown(290), true);
 		
 		chooser = new SingleDuelChooser();
-		chooser.init(this);
-				
+		chooser.init(this);  
+						
+	}
+	
+	public static int ydown(int y) {
+		return SCREEN_HEIGHT - y;
 	}
 
 
@@ -280,7 +287,7 @@ public class Cards extends SimpleGame {
 			
 			CardType[] types = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, opponent.getPlayerInfo().getPlayerClass().getType()};
 			for (int i=0;i<5;i++) {
-				setStrengthLabel(topStrengthLabels[i], pInfo, types[i]);
+				setStrengthLabel(topStrengthLabels[i], oInfo, types[i]);
 			}
 			types[4] = player.getPlayerInfo().getPlayerClass().getType();
 			for (int i=0;i<5;i++) {
@@ -333,7 +340,7 @@ public class Cards extends SimpleGame {
 	public void initializePlayerCards(Player player, boolean visible) throws Exception {
 		
 		int x = 405;
-		int y = 250;
+		int y = ydown(328);
 		
 		CardType[] types = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, player.getPlayerClass().getType()};
 		
@@ -374,14 +381,14 @@ public class Cards extends SimpleGame {
 			
 			if (!addToStage) {
 				x1 = 0;
-				y1 = 0;
+				y1 = ydown(0);
 			}
 			
 			ci.setFont(greenfont);
 			ci.setFrame(ci.getCard().isSpell()?spellramka:ramka);
 			ci.addListener(li);
 
-			y1 += (spacing + ci.getFrame().getHeight());
+			y1 -= (spacing + ci.getFrame().getHeight());
 			ci.setBounds(x1, y1, ci.getFrame().getWidth(), ci.getFrame().getHeight());
 			
 			if (addToStage) {
@@ -451,12 +458,15 @@ public class Cards extends SimpleGame {
 				Sprite sp = largeCardAtlas.createSprite(card.getName().toLowerCase());
 				if (sp == null) {
 					sp = largeTGACardAtlas.createSprite(card.getName().toLowerCase());
-	        		if (sp != null) sp.flip(false, true); //tga files need to be flipped
+	        		if (sp != null) sp.flip(false, true); //tga files need to be flipped twice
 				}
 				if (sp == null) {
 					cdi.setImg(null);
 					return;
 				}
+				
+	    		sp.flip(false, true);
+
 				
 				cdi.setImg(sp);
 				cdi.setFrame(ci.getCard().isSpell()?ramkabigspell:ramkabig);

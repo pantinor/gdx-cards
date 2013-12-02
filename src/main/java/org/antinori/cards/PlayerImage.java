@@ -31,6 +31,9 @@ public class PlayerImage extends Actor {
 		this.frame = frame;
 		this.playerInfo = info;
 		this.font = font;
+		
+		//this.img.flip(false, true);
+
 		setX(x);
 		setY(y);
 	}
@@ -79,6 +82,7 @@ public class PlayerImage extends Actor {
 
 	public void setImg(Sprite img) {
 		this.img = img;
+		//this.img.flip(false, true);
 	}
 
 	public void setFrame(Texture frame) {

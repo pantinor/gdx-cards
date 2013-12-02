@@ -51,15 +51,15 @@ public class CardDescriptionImage extends Actor {
 		int li = card.getLife();
 		
 		if (!card.isSpell()) {
-			font.draw(batch, "" + at, (at>9?x+5:x+7), y+3);
-			font.draw(batch, "" + co,(co>9?x+132:x+130), y+3);
-			font.draw(batch, "" + li, (li>9?x+131:x+134), y+133);
+			font.draw(batch, "" + at, (at>9?x+5:x+7), y+15);
+			font.draw(batch, "" + co,(co>9?x+132:x+130), y+150);
+			font.draw(batch, "" + li, (li>9?x+131:x+134), y+15);
 		} else {
-			font.draw(batch, "" + co,(co>9?x+132:x+130), y+3);
+			font.draw(batch, "" + co,(co>9?x+132:x+130), y+15);
 		}
 		
-		font.draw(batch, card.getCardname(), x+190, y);
-		font.drawWrapped(batch, card.getDesc(), x+190, y+40, 240);
+		font.draw(batch, card.getCardname(), x+190, y + 150);
+		font.drawWrapped(batch, card.getDesc(), x+190, y+125, 240);
 
 	}
 

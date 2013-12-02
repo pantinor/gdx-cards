@@ -204,11 +204,14 @@ public class CardSetup {
     		Sprite sp = atlas1.createSprite(c.getName().toLowerCase());
     		if (sp == null) {
         		sp = atlas2.createSprite(c.getName().toLowerCase());
-        		if (sp != null) sp.flip(false, true); //tga files need to be flipped
+        		if (sp != null) sp.flip(false, true); //tga files need to be flipped twice
     		}
     		
     		if (sp == null) 
     			throw new Exception("Sprite is null for card: " + c);
+    		
+    		sp.flip(false, true);
+
     		
     		CardImage img = new CardImage(sp, c);
     		images.add(img);

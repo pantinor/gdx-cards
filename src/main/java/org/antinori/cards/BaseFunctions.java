@@ -103,7 +103,7 @@ public class BaseFunctions {
 		
 		final AtomicBoolean doneBattle = new AtomicBoolean(false);
 		
-		cardImage.addAction(sequence(moveBy(0, isComputer?20:-20, 0.5f), moveBy(0, isComputer?-20:20, 0.5f), new Action() {
+		cardImage.addAction(sequence(moveBy(0, isComputer?-20:20, 0.5f), moveBy(0, isComputer?20:-20, 0.5f), new Action() {
 			public boolean act(float delta) {
 				doneBattle.set(true);
 				return true;
@@ -128,7 +128,7 @@ public class BaseFunctions {
 		
 		PlayerImage actor = isComputer?game.opponent:game.player;
     
-		actor.addAction(sequence(moveBy(0, isComputer?20:-20, 0.5f), moveBy(0, isComputer?-20:20, 0.5f), new Action() {
+		actor.addAction(sequence(moveBy(0, isComputer?-20:20, 0.5f), moveBy(0, isComputer?20:-20, 0.5f), new Action() {
 			public boolean act(float delta) {
 				done.set(true);
 				return true;

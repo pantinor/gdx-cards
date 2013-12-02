@@ -4,9 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,10 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class SingleDuelChooser {
 	
@@ -76,8 +70,8 @@ public class SingleDuelChooser {
 				pi.getPlayerInfo().setPlayerClass(Specializations.fromString(classesPlayer.getSelection()));
 				oi.getPlayerInfo().setPlayerClass(Specializations.fromString(classesOpponent.getSelection()));
 				
-				pi.getImg().flip(false, true);
-				oi.getImg().flip(false, true);
+				//pi.getImg().flip(false, true);
+				//oi.getImg().flip(false, true);
 				
 				stage.clear();
 				stage.dispose();

@@ -38,7 +38,7 @@ public abstract class SimpleGame extends InputAdapter implements ApplicationList
 	public void create() {
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(true);
+		camera.setToOrtho(false);
 		
 		stage = new Stage();
 		stage.setCamera(camera);

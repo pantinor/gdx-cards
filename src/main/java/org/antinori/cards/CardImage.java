@@ -44,11 +44,11 @@ public class CardImage extends Actor {
 		int li = card.getLife();
 
 		if (!card.isSpell()) {
-			font.draw(batch, "" + at, (at>9?x:x+3), y-7);
-			font.draw(batch, "" + co, (co>9?x+66:x+69), y-7);
-			font.draw(batch, "" + li, (li>9?x+66:x+69), y+72);
+			font.draw(batch, "" + at, (at>9?x:x+3), y+7);
+			font.draw(batch, "" + co, (co>9?x+66:x+69), y+87);
+			font.draw(batch, "" + li, (li>9?x+66:x+69), y+7);
 		} else {
-			font.draw(batch, "" + co, (co>9?x+66:x+69), y+66);
+			font.draw(batch, "" + co, (co>9?x+66:x+69), y+77);
 		}
 
 	}
@@ -99,13 +99,13 @@ public class CardImage extends Actor {
 	public void decrementLife(int value, Cards game) {
 		int life = card.getLife();
 		card.setLife(life - value);
-		game.animateDamageText(value, getX() + 66, getY() + 69, getX() + 66, getY() + 10 );
+		game.animateDamageText(value, getX() + 66, getY() + 10, getX() + 66, getY() + 69 );
 	}
 	
 	public void incrementLife(int value, Cards game) {
 		int life = card.getLife();
 		card.setLife(life + value);
-		game.animateHealingText(value, getX() + 66, getY() + 69, getX() + 66, getY() + 10 );
+		game.animateHealingText(value, getX() + 66, getY() + 10, getX() + 66, getY() + 69 );
 	}
 		
 	public boolean isEnabled() {
