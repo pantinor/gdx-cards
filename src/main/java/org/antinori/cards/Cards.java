@@ -52,11 +52,12 @@ public class Cards extends SimpleGame {
 	static Texture ramkabigspell;
 	static Texture slotTexture;
 
-	static BitmapFont font;
+	public static BitmapFont font;
 	public static BitmapFont greenfont;
-	static BitmapFont redfont;
-	static Label.LabelStyle redStyle;
-	static Label.LabelStyle greenStyle;
+	public static BitmapFont redfont;
+	public static Label.LabelStyle whiteStyle;
+	public static Label.LabelStyle redStyle;
+	public static Label.LabelStyle greenStyle;
 
 	
 	static int SCREEN_WIDTH = 1024;
@@ -159,20 +160,19 @@ public class Cards extends SimpleGame {
 		opponent = new PlayerImage(faceCardAtlas.createSprite("face1"), portraitramka, greenfont, null, 80, ydown(125));
 		
 		font = new BitmapFont(Gdx.files.classpath("default.fnt"), false);
-		Label.LabelStyle ls = new Label.LabelStyle(font, Color.WHITE);
+		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), false);
+		greenfont.setColor(Color.valueOf("105410"));
+		redfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),false);
 		
-		playerInfoLabel = new Label(Specializations.Cleric.getTitle(), ls);
-		opptInfoLabel = new Label(Specializations.Cleric.getTitle(), ls);
+		whiteStyle = new Label.LabelStyle(font, Color.WHITE);
+		redStyle = new Label.LabelStyle(redfont, Color.RED);
+		greenStyle = new Label.LabelStyle(redfont, Color.GREEN);
+		
+		playerInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
+		opptInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
 		playerInfoLabel.setPosition(80 + 10 + 120, ydown(300));
 		opptInfoLabel.setPosition(80 + 10 + 120, ydown(30));
 		
-		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), false);
-		greenfont.setColor(Color.valueOf("105410"));
-		
-		redfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),false);
-		redStyle = new Label.LabelStyle(redfont, Color.RED);
-		greenStyle = new Label.LabelStyle(redfont, Color.GREEN);
-
 		
 		ImageButtonStyle style = new ImageButtonStyle(skin.get(ButtonStyle.class));
 		TextureRegion tr = new TextureRegion(new Texture(Gdx.files.classpath("endturnbutton.png")));
@@ -222,14 +222,14 @@ public class Cards extends SimpleGame {
 		int y = ydown(337);
 		int incr = 103;
 		for (int i=0;i<5;i++) {
-			bottomStrengthLabels[i] = new Label(getPlayerStrength(player.playerInfo, CardType.OTHER), ls);
+			bottomStrengthLabels[i] = new Label(getPlayerStrength(player.playerInfo, CardType.OTHER), whiteStyle);
 			bottomStrengthLabels[i].setPosition(x+=incr, y);
 			stage.addActor(bottomStrengthLabels[i]);
 		}
 		x = 420;
 		y = ydown(25);
 		for (int i=0;i<5;i++) {
-			topStrengthLabels[i] = new Label(getPlayerStrength(opponent.playerInfo, CardType.OTHER), ls);
+			topStrengthLabels[i] = new Label(getPlayerStrength(opponent.playerInfo, CardType.OTHER), whiteStyle);
 			topStrengthLabels[i].setPosition(x+=incr, y);
 			stage.addActor(topStrengthLabels[i]);
 		}
@@ -433,6 +433,8 @@ public class Cards extends SimpleGame {
 			if (actor instanceof CardImage) {
 				
 				selectedCard = (CardImage)actor;
+				
+				clearHighlights();
 				
 				if (!activeTurn && selectedCard.getCard().isSpell() && selectedCard.isEnabled()) {
 					

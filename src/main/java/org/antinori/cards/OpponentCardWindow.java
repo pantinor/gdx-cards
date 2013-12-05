@@ -2,6 +2,7 @@ package org.antinori.cards;
 
 import java.util.List;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
@@ -25,7 +26,8 @@ public class OpponentCardWindow extends Window {
 			
 			add().space(3);
 			for (int i=0;i<5;i++) {
-				add(game.topStrengthLabels[i]);
+				Label l = new Label(game.topStrengthLabels[i].getText(), Cards.whiteStyle);
+				add(l);
 			}
 			row();
 
