@@ -10,8 +10,7 @@ public class FaerieApprentice extends BaseCreature {
 	}
 
 	public void onSummoned() {
-		int earth = ownerPlayer.getStrengthEarth();
-		owner.incrementLife(earth, game);
+		super.onSummoned();
 	}
 
 }

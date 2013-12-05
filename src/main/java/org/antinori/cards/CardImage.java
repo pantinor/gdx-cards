@@ -18,6 +18,7 @@ public class CardImage extends Actor {
 	Card card;
 	BitmapFont font;
 	boolean enabled;
+	boolean isHighlighted;
 	Creature creature;
 	
 	public CardImage() {
@@ -99,13 +100,13 @@ public class CardImage extends Actor {
 	public void decrementLife(int value, Cards game) {
 		int life = card.getLife();
 		card.setLife(life - value);
-		game.animateDamageText(value, getX() + 66, getY() + 10, getX() + 66, getY() + 69 );
+		game.animateDamageText(value, getX() + 60, getY() + 10, getX() + 60, getY() + 69 );
 	}
 	
 	public void incrementLife(int value, Cards game) {
 		int life = card.getLife();
 		card.setLife(life + value);
-		game.animateHealingText(value, getX() + 66, getY() + 10, getX() + 66, getY() + 69 );
+		game.animateHealingText(value, getX() + 60, getY() + 10, getX() + 60, getY() + 69 );
 	}
 		
 	public boolean isEnabled() {
@@ -138,6 +139,14 @@ public class CardImage extends Actor {
 
 	public void setCreature(Creature creature) {
 		this.creature = creature;
+	}
+
+	public boolean isHighlighted() {
+		return isHighlighted;
+	}
+
+	public void setHighlighted(boolean isHighlighted) {
+		this.isHighlighted = isHighlighted;
 	}
 
 	

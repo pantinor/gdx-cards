@@ -10,6 +10,7 @@ public class Card {
 	String desc;
 	CardType type;
 	boolean spell = false;
+	boolean damagingSpell = false;
 	boolean targetable = false;
 	boolean wall = false;
 
@@ -34,6 +35,7 @@ public class Card {
 		c.setSpell(this.spell);
 		c.setWall(this.wall);
 		c.setTargetable(this.targetable);
+		c.setDamagingSpell(this.damagingSpell);
 		return c;
 	}
 
@@ -74,7 +76,7 @@ public class Card {
 		this.attack -= dec;
 	}
 
-	public void setLife(int life) {
+	public void setLife(int life) {		
 		this.life = life;
 	}
 	
@@ -123,6 +125,14 @@ public class Card {
 
 	public void setWall(boolean wall) {
 		this.wall = wall;
+	}
+
+	public boolean isDamagingSpell() {
+		return damagingSpell;
+	}
+
+	public void setDamagingSpell(boolean damagingSpell) {
+		this.damagingSpell = damagingSpell;
 	}
 
 	

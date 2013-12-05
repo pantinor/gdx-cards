@@ -15,7 +15,7 @@ public class BaseFunctions {
 	protected CardImage cardImage;
 	protected Cards game;
 	protected boolean isComputer;
-	protected int slotIndex;
+	public int slotIndex = -1;
 	
 	protected CardImage[] enemyCards ;
 	protected CardImage[] teamCards ;
@@ -46,11 +46,14 @@ public class BaseFunctions {
 	
 	protected void damageSlots(int[] indexes, boolean ownerSide, int value) {
 		for (int index : indexes) {
-			if (index < 0 || index > 5 || index == slotIndex) continue;
+			if (index < 0 || index > 5) continue;
+			
+			//like Bargul, dont injure self
+			if (ownerSide && index == slotIndex) continue;
 					
 			CardImage ci = ownerSide?teamCards[index]:enemyCards[index];
 			if (ci == null) continue;
-			
+						
 			ci.decrementLife(value, game);
 			
 			int remainingLife = ci.getCard().getLife();
@@ -60,6 +63,13 @@ public class BaseFunctions {
 				disposeEnemy(ci, index);
 			}
 		}
+	}
+
+	
+	protected void damageOpposingSlot(int value) {
+		int[] slots = new int[1];
+		slots[0] = slotIndex;
+		damageSlots(slots, false, value);
 	}
 	
 	protected void damageNeighbors(boolean ownerSide, int value) {

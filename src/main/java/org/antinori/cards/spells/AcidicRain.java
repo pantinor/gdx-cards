@@ -11,8 +11,9 @@ public class AcidicRain extends BaseSpell {
 	}
 
 	public void onCast() {
-		int value = 15;
-		damageAll(false, value);
+		super.onCast();
+
+		damageAll(false, 15);
 		
 		opposingPlayer.decrementStrength(CardType.FIRE, 1);
 		opposingPlayer.decrementStrength(CardType.AIR, 1);

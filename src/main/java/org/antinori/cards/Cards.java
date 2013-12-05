@@ -38,14 +38,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class Cards extends SimpleGame {
 	
-	static TextureAtlas smallCardAtlas;
-	static TextureAtlas smallTGACardAtlas;
+	public static TextureAtlas smallCardAtlas;
+	public static TextureAtlas smallTGACardAtlas;
 	static TextureAtlas largeCardAtlas;
 	static TextureAtlas largeTGACardAtlas;
 	static TextureAtlas faceCardAtlas;
 	
-	static Texture ramka;
-	static Texture spellramka;
+	public static Texture ramka;
+	public static Texture spellramka;
 
 	static Texture portraitramka;
 	static Texture ramkabig;
@@ -53,7 +53,7 @@ public class Cards extends SimpleGame {
 	static Texture slotTexture;
 
 	static BitmapFont font;
-	static BitmapFont greenfont;
+	public static BitmapFont greenfont;
 	static BitmapFont redfont;
 	static Label.LabelStyle redStyle;
 	static Label.LabelStyle greenStyle;
@@ -79,7 +79,7 @@ public class Cards extends SimpleGame {
 	Label[] bottomStrengthLabels = new Label[5];
 
 
-	CardSetup cs;
+	public CardSetup cs;
 	CardDescriptionImage cdi;
 	
 	public Music bgm;
@@ -89,7 +89,9 @@ public class Cards extends SimpleGame {
 	SpriteBatch batch;
 	
 	public MouseOverCardListener li;
-	SlotListener sl;
+	public TargetedCardListener tl;
+	public ShowDescriptionListener sdl;
+	public SlotListener sl;
 	
 	private SlotImage[] topSlots = new SlotImage[6];
 	private SlotImage[] bottomSlots = new SlotImage[6];
@@ -244,6 +246,8 @@ public class Cards extends SimpleGame {
 		
 		sl = new SlotListener();
 		li = new MouseOverCardListener();
+		tl = new TargetedCardListener();
+		sdl = new ShowDescriptionListener();
 		
 		addSlotImages(330,ydown(170), false);
 		addSlotImages(330,ydown(290), true);
@@ -386,12 +390,13 @@ public class Cards extends SimpleGame {
 			
 			ci.setFont(greenfont);
 			ci.setFrame(ci.getCard().isSpell()?spellramka:ramka);
-			ci.addListener(li);
+			ci.addListener(sdl);
 
 			y1 -= (spacing + ci.getFrame().getHeight());
 			ci.setBounds(x1, y1, ci.getFrame().getWidth(), ci.getFrame().getHeight());
 			
 			if (addToStage) {
+				ci.addListener(li);
 				stage.addActor(ci);
 			}
 		}
@@ -432,9 +437,14 @@ public class Cards extends SimpleGame {
 				if (!activeTurn && selectedCard.getCard().isSpell() && selectedCard.isEnabled()) {
 					
 					if (selectedCard.getCard().isTargetable()) {
-						//highlight any targets
-						for (CardImage ci : bottomSlotCards) {
-							if (ci != null) ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+						
+						CardImage[] cards = selectedCard.getCard().isDamagingSpell()?topSlotCards:bottomSlotCards;
+						//highlight targets
+						for (CardImage ci : cards) {
+							if (ci != null) {
+								ci.setHighlighted(true);
+								ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+							}
 						}
 					} else {
 						//cast the spell
@@ -445,6 +455,29 @@ public class Cards extends SimpleGame {
 			}
 			return true;
 		}
+
+	}
+	
+	class TargetedCardListener extends InputListener {	
+		
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			Actor actor = event.getListenerActor();
+			if (actor instanceof CardImage) {
+				CardImage targetedCard = (CardImage)actor;
+				
+				if (!targetedCard.isHighlighted) return true;
+				
+				clearHighlights();
+				
+				//cast the spell to target
+				Thread t = new Thread(new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard));
+				t.start();
+			}
+			return true;
+		}
+	}
+	
+	class ShowDescriptionListener extends InputListener {
         		
 		public void enter (InputEvent event, float x, float y, int pointer, Actor a) {
 			Actor actor = event.getListenerActor();
@@ -479,23 +512,20 @@ public class Cards extends SimpleGame {
 		}
 	}
 	
-	class TargetedCardListener extends MouseOverCardListener {		
-		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			Actor actor = event.getListenerActor();
-			if (actor instanceof CardImage) {
-				CardImage targetedCard = (CardImage)actor;
-				//unhighlight targets
-				for (CardImage ci : bottomSlotCards) {
-					if (ci != null) {
-						ci.clearActions();
-						ci.setColor(Color.WHITE);
-					}
-				}
-				//cast the spell to target
-				Thread t = new Thread(new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard));
-				t.start();
+	public void clearHighlights() {
+		for (CardImage ci : topSlotCards) {
+			if (ci != null) {
+				ci.setHighlighted(false);
+				ci.clearActions();
+				ci.setColor(Color.WHITE);
 			}
-			return true;
+		}
+		for (CardImage ci : bottomSlotCards) {
+			if (ci != null) {
+				ci.setHighlighted(false);
+				ci.clearActions();
+				ci.setColor(Color.WHITE);
+			}
 		}
 	}
 	
@@ -516,8 +546,9 @@ public class Cards extends SimpleGame {
 						final CardImage clone = selectedCard.clone();
 						
 						stage.addActor(clone);
-						clone.addListener(new TargetedCardListener());
-						
+						clone.addListener(tl);
+						clone.addListener(sdl);
+
 						CardImage[] imgs = getBottomSlotCards();
 						imgs[si.getIndex()] = clone;
 						

@@ -4,14 +4,13 @@ import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 
-public class Titan extends BaseCreature {
-	public Titan(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {
+public class ForestSpider extends BaseCreature {
+	public ForestSpider(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {
 		super(game, card, cardImage, isComputer, slotIndex);
 	}
 
 	public void onSummoned() {
 		super.onSummoned();
-		damageOpposingSlot(15);
 	}
 
 	public void onAttack() {

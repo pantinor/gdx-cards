@@ -3,6 +3,7 @@ package org.antinori.cards.characters;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.PlayerImage;
 
 public class GoblinBerserker extends BaseCreature {
 
@@ -16,6 +17,9 @@ public class GoblinBerserker extends BaseCreature {
 
 	public void onAttack() {
 		super.onAttack();
+	}
+	
+	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
 		damageNeighbors(true, 2);
 	}
 }

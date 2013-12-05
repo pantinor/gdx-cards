@@ -10,7 +10,9 @@ public class ChainLightning extends BaseSpell {
 	}
 
 	public void onCast() {
+		super.onCast();
+
 		damageAll(false, 9);
-		damagePlayerSpellcasting(9);
+		this.opponent.decrementLife(9, game, true);
 	}
 }

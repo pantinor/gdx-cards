@@ -5,7 +5,6 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import com.badlogic.gdx.scenes.scene2d.Action;
 
 
@@ -86,6 +85,9 @@ public class BattleRoundThread implements Runnable {
 			for (CardImage attacker : bottomCards) {
 				i++;
 				if (summonedCardImage != null && i == summonedSlot) continue;
+				if (summonedCardImage != null && attacker != null &&
+						summonedCardImage.getCard().getName().equalsIgnoreCase("giantspider") && 
+						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
 				if (attacker == null) continue;
 				
 				attacker.getCreature().onAttack();
@@ -113,7 +115,9 @@ public class BattleRoundThread implements Runnable {
 					opptSummons = opptPick.clone();
 					
 					game.stage.addActor(opptSummons);
-					opptSummons.addListener(game.li);
+					opptSummons.addListener(game.sdl);
+					opptSummons.addListener(game.tl);
+
 					
 					CardImage[] imgs = game.getTopSlotCards();
 					imgs[si.getIndex()] = opptSummons;
@@ -163,6 +167,9 @@ public class BattleRoundThread implements Runnable {
 			for (CardImage attacker : topCards) {
 				j++;
 				if (opptSummons != null  && j == si.getIndex()) continue;
+				if (opptSummons != null  && attacker != null &&
+						opptSummons.getCard().getName().equalsIgnoreCase("giantspider") && 
+						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
 				if (attacker == null) continue;
 				
 				attacker.getCreature().onAttack();
@@ -195,27 +202,13 @@ public class BattleRoundThread implements Runnable {
 		
 	}
 	
-	
 	private void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		
 		CardImage[] cards = isComputer?game.getTopSlotCards():game.getBottomSlotCards();
-
-		
 		for (int index = 0;index<6;index++) {
 			CardImage ci = cards[index];
 			if (ci == null) continue;
-			
-			if (ci.getCard().getName().equalsIgnoreCase("masterhealer")) {
-				player.incrementLife(3, game);
-				for (int j = 0;j<6;j++) {
-					CardImage ci2 = cards[j];
-					if (ci2 == null) continue;
-					ci2.incrementLife(3, game);
-				}
-			}
-			
+			ci.getCreature().startOfTurnCheck(isComputer, player);
 		}
-		
 	}
 		
 	public SlotImage getOpenTopSlot() {

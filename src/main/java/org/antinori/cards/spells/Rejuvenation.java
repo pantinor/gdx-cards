@@ -11,8 +11,9 @@ public class Rejuvenation extends BaseSpell {
 	}
 	
 	public void onCast() {
+		super.onCast();
 		int heal = ownerPlayer.getStrengthEarth() * 2;
-		healPlayerSpellcasting(heal);
+		this.owner.incrementLife(heal, game);
 	}
 
 }

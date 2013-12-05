@@ -11,10 +11,11 @@ public class Armageddon extends BaseSpell {
 	}
 	
 	public void onCast() {
-		
+		super.onCast();
 		int value = 8 + ownerPlayer.getStrengthFire();
 		damageAll(false, value);
-		damagePlayerSpellcasting(value);
+		damageAll(true, value);
+		this.opponent.decrementLife(value, game, true);
 
 	}
 

@@ -11,12 +11,12 @@ public class IceGuard extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
+		owner.setReceivedDamageModifier(0.50f);
+		owner.setReceivedSpellDamageModifier(0.50f);
 	}
 
 	public void onAttack() {
 		super.onAttack();
-		owner.setReceivedDamageModifier(0.50f);
-		owner.setReceivedSpellDamageModifier(0.50f);
 	}
 
 	public void onDying() {

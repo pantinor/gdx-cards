@@ -155,6 +155,9 @@ public class CardSetup {
                     Boolean targetable = Boolean.parseBoolean(getAttrText( n1, "targetable" ));
                     c.setTargetable(targetable);
                     
+                    Boolean damagingSpell = Boolean.parseBoolean(getAttrText( n1, "damagingSpell" ));
+                    c.setDamagingSpell(damagingSpell);
+                    
                     int cost = Integer.parseInt(getAttrText( n1, "cost2" ));
                     if (spell) {
                     	cost = Integer.parseInt(getAttrText( n1, "cost1" ));
@@ -220,15 +223,34 @@ public class CardSetup {
 		
 	}
 	
+	public CardImage getCardImageByName(TextureAtlas atlas1, TextureAtlas atlas2, String name) throws Exception {
+    	Card c = getCardByName(name);
+    	Sprite sp = atlas1.createSprite(c.getName().toLowerCase());
+		if (sp == null) {
+    		sp = atlas2.createSprite(c.getName().toLowerCase());
+    		if (sp != null) sp.flip(false, true); //tga files need to be flipped twice
+		}
+    		
+		if (sp == null) 
+			throw new Exception("Sprite is null for card: " + c);
+		
+		sp.flip(false, true);
+	
+		CardImage img = new CardImage(sp, c);
+    	
+    	return img;
+		
+	}
+	
 	public List<Card> getCardsByType(CardType type, int maxNumber) {
 		
 		List<Card> result = new ArrayList<Card>();
 		//debugging
-		if (type == CardType.FIRE) {
-			result.add(getCardByName("OrcChieftain"));
-			result.add(getCardByName("GoblinBerserker"));
-			result.add(getCardByName("Armageddon"));
-			result.add(getCardByName("FireElemental"));
+		if (type == CardType.AIR) {
+			result.add(getCardByName("FaerieApprentice"));
+			result.add(getCardByName("FaerieSage"));
+			result.add(getCardByName("CalltoThunder"));
+			result.add(getCardByName("Titan"));
 			return result;
 		}
 		

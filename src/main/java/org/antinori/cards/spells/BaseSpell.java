@@ -4,7 +4,6 @@ import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
-import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Spell;
 
 public class BaseSpell extends BaseFunctions implements Spell {
@@ -37,36 +36,11 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		
 		System.out.println("onCast: " + card);
 		
-		damagePlayerSpellcasting(card.getCost());
+		ownerPlayer.decrementStrength(card.getType(), card.getCost());
+
+		moveCardActorOnMagic();
 
 	}
 	
-	protected void damagePlayerSpellcasting(int value) {
-		
-		PlayerImage pi = isComputer?game.player:game.opponent;
-		pi.decrementLife(value, game, true);
-		
-		ownerPlayer.decrementStrength(card.getType(), value);
-		
-		moveCardActorOnMagic();
-		
-		if (opposingPlayer.getLife() < 1) {
-			game.handleGameOver();
-		}
-	}
-	
-	protected void healPlayerSpellcasting(int value) {
-		
-		PlayerImage pi = isComputer?game.player:game.opponent;
-		pi.incrementLife(value, game);
-		
-		ownerPlayer.decrementStrength(card.getType(), value);
-		
-		moveCardActorOnMagic();
-		
-	}
-	
-	
-
 
 }

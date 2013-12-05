@@ -10,8 +10,9 @@ public class LightningBolt extends BaseSpell {
 	}
 
 	public void onCast() {
+		super.onCast();
 		int value = 5 + ownerPlayer.getStrengthAir();
-		damagePlayerSpellcasting(value);
+		this.opponent.decrementLife(value, game, true);
 
 	}
 }
