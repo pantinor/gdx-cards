@@ -1,0 +1,432 @@
+
+largeTGATiles.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+acidicrain
+  rotate: false
+  xy: 0, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 0
+armageddon
+  rotate: false
+  xy: 0, 165
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 1
+armyofrats
+  rotate: false
+  xy: 0, 330
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 2
+armyupgrade
+  rotate: false
+  xy: 0, 495
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 3
+bloodboil
+  rotate: false
+  xy: 0, 660
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 4
+bloodritual
+  rotate: false
+  xy: 0, 825
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 5
+breathefire
+  rotate: false
+  xy: 0, 990
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 6
+calltoancientspirits
+  rotate: false
+  xy: 0, 1155
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 7
+calltothunder
+  rotate: false
+  xy: 0, 1320
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 8
+cannonade
+  rotate: false
+  xy: 0, 1485
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 9
+chainlightning
+  rotate: false
+  xy: 165, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 10
+chaoticwave
+  rotate: false
+  xy: 165, 165
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 11
+cursedfog
+  rotate: false
+  xy: 165, 330
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 12
+darkritual
+  rotate: false
+  xy: 165, 495
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 13
+disintegrate
+  rotate: false
+  xy: 165, 660
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 14
+divineintervention
+  rotate: false
+  xy: 165, 825
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 15
+divinejustice
+  rotate: false
+  xy: 165, 990
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 16
+divinemeddling
+  rotate: false
+  xy: 165, 1155
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 17
+doombolt
+  rotate: false
+  xy: 165, 1320
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 18
+drainsouls
+  rotate: false
+  xy: 165, 1485
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 19
+enrage
+  rotate: false
+  xy: 330, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 20
+explosion
+  rotate: false
+  xy: 330, 165
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 21
+fireball
+  rotate: false
+  xy: 330, 330
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 22
+flamewave
+  rotate: false
+  xy: 330, 495
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 23
+gaze
+  rotate: false
+  xy: 330, 660
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 24
+golemsfrenzy
+  rotate: false
+  xy: 330, 825
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 25
+golemsjustice
+  rotate: false
+  xy: 330, 990
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 26
+hasten
+  rotate: false
+  xy: 330, 1155
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 27
+healingspray
+  rotate: false
+  xy: 330, 1320
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 28
+hellfire
+  rotate: false
+  xy: 330, 1485
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 29
+hypnosis
+  rotate: false
+  xy: 495, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 30
+inferno
+  rotate: false
+  xy: 495, 165
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 31
+lightningbolt
+  rotate: false
+  xy: 495, 330
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 32
+madness
+  rotate: false
+  xy: 495, 495
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 33
+manaburn
+  rotate: false
+  xy: 495, 660
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 34
+meditation
+  rotate: false
+  xy: 495, 825
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 35
+movefalcon
+  rotate: false
+  xy: 495, 990
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 36
+naturalhealing
+  rotate: false
+  xy: 495, 1155
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 37
+naturesfury
+  rotate: false
+  xy: 495, 1320
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 38
+naturesritual
+  rotate: false
+  xy: 495, 1485
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 39
+overtime
+  rotate: false
+  xy: 660, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 40
+poison
+  rotate: false
+  xy: 660, 165
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 41
+poisonouscloud
+  rotate: false
+  xy: 660, 330
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 42
+powerchains
+  rotate: false
+  xy: 660, 495
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 43
+pumpenergy
+  rotate: false
+  xy: 660, 660
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 44
+rageofgod
+  rotate: false
+  xy: 660, 825
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 45
+rageofsouls
+  rotate: false
+  xy: 660, 990
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 46
+rejuvenation
+  rotate: false
+  xy: 660, 1155
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 47
+rescueoperation
+  rotate: false
+  xy: 660, 1320
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 48
+ritualofglory
+  rotate: false
+  xy: 660, 1485
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 49
+ritualoftheforest
+  rotate: false
+  xy: 825, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 50
+sacrifice
+  rotate: false
+  xy: 825, 165
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 51
+sonicboom
+  rotate: false
+  xy: 825, 330
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 52
+stealessence
+  rotate: false
+  xy: 825, 495
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 53
+stonerain
+  rotate: false
+  xy: 825, 660
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 54
+suddenstrike
+  rotate: false
+  xy: 825, 825
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 55
+timestop
+  rotate: false
+  xy: 825, 990
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 56
+tornado
+  rotate: false
+  xy: 825, 1155
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 57
+trumpet
+  rotate: false
+  xy: 825, 1320
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 58
+weakness
+  rotate: false
+  xy: 825, 1485
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 59
+wrathofgod
+  rotate: false
+  xy: 990, 0
+  size: 165, 165
+  orig: 165, 165
+  offset: 0, 0
+  index: 60

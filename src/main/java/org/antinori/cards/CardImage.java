@@ -1,5 +1,7 @@
 package org.antinori.cards;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -11,8 +13,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class CardImage extends Actor {
+public class CardImage extends Actor implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	Sprite img;
 	Texture frame;
 	Card card;
@@ -147,6 +151,23 @@ public class CardImage extends Actor {
 
 	public void setHighlighted(boolean isHighlighted) {
 		this.isHighlighted = isHighlighted;
+	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeObject(card);
+		out.writeBoolean(enabled);
+		out.writeBoolean(isHighlighted);
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+		card = (Card)in.readObject();
+		enabled = in.readBoolean();
+		isHighlighted = in.readBoolean();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("CardImage [card=%s, enabled=%s, isHighlighted=%s]", card, enabled, isHighlighted);
 	}
 
 	

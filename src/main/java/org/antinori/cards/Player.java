@@ -1,12 +1,15 @@
 package org.antinori.cards;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 
-public class Player {
+public class Player implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public static CardType[] TYPES = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, CardType.OTHER};
 		
 	String imgName;
@@ -238,6 +241,14 @@ public class Player {
 		
 		return ci;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Player [imgName=%s, playerClass=%s, life=%s, strengthFire=%s, strengthAir=%s, strengthEarth=%s, strengthWater=%s, strengthSpecial=%s, fireCards=%s, airCards=%s, waterCards=%s, earthCards=%s, specialCards=%s]", imgName,
+				playerClass, life, strengthFire, strengthAir, strengthEarth, strengthWater, strengthSpecial, fireCards, airCards, waterCards, earthCards, specialCards);
+	}
+	
+	
 	
 
 }

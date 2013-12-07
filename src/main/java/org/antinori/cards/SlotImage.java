@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class SlotImage extends Image {
-	
+		
 	private boolean bottomSlots;
 	private int index = 0;
 	private boolean occupied;

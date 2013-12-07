@@ -9,6 +9,9 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.List;
 
+import org.antinori.cards.network.NetworkGame;
+import org.antinori.cards.network.SelectHostsDialog;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Music;
@@ -74,6 +77,7 @@ public class Cards extends SimpleGame {
 	
 	ImageButton skipTurnButton;
 	Button showOpptCardsButton;
+	Button selectHostsButton;
 
 	
 	Label[] topStrengthLabels = new Label[5];
@@ -107,6 +111,9 @@ public class Cards extends SimpleGame {
 	
 	private boolean gameOver = false;
 	private boolean opptCardsShown = false;
+	private boolean selectHostsShown = false;
+	
+	public NetworkGame ng;
 
 	
 	public static void main(String[] args) {
@@ -127,32 +134,32 @@ public class Cards extends SimpleGame {
 		
 		batch = new SpriteBatch();
 		
-		bgm = Gdx.audio.newMusic(Gdx.files.classpath("Audio/combat3.ogg"));
+		bgm = Gdx.audio.newMusic(Gdx.files.classpath("audio/combat3.ogg"));
 		bgm.setLooping(true);
 		bgm.setVolume(0.2f);
 		bgm.play();
 		
-		attackSound = Gdx.audio.newMusic(Gdx.files.classpath("Audio/attack.ogg"));
+		attackSound = Gdx.audio.newMusic(Gdx.files.classpath("audio/attack.ogg"));
 		attackSound.setVolume(0.3f);
-		magicSound = Gdx.audio.newMusic(Gdx.files.classpath("Audio/magic.ogg"));
+		magicSound = Gdx.audio.newMusic(Gdx.files.classpath("audio/magic.ogg"));
 		magicSound.setVolume(0.3f);
 		
-		ramka = new Texture(Gdx.files.classpath("ramka.png"));
-		spellramka = new Texture(Gdx.files.classpath("ramkaSpell.png"));
-		portraitramka = new Texture(Gdx.files.classpath("portraitramka.png"));
-		ramkabig = new Texture(Gdx.files.classpath("ramkabig.png"));
-		ramkabigspell = new Texture(Gdx.files.classpath("ramkabigspell.png"));
-		slotTexture = new Texture(Gdx.files.classpath("slot.png"));
+		ramka = new Texture(Gdx.files.classpath("images/ramka.png"));
+		spellramka = new Texture(Gdx.files.classpath("images/ramkaspell.png"));
+		portraitramka = new Texture(Gdx.files.classpath("images/portraitramka.png"));
+		ramkabig = new Texture(Gdx.files.classpath("images/ramkabig.png"));
+		ramkabigspell = new Texture(Gdx.files.classpath("images/ramkabigspell.png"));
+		slotTexture = new Texture(Gdx.files.classpath("images/slot.png"));
 
-		smallCardAtlas = new TextureAtlas(Gdx.files.classpath("smallCardsPack.txt"), true);
-		largeCardAtlas = new TextureAtlas(Gdx.files.classpath("largeCardsPack.txt"), true);
+		smallCardAtlas = new TextureAtlas(Gdx.files.classpath("images/smallCardsPack.txt"), true);
+		largeCardAtlas = new TextureAtlas(Gdx.files.classpath("images/largeCardsPack.txt"), true);
 		
-		smallTGACardAtlas = new TextureAtlas(Gdx.files.classpath("smallTGACardsPack.txt"), true);
-		largeTGACardAtlas = new TextureAtlas(Gdx.files.classpath("largeTGACardsPack.txt"), true);
+		smallTGACardAtlas = new TextureAtlas(Gdx.files.classpath("images/smallTGACardsPack.txt"), true);
+		largeTGACardAtlas = new TextureAtlas(Gdx.files.classpath("images/largeTGACardsPack.txt"), true);
 
-		faceCardAtlas = new TextureAtlas(Gdx.files.classpath("faceCardsPack.txt"), true);
+		faceCardAtlas = new TextureAtlas(Gdx.files.classpath("images/faceCardsPack.txt"), true);
 			
-		background = new Texture(Gdx.files.classpath("background.jpg"));
+		background = new Texture(Gdx.files.classpath("images/background.jpg"));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprBg = new Sprite(background, 0, 0, background.getWidth(), background.getHeight());
 		
@@ -175,14 +182,15 @@ public class Cards extends SimpleGame {
 		
 		
 		ImageButtonStyle style = new ImageButtonStyle(skin.get(ButtonStyle.class));
-		TextureRegion tr = new TextureRegion(new Texture(Gdx.files.classpath("endturnbutton.png")));
+		TextureRegion tr = new TextureRegion(new Texture(Gdx.files.classpath("images/endturnbutton.png")));
 		style.imageUp = new TextureRegionDrawable(tr);
 		style.imageDown = new TextureRegionDrawable(tr);
 		skipTurnButton = new ImageButton(style);
 		skipTurnButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (gameOver) return true;
-				Thread t = new Thread(new BattleRoundThread(Cards.this, player, opponent));
+				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent);
+				t.setNetworkGame(ng);
 				t.start();
 				return true;
 			}
@@ -216,6 +224,33 @@ public class Cards extends SimpleGame {
 		});
 		showOpptCardsButton.setPosition(80, ydown(150));
 		stage.addActor(showOpptCardsButton);
+		
+		
+		
+		selectHostsButton = new Button(skin);
+		selectHostsButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (selectHostsShown) return true;
+				selectHostsShown = true;
+
+				final SelectHostsDialog window = new SelectHostsDialog("Select Remote Player on Network", Cards.this, skin);
+				
+				TextButton close = new TextButton("X", skin);
+				close.addListener(new ChangeListener() {
+					public void changed (ChangeEvent event, Actor actor) {
+						window.setAlive(false);
+						window.remove();
+						selectHostsShown = false;
+					}
+				});
+				window.getButtonTable().add(close).height(window.getPadTop());
+				window.setPosition(200, 100);
+				stage.addActor(window);
+				return true;
+			}
+		});
+		selectHostsButton.setPosition(100, ydown(150));
+		stage.addActor(selectHostsButton);
 		
 		
 		int x = 420;
@@ -450,7 +485,8 @@ public class Cards extends SimpleGame {
 						}
 					} else {
 						//cast the spell
-						Thread t = new Thread(new BattleRoundThread(Cards.this, player, opponent, selectedCard));
+						BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard);
+						t.setNetworkGame(ng);
 						t.start();
 					}
 				}
@@ -472,7 +508,8 @@ public class Cards extends SimpleGame {
 				clearHighlights();
 				
 				//cast the spell to target
-				Thread t = new Thread(new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard));
+				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard);
+				t.setNetworkGame(ng);
 				t.start();
 			}
 			return true;
@@ -562,7 +599,8 @@ public class Cards extends SimpleGame {
 						
 						clone.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
 							public boolean act(float delta) {
-								Thread t = new Thread(new BattleRoundThread(Cards.this, player, opponent, clone, si.getIndex()));
+								BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, clone, si.getIndex());
+								t.setNetworkGame(ng);
 								t.start();
 								return true;
 							}

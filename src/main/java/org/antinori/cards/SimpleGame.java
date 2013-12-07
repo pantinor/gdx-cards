@@ -43,11 +43,11 @@ public abstract class SimpleGame extends InputAdapter implements ApplicationList
 		stage = new Stage();
 		stage.setCamera(camera);
 		
-		cursor = new Texture(Gdx.files.classpath("cursor.png"));
+		cursor = new Texture(Gdx.files.classpath("images/cursor.png"));
 		xHotspot = 0;
 		yHotspot = cursor.getHeight();
 	
-		skin = new Skin(Gdx.files.classpath("uiskin.json"));
+		skin = new Skin(Gdx.files.classpath("skin/uiskin.json"));
 
 		init();
 

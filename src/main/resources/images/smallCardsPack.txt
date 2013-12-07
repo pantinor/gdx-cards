@@ -1,0 +1,1293 @@
+
+smallTiles.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+academyofmagic
+  rotate: false
+  xy: 0, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 0
+adeptofmagic
+  rotate: false
+  xy: 0, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 1
+airelemental
+  rotate: false
+  xy: 0, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 2
+airspirit
+  rotate: false
+  xy: 0, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 3
+altarofsacrifice
+  rotate: false
+  xy: 0, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 4
+ambrosiastone
+  rotate: false
+  xy: 0, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 5
+ancientdragon
+  rotate: false
+  xy: 0, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 6
+ancientgiant
+  rotate: false
+  xy: 0, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 7
+ancienthorror
+  rotate: false
+  xy: 0, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 8
+ancientwitch
+  rotate: false
+  xy: 0, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 9
+angel
+  rotate: false
+  xy: 80, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 10
+angelofwar
+  rotate: false
+  xy: 80, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 11
+angryangrybear
+  rotate: false
+  xy: 80, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 12
+archangel
+  rotate: false
+  xy: 80, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 13
+astralaccelerator
+  rotate: false
+  xy: 80, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 14
+astraldamper
+  rotate: false
+  xy: 80, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 15
+astraldrake
+  rotate: false
+  xy: 80, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 16
+astralguard
+  rotate: false
+  xy: 80, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 17
+bafflerdragon
+  rotate: false
+  xy: 80, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 18
+bafflerroost
+  rotate: false
+  xy: 80, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 19
+banshee
+  rotate: false
+  xy: 160, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 20
+bargul
+  rotate: false
+  xy: 160, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 21
+basilisk
+  rotate: false
+  xy: 160, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 22
+beehive
+  rotate: false
+  xy: 160, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 23
+beequeen
+  rotate: false
+  xy: 160, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 24
+beesoldier
+  rotate: false
+  xy: 160, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 25
+blindprophet
+  rotate: false
+  xy: 160, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 26
+cannon
+  rotate: false
+  xy: 160, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 27
+celestia
+  rotate: false
+  xy: 160, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 28
+chastiser
+  rotate: false
+  xy: 160, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 29
+chronoengine
+  rotate: false
+  xy: 240, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 30
+chronohunter
+  rotate: false
+  xy: 240, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 31
+cloisteredelemental
+  rotate: false
+  xy: 240, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 32
+crazysquirrel
+  rotate: false
+  xy: 240, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 33
+crusader
+  rotate: false
+  xy: 240, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 34
+cursedground
+  rotate: false
+  xy: 240, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 35
+cursedunicorn
+  rotate: false
+  xy: 240, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 36
+dampingtower
+  rotate: false
+  xy: 240, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 37
+darksculptor
+  rotate: false
+  xy: 240, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 38
+darktroll
+  rotate: false
+  xy: 240, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 39
+deathfalcon
+  rotate: false
+  xy: 320, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 40
+demonapostate
+  rotate: false
+  xy: 320, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 41
+demonlord
+  rotate: false
+  xy: 320, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 42
+demonquartermaster
+  rotate: false
+  xy: 320, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 43
+devotedservant
+  rotate: false
+  xy: 320, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 44
+dragon
+  rotate: false
+  xy: 320, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 45
+dwarvencraftsman
+  rotate: false
+  xy: 320, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 46
+dwarvenrifleman
+  rotate: false
+  xy: 320, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 47
+earthelemental
+  rotate: false
+  xy: 320, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 48
+elfhermit
+  rotate: false
+  xy: 320, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 49
+elvenhealer
+  rotate: false
+  xy: 400, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 50
+emissaryofdorlak
+  rotate: false
+  xy: 400, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 51
+energybeast
+  rotate: false
+  xy: 400, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 52
+enragedbeaver
+  rotate: false
+  xy: 400, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 53
+enragedquartermaster
+  rotate: false
+  xy: 400, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 54
+ergodemon
+  rotate: false
+  xy: 400, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 55
+everrainingland
+  rotate: false
+  xy: 400, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 56
+faerieapprentice
+  rotate: false
+  xy: 400, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 57
+faeriesage
+  rotate: false
+  xy: 400, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 58
+fanatic
+  rotate: false
+  xy: 400, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 59
+fetidswamp
+  rotate: false
+  xy: 480, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 60
+firedrake
+  rotate: false
+  xy: 480, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 61
+fireelemental
+  rotate: false
+  xy: 480, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 62
+forestspider
+  rotate: false
+  xy: 480, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 63
+forestsprite
+  rotate: false
+  xy: 480, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 64
+forestwolf
+  rotate: false
+  xy: 480, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 65
+ghoul
+  rotate: false
+  xy: 480, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 66
+giantspider
+  rotate: false
+  xy: 480, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 67
+giantturtle
+  rotate: false
+  xy: 480, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 68
+goblinberserker
+  rotate: false
+  xy: 480, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 69
+goblinhero
+  rotate: false
+  xy: 560, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 70
+goblinlooter
+  rotate: false
+  xy: 560, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 71
+goblinraider
+  rotate: false
+  xy: 560, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 72
+goblinsaboteur
+  rotate: false
+  xy: 560, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 73
+goblinshaman
+  rotate: false
+  xy: 560, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 74
+golem
+  rotate: false
+  xy: 560, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 75
+golemguide
+  rotate: false
+  xy: 560, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 76
+golemhandler
+  rotate: false
+  xy: 560, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 77
+goleminstructor
+  rotate: false
+  xy: 560, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 78
+greaterbargul
+  rotate: false
+  xy: 560, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 79
+greaterdemon
+  rotate: false
+  xy: 640, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 80
+greatoak
+  rotate: false
+  xy: 640, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 81
+griffin
+  rotate: false
+  xy: 640, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 82
+guardianstatue
+  rotate: false
+  xy: 640, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 83
+hallowedground
+  rotate: false
+  xy: 640, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 84
+hellbot
+  rotate: false
+  xy: 640, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 85
+holyavenger
+  rotate: false
+  xy: 640, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 86
+holyguard
+  rotate: false
+  xy: 640, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 87
+hydra
+  rotate: false
+  xy: 640, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 88
+hypnotist
+  rotate: false
+  xy: 640, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 89
+icegolem
+  rotate: false
+  xy: 720, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 90
+iceguard
+  rotate: false
+  xy: 720, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 91
+inactivehellbot
+  rotate: false
+  xy: 720, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 92
+initiate
+  rotate: false
+  xy: 720, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 93
+insanianberserker
+  rotate: false
+  xy: 720, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 94
+insaniancatapult
+  rotate: false
+  xy: 720, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 95
+insanianking
+  rotate: false
+  xy: 720, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 96
+insanianlord
+  rotate: false
+  xy: 720, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 97
+insanianpeacekeeper
+  rotate: false
+  xy: 720, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 98
+insanianshaman
+  rotate: false
+  xy: 720, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 99
+insaniansoldier
+  rotate: false
+  xy: 800, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 100
+jadestatue
+  rotate: false
+  xy: 800, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 101
+justicar
+  rotate: false
+  xy: 800, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 102
+keeperofdeath
+  rotate: false
+  xy: 800, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 103
+lemure
+  rotate: false
+  xy: 800, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 104
+libraryofthemadmagi
+  rotate: false
+  xy: 800, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 105
+lightningcloud
+  rotate: false
+  xy: 800, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 106
+livingtornado
+  rotate: false
+  xy: 800, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 107
+madcatofalrio
+  rotate: false
+  xy: 800, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 108
+magichamster
+  rotate: false
+  xy: 800, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 109
+magicrabbit
+  rotate: false
+  xy: 880, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 110
+magisterofblood
+  rotate: false
+  xy: 880, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 111
+manastorm
+  rotate: false
+  xy: 880, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 112
+marchingstone
+  rotate: false
+  xy: 880, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 113
+masterhealer
+  rotate: false
+  xy: 880, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 114
+masterlich
+  rotate: false
+  xy: 880, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 115
+meatgrinder
+  rotate: false
+  xy: 880, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 116
+megacolossus
+  rotate: false
+  xy: 880, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 117
+merfolkapostate
+  rotate: false
+  xy: 880, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 118
+merfolkelder
+  rotate: false
+  xy: 880, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 119
+merfolkoverlord
+  rotate: false
+  xy: 960, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 120
+merfolkrevolutionary
+  rotate: false
+  xy: 960, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 121
+mindmaster
+  rotate: false
+  xy: 960, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 122
+mindstealer
+  rotate: false
+  xy: 960, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 123
+mine
+  rotate: false
+  xy: 960, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 124
+minotaurcommander
+  rotate: false
+  xy: 960, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 125
+monk
+  rotate: false
+  xy: 960, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 126
+monumenttorage
+  rotate: false
+  xy: 960, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 127
+nettlingfaerie
+  rotate: false
+  xy: 960, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 128
+nigglingimp
+  rotate: false
+  xy: 960, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 129
+oracle
+  rotate: false
+  xy: 1040, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 130
+orcchieftain
+  rotate: false
+  xy: 1040, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 131
+ornithopter
+  rotate: false
+  xy: 1040, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 132
+paladin
+  rotate: false
+  xy: 1040, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 133
+peacetree
+  rotate: false
+  xy: 1040, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 134
+phantomwarrior
+  rotate: false
+  xy: 1040, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 135
+phoenix
+  rotate: false
+  xy: 1040, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 136
+phoenixhydra
+  rotate: false
+  xy: 1040, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 137
+portaljumper
+  rotate: false
+  xy: 1040, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 138
+priestessofmoments
+  rotate: false
+  xy: 1040, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 139
+priestoffire
+  rotate: false
+  xy: 1120, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 140
+raginggiant
+  rotate: false
+  xy: 1120, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 141
+ratmaster
+  rotate: false
+  xy: 1120, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 142
+reaver
+  rotate: false
+  xy: 1120, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 143
+scorpion
+  rotate: false
+  xy: 1120, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 144
+scrambledlemure
+  rotate: false
+  xy: 1120, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 145
+seasprite
+  rotate: false
+  xy: 1120, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 146
+sleepinggiant
+  rotate: false
+  xy: 1120, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 147
+solidecho
+  rotate: false
+  xy: 1120, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 148
+sorcerorsapprentice
+  rotate: false
+  xy: 1120, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 149
+souljar
+  rotate: false
+  xy: 1200, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 150
+spectralaltar
+  rotate: false
+  xy: 1200, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 151
+spectralassassin
+  rotate: false
+  xy: 1200, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 152
+spectralmage
+  rotate: false
+  xy: 1200, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 153
+starfish
+  rotate: false
+  xy: 1200, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 154
+steamtank
+  rotate: false
+  xy: 1200, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 155
+steelgolem
+  rotate: false
+  xy: 1200, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 156
+supremeelemental
+  rotate: false
+  xy: 1200, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 157
+tamedgriffin
+  rotate: false
+  xy: 1200, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 158
+templar
+  rotate: false
+  xy: 1200, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 159
+templeoffire
+  rotate: false
+  xy: 1280, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 160
+threeheadeddemon
+  rotate: false
+  xy: 1280, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 161
+timeblazer
+  rotate: false
+  xy: 1280, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 162
+timedragon
+  rotate: false
+  xy: 1280, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 163
+timeweaver
+  rotate: false
+  xy: 1280, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 164
+titan
+  rotate: false
+  xy: 1280, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 165
+toothedstone
+  rotate: false
+  xy: 1280, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 166
+treefolkprotector
+  rotate: false
+  xy: 1280, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 167
+troll
+  rotate: false
+  xy: 1280, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 168
+unsummonaltar
+  rotate: false
+  xy: 1280, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 169
+vampire
+  rotate: false
+  xy: 1360, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 170
+vampireelder
+  rotate: false
+  xy: 1360, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 171
+vampiremystic
+  rotate: false
+  xy: 1360, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 172
+vampiriccloud
+  rotate: false
+  xy: 1360, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 173
+vindictiveraccoon
+  rotate: false
+  xy: 1360, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 174
+volcano
+  rotate: false
+  xy: 1360, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 175
+walloffire
+  rotate: false
+  xy: 1360, 480
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 176
+walloflightning
+  rotate: false
+  xy: 1360, 560
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 177
+wallofreflection
+  rotate: false
+  xy: 1360, 640
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 178
+wanderingstone
+  rotate: false
+  xy: 1360, 720
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 179
+waterelemental
+  rotate: false
+  xy: 1440, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 180
+whiteelephant
+  rotate: false
+  xy: 1440, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 181
+wolverine
+  rotate: false
+  xy: 1440, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 182
+zealot
+  rotate: false
+  xy: 1440, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 183

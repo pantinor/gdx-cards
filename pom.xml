@@ -81,6 +81,54 @@
 
 
 	<build>
+	
+			<plugins>
+	
+				<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+
+							<mainClass>org.antinori.cards.Cards</mainClass>
+						</manifest>
+
+					</archive>
+				</configuration>
+			</plugin>
+			
+			
+				<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+
+					<descriptors>
+						<descriptor>src/assemble/assemble.xml</descriptor>
+					</descriptors>
+
+					<archive>
+						<manifest>
+							<mainClass>org.antinori.cards.Cards</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 
 	</build>
 </project>

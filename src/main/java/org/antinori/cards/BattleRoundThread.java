@@ -5,10 +5,12 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.antinori.cards.network.NetworkGame;
+
 import com.badlogic.gdx.scenes.scene2d.Action;
 
 
-public class BattleRoundThread implements Runnable {
+public class BattleRoundThread extends Thread {
 	
 	Cards game;
 	PlayerImage player;
@@ -21,6 +23,8 @@ public class BattleRoundThread implements Runnable {
 
 	CardImage spellCardImage;
 	CardImage targetedCardImage;
+	
+	NetworkGame ng;
 	
 	public BattleRoundThread(Cards game, PlayerImage player, PlayerImage opponent, CardImage spellCardImage) {
 		this.game = game;
@@ -51,6 +55,10 @@ public class BattleRoundThread implements Runnable {
 		this.opponent = opponent;
 	}
 	
+	public void setNetworkGame(NetworkGame ng) {
+		this.ng = ng;
+	}
+	
 	public void run() {
 		
 		try {			
@@ -71,13 +79,22 @@ public class BattleRoundThread implements Runnable {
 				
 				summonedCardImage.getCreature().onSummoned();
 				
+				if (ng != null) {
+					ng.sendCard(summonedCardImage.getCard(), summonedSlot);
+				}
+				
 			} else if (spellCardImage != null) {
 				
 				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, false);	
 				spell.setTargeted(targetedCardImage);
 				spell.onCast();
 				
+				if (ng != null) {
+					ng.sendCard(spellCardImage.getCard(), -1);
+				}
+				
 			}
+			
 						
 			//TODO add summoning description to log
 			
@@ -91,6 +108,14 @@ public class BattleRoundThread implements Runnable {
 				if (attacker == null) continue;
 				
 				attacker.getCreature().onAttack();
+				
+				if (ng != null) {
+					ng.sendCard(topCards[i].getCard(), i);
+				}
+			}
+			
+			if (ng != null) {
+				ng.sendPlayer(oi);
 			}
 			
 			
@@ -100,7 +125,7 @@ public class BattleRoundThread implements Runnable {
 		
 			CardImage opptSummons = null;
 
-			SlotImage si = getOpenTopSlot();
+			SlotImage si = getOpponentSlot();
 
 			if (si != null) {
 				
@@ -211,7 +236,8 @@ public class BattleRoundThread implements Runnable {
 		}
 	}
 		
-	public SlotImage getOpenTopSlot() {
+	public SlotImage getOpponentSlot() {
+		
 		SlotImage si = null;
 		SlotImage[] slots = game.getTopSlots();
 		

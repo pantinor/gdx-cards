@@ -48,11 +48,11 @@ public class SingleDuelChooser {
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 		Gdx.input.setInputProcessor(stage);
 
-		background = new TextureRegion(new Texture(Gdx.files.classpath("dragonFire.jpg")));
+		background = new TextureRegion(new Texture(Gdx.files.classpath("images/dragonFire.jpg")));
 		bgimg = new Image(background);
 		stage.addActor(bgimg);
 
-		chooserBg = new TextureRegion(new Texture(Gdx.files.classpath("singleduel1.png")));
+		chooserBg = new TextureRegion(new Texture(Gdx.files.classpath("images/singleduel1.png")));
 		cbgimg = new Image(chooserBg);
 
 		Sprite spP = Cards.faceCardAtlas.createSprite("face10");
