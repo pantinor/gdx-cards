@@ -3,6 +3,7 @@ package org.antinori.cards;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.badlogic.gdx.graphics.Color;
 
@@ -12,21 +13,22 @@ public class Player implements Serializable {
 
 	public static CardType[] TYPES = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, CardType.OTHER};
 		
-	String imgName;
-	Specializations playerClass;
-	int life = 60;
+	private String imgName;
+	private Specializations playerClass;
+	private int life = 60;
+	private String id = UUID.randomUUID().toString();
 	
-	int strengthFire = 0;
-	int strengthAir = 0;
-	int strengthEarth = 0;
-	int strengthWater = 0;
-	int strengthSpecial = 0;
+	private int strengthFire = 0;
+	private int strengthAir = 0;
+	private int strengthEarth = 0;
+	private int strengthWater = 0;
+	private int strengthSpecial = 0;
 	
-	List<CardImage> fireCards = new ArrayList<CardImage>();
-	List<CardImage> airCards = new ArrayList<CardImage>();
-	List<CardImage> waterCards = new ArrayList<CardImage>();
-	List<CardImage> earthCards = new ArrayList<CardImage>();
-	List<CardImage> specialCards = new ArrayList<CardImage>();
+	private List<CardImage> fireCards = new ArrayList<CardImage>();
+	private List<CardImage> airCards = new ArrayList<CardImage>();
+	private List<CardImage> waterCards = new ArrayList<CardImage>();
+	private List<CardImage> earthCards = new ArrayList<CardImage>();
+	private List<CardImage> specialCards = new ArrayList<CardImage>();
 
 	
 	public Player() {
@@ -246,6 +248,14 @@ public class Player implements Serializable {
 	public String toString() {
 		return String.format("Player [imgName=%s, playerClass=%s, life=%s, strengthFire=%s, strengthAir=%s, strengthEarth=%s, strengthWater=%s, strengthSpecial=%s, fireCards=%s, airCards=%s, waterCards=%s, earthCards=%s, specialCards=%s]", imgName,
 				playerClass, life, strengthFire, strengthAir, strengthEarth, strengthWater, strengthSpecial, fireCards, airCards, waterCards, earthCards, specialCards);
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	

@@ -1,30 +1,27 @@
-package org.antinori.cards.spells;
+package org.antinori.cards.spells;import org.antinori.cards.PlayerImage;
 
 import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Spell;
 
 public class BaseSpell extends BaseFunctions implements Spell {
 	
 	CardImage targetedCardImage;
 		
-	public BaseSpell(Cards game, Card card, CardImage cardImage, boolean isComputer) {
+	public BaseSpell(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
 		
 		this.game = game;
 		this.card = card;
 		this.cardImage = cardImage;
-		this.isComputer = isComputer;
 		
-		this.enemyCards = isComputer?game.getBottomSlotCards():game.getTopSlotCards();
-		this.teamCards = isComputer?game.getTopSlotCards():game.getBottomSlotCards();
+		this.owner = owner;
+		this.opponent = opponent;
 		
-		this.opposingPlayer = isComputer?game.player.getPlayerInfo():game.opponent.getPlayerInfo();
-		this.ownerPlayer = isComputer?game.opponent.getPlayerInfo():game.player.getPlayerInfo();
-		
-		this.owner = isComputer?game.opponent:game.player;
-		this.opponent = isComputer?game.player:game.opponent;
+		this.opposingPlayer = opponent.getPlayerInfo();
+		this.ownerPlayer = owner.getPlayerInfo();
 		
 	}
 	
@@ -38,7 +35,7 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		
 		ownerPlayer.decrementStrength(card.getType(), card.getCost());
 
-		moveCardActorOnMagic();
+		game.moveCardActorOnMagic(cardImage, owner);
 
 	}
 	

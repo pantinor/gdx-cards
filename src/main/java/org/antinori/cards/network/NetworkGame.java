@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.CardType;
@@ -18,69 +19,113 @@ import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
 import org.antinori.cards.CreatureFactory;
 import org.antinori.cards.Player;
+import org.antinori.cards.PlayerImage;
 import org.antinori.cards.SlotImage;
-
-import com.badlogic.gdx.scenes.scene2d.Action;
 
 public class NetworkGame {
 
-	private String remoteHost;
 	private Socket socket;
 	private ServerSocket serverSocket;
 	private static final int SERVER_PORT = 5000;
-	private boolean server = false;
 	private Cards game;
+	private boolean server = false;
+	private boolean isMyTurn = false;
 
 	public NetworkGame(Cards game, boolean server) {
 
-		this.server = server;
 		this.game = game;
+		this.server = server;
 		
-		BroadcastThread bcth = new BroadcastThread();
-		bcth.start();
-
 		if (server) {
+			
+			final BroadcastThread bcth = new BroadcastThread();
+			bcth.start();
+			
 			try {
 				serverSocket = new ServerSocket(SERVER_PORT);
+				final Cards temp = game;
+				new Thread() {
+					public void run() {
+						try {
+							socket = serverSocket.accept();
+							
+							System.out.println("Server Socket listening on port 5000");
+							
+							bcth.setAlive(false);
+							isMyTurn = true;
+							
+							//send the player id and set the remote player id
+							sendEvent(new NetworkEvent(Event.REMOTE_PLAYER_ID_INIT,temp.player.getPlayerInfo().getId()));
+							
+							ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+							Object obj = in.readObject();
+							
+							System.out.println("Received: " + obj);
+							if (obj instanceof NetworkEvent) {
+
+								NetworkEvent ne = (NetworkEvent) obj;
+								Event evt = ne.getEvent();
+								String id = ne.getId();
+
+								if (evt == Event.REMOTE_PLAYER_ID_INIT) {
+									temp.setOpposingPlayerId(id);
+								}
+							}
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}.start();
+		             
 			} catch (IOException ex) {
 				ex.printStackTrace();
-				return;
 			}
 
-			try {
-				socket = serverSocket.accept();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-				return;
-			}
-
+			
 		}
 
 	}
-
-	public String getRemoteHost() {
-		return remoteHost;
+	
+	public boolean isServer() {
+		return this.server;
+	}
+	
+	public boolean isMyTurn() {
+		return this.isMyTurn;
 	}
 
-	public void setRemoteHost(String remoteHost) {
-		this.remoteHost = remoteHost;
-	}
-
-	public void startListenFromServer() {
+	public boolean connectToServer(String remoteHost) {
 		try {
 			socket = new Socket(remoteHost, SERVER_PORT);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.err.println(ex.getMessage());
+			return false;
 		}
+		return true;
+	}
+	
+	public boolean isConnected() {
+		return (socket==null?false:socket.isConnected());
+	}
+	
+	public String getConnectedHost() {
+		return (isConnected()? "not connected": "connected");
 	}
 	
 	public void read() {
 		try {
-			boolean ready = false;
-			while(!ready) {
+			
+			if (socket == null) throw new Exception("socket is connected (null).");
+			
+			boolean stillMoreToCome = true;
+			while(stillMoreToCome) {
 			
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				Object obj = in.readObject();
+				
+				System.out.println("Received: "+ obj);
+
 				
 				if (obj instanceof Player) {
 					Player player = (Player)obj;
@@ -101,34 +146,105 @@ public class NetworkGame {
 					opptPlayer.setCards(CardType.EARTH, player.getEarthCards());
 					opptPlayer.setCards(CardType.OTHER, player.getSpecialCards());
 
-				} else if (obj instanceof CardSerializable) {
 					
-					CardSerializable cs = (CardSerializable)obj;
+				} else if (obj instanceof NetworkEvent) {
 					
-					CardImage ci = getCardImageAfterSerialization(cs.getCard());
-					if (!cs.getCard().isSpell()) {
-						Creature sp1 = CreatureFactory.getCreatureClass(cs.getCard().getName(), game, cs.getCard(), ci, true, cs.getSlotIndex());
-						ci.setCreature(sp1);
-						SlotImage slot = game.getTopSlots()[cs.getSlotIndex()];
-						slot.setOccupied(true);
-						game.getTopSlotCards()[cs.getSlotIndex()] = ci;
-						ci.setBounds(slot.getX() + 5, slot.getY() + 26, ci.getFrame().getWidth(), ci.getFrame().getHeight());
-						game.stage.addActor(ci);
-						ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
-					} else {
-						
+					NetworkEvent ne = (NetworkEvent)obj;
+					
+					Event evt = ne.getEvent();
+					int index = ne.getSlot();
+					int val = ne.getAttackAffectedAmount();
+					int health = ne.getHealthAffectedAmount();
+					String id = ne.getId();
+					
+					if (evt == Event.REMOTE_PLAYER_ID_INIT) {
+						game.setOpposingPlayerId(id);
+						sendEvent(new NetworkEvent(Event.REMOTE_PLAYER_ID_INIT,game.player.getPlayerInfo().getId()));
+						continue;
 					}
 
+					PlayerImage pi = game.getPlayerImage(id);
+					SlotImage slot = pi.getSlots()[index];
+					CardImage[] cards = pi.getSlotCards();
+					CardImage existingCardImage = cards[index];
+						
+					switch(evt) {
+					
+					case REMOTE_PLAYER_ID_INIT:
+						break;
+					case ATTACK_AFFECTED:
+						if (val > 0) {
+							existingCardImage.getCard().incrementAttack(val);
+						} else {
+							existingCardImage.getCard().decrementAttack(val);
+						}
+						break;
+					case CARD_ADDED:
+						
+						CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());
+						CardImage ci = orig.clone();
+						
+						Creature sp1 = CreatureFactory.getCreatureClass(ne.getCardName(), game, ci.getCard(), ci, index, pi, game.getOpposingPlayerImage(id));
+						ci.setCreature(sp1);
+						
+						cards[index] = ci;
+						slot.setOccupied(true);
+						ci.setFont(Cards.greenfont);
+						ci.setFrame(Cards.ramka);
+						ci.addListener(game.tl);
+						ci.addListener(game.sdl);
+						ci.setBounds(0, Cards.SCREEN_HEIGHT, ci.getFrame().getWidth(), ci.getFrame().getHeight());
+						game.stage.addActor(ci);
+						ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
+						
+						break;
+					case CARD_HEALTH_AFFECTED:
+						if (health > 0) {
+							existingCardImage.incrementLife(Math.abs(health), game);
+						} else {
+							existingCardImage.decrementLife(Math.abs(health), game);
+							game.moveCardActorOnBattle(existingCardImage, pi);
+						}
+						break;
+					case CARD_REMOVED:
+						
+						BaseFunctions bf = (BaseFunctions)existingCardImage.getCreature();
+						bf.disposeCardImage(pi, index);
+						
+						break;
+					case PLAYER_HEALTH_AFFECTED:
+						if (health > 0) {
+							pi.incrementLife(Math.abs(health), game);
+						} else {
+							pi.decrementLife(Math.abs(health), game, ne.isDamageViaSpell());
+						}
+						break;
+					case SPELL_CAST:
+						break;
+					case PLAYER_STRENGTH_AFFECTED:
+						int str = ne.getStrengthAffected();
+						CardType type = ne.getTypeStrengthAffected();
+						if (str > 0) {
+							pi.getPlayerInfo().incrementStrength(type, Math.abs(str));
+						} else {
+							pi.getPlayerInfo().decrementStrength(type, Math.abs(str));
+						}
+						break;
+					default:
+						break;
+					
+					}
+					
 					
 				} else if (obj instanceof String) {
-					ready = true;
+					stillMoreToCome = false;
 				}
 				
-				// Send a reply
-				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-				out.writeObject("OK");
-				out.flush();
 			}
+			
+			isMyTurn = true;
+			System.out.println("It is now my turn!");
+
 		
 			
 		} catch (Exception e) {
@@ -143,46 +259,49 @@ public class NetworkGame {
 	public void sendPlayer(Player player) {
 
 		try {
+			if (socket == null) throw new Exception("socket is connected (null).");
+
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.writeObject(player);
 			out.flush();
 			
-			//wait for reply
-			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-			String reply = (String) in.readObject();
+			System.out.println("Sent player: "+ player);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public void sendCard(Card card, int slot) {
+	
+	public void sendEvent(NetworkEvent event) {
 
 		try {
-			
-			CardSerializable cs = new CardSerializable(card, slot);
+			if (socket == null) throw new Exception("socket is connected (null).");
+
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject(cs);
+			out.writeObject(event);
 			out.flush();
 			
-			//wait for reply
-			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-			String reply = (String) in.readObject();
+			System.out.println("Sent event: "+ event);
+			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public void sendReadySignal() {
+	public void sendYourTurnSignal() {
 
 		try {
-			
+			if (socket == null) throw new Exception("socket is connected (null).");
+
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject("Ready");
+			out.writeObject("Your turn.");
 			out.flush();
 			
-			//wait for reply
-			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-			String reply = (String) in.readObject();
+			System.out.println("Sent \"your turn\" signal.");
+			isMyTurn = false;
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

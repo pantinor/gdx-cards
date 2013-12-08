@@ -7,20 +7,19 @@ import org.antinori.cards.PlayerImage;
 
 public class SeaSprite extends BaseCreature {
 
-	public SeaSprite(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {
-		super(game, card, cardImage, isComputer, slotIndex);
+	public SeaSprite(Cards game, Card card, CardImage cardImage, int slotIndex, PlayerImage owner, PlayerImage opponent) {
+		super(game, card, cardImage, slotIndex, owner, opponent);
 	}
-	
+
 	public void onSummoned() {
 		super.onSummoned();
 	}
 
 	public void onAttack() {
-		damagePlayer(true, 2);
 		super.onAttack();
 	}
-	
+
 	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		damagePlayer(true, 2);
+		damagePlayer(owner, 2);
 	}
 }

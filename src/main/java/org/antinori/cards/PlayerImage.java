@@ -14,6 +14,9 @@ public class PlayerImage extends Actor {
 	Player playerInfo;
 	BitmapFont font;
 	
+	private SlotImage[] slots = new SlotImage[6];
+	private CardImage[] slotCards = new CardImage[6];
+	
 	float receivedDamageModifier = 0.0f;
 	float receivedSpellDamageModifier = 0.0f;
 
@@ -131,6 +134,22 @@ public class PlayerImage extends Actor {
 
 	public void setDealingSpellDamageModifier(float dealingSpellDamageModifier) {
 		this.dealingSpellDamageModifier = dealingSpellDamageModifier;
+	}
+
+	public SlotImage[] getSlots() {
+		return slots;
+	}
+
+	public void setSlots(SlotImage[] slots) {
+		this.slots = slots;
+	}
+
+	public CardImage[] getSlotCards() {
+		return slotCards;
+	}
+
+	public void setSlotCards(CardImage[] slotCards) {
+		this.slotCards = slotCards;
 	}
 	
 	

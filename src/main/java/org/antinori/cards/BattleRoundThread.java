@@ -24,7 +24,7 @@ public class BattleRoundThread extends Thread {
 	CardImage spellCardImage;
 	CardImage targetedCardImage;
 	
-	NetworkGame ng;
+	NetworkGame ng = Cards.NET_GAME;
 	
 	public BattleRoundThread(Cards game, PlayerImage player, PlayerImage opponent, CardImage spellCardImage) {
 		this.game = game;
@@ -55,10 +55,6 @@ public class BattleRoundThread extends Thread {
 		this.opponent = opponent;
 	}
 	
-	public void setNetworkGame(NetworkGame ng) {
-		this.ng = ng;
-	}
-	
 	public void run() {
 		
 		try {			
@@ -71,27 +67,15 @@ public class BattleRoundThread extends Thread {
 			Player pi = player.getPlayerInfo();
 			Player oi = opponent.getPlayerInfo();
 			
-			CardImage[] bottomCards = game.getBottomSlotCards();
-			CardImage[] topCards = game.getTopSlotCards();
-			
-			
 			if (summonedCardImage != null) {
 				
 				summonedCardImage.getCreature().onSummoned();
 				
-				if (ng != null) {
-					ng.sendCard(summonedCardImage.getCard(), summonedSlot);
-				}
-				
 			} else if (spellCardImage != null) {
 				
-				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, false);	
+				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
 				spell.setTargeted(targetedCardImage);
 				spell.onCast();
-				
-				if (ng != null) {
-					ng.sendCard(spellCardImage.getCard(), -1);
-				}
 				
 			}
 			
@@ -99,7 +83,7 @@ public class BattleRoundThread extends Thread {
 			//TODO add summoning description to log
 			
 			int i = -1;
-			for (CardImage attacker : bottomCards) {
+			for (CardImage attacker : player.getSlotCards()) {
 				i++;
 				if (summonedCardImage != null && i == summonedSlot) continue;
 				if (summonedCardImage != null && attacker != null &&
@@ -109,95 +93,101 @@ public class BattleRoundThread extends Thread {
 				
 				attacker.getCreature().onAttack();
 				
-				if (ng != null) {
-					ng.sendCard(topCards[i].getCard(), i);
-				}
 			}
 			
 			if (ng != null) {
 				ng.sendPlayer(oi);
+				
+				ng.sendYourTurnSignal();
+				
+				//wait until the far end has sent over all cards and player info
+				ng.read();
 			}
 			
 			
 			//start computer turn
-			startOfTurnCheck(true, opponent);
+			startOfTurnCheck(opponent);
 
 		
-			CardImage opptSummons = null;
-
-			SlotImage si = getOpponentSlot();
-
-			if (si != null) {
+			if (ng == null) {
+				//do single duel computer turn
+				CardImage opptSummons = null;
+	
+				SlotImage si = getOpponentSlot();
+	
+				if (si != null) {
+					
+					CardImage opptPick = null;
+					do {
+						opptPick = oi.pickBestEnabledCard();
+					} while (opptPick == null);
+					
+					if (!opptPick.getCard().isSpell()) {
 				
-				CardImage opptPick = null;
-				do {
-					opptPick = oi.pickBestEnabledCard();
-				} while (opptPick == null);
-				
-				if (!opptPick.getCard().isSpell()) {
-			
-					//summon the opponents creature card to an open slot
-					opptSummons = opptPick.clone();
-					
-					game.stage.addActor(opptSummons);
-					opptSummons.addListener(game.sdl);
-					opptSummons.addListener(game.tl);
-
-					
-					CardImage[] imgs = game.getTopSlotCards();
-					imgs[si.getIndex()] = opptSummons;
-					
-					SlotImage[] slots = game.getTopSlots();
-					slots[si.getIndex()].setOccupied(true);
-					
-					Creature summonedCreature = CreatureFactory.getCreatureClass(opptSummons.getCard().getName(), game, opptSummons.getCard(), opptSummons, true, si.getIndex());
-					opptSummons.setCreature(summonedCreature);
-					
-					opptSummons.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
-						public boolean act(float delta) {
-							opptSummoningFinished.set(true);
-							return true;
+						//summon the opponents creature card to an open slot
+						opptSummons = opptPick.clone();
+						
+						game.stage.addActor(opptSummons);
+						opptSummons.addListener(game.sdl);
+						opptSummons.addListener(game.tl);
+	
+						
+						CardImage[] imgs = opponent.getSlotCards();
+						imgs[si.getIndex()] = opptSummons;
+						
+						SlotImage[] slots = opponent.getSlots();
+						slots[si.getIndex()].setOccupied(true);
+						
+						Creature summonedCreature = CreatureFactory.getCreatureClass(opptSummons.getCard().getName(), game, opptSummons.getCard(), opptSummons, si.getIndex(), opponent, player);
+						opptSummons.setCreature(summonedCreature);
+						
+						opptSummons.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
+							public boolean act(float delta) {
+								opptSummoningFinished.set(true);
+								return true;
+							}
+						}));
+						
+						//wait for summoning action to end
+						while(!opptSummoningFinished.get()) {
+							Thread.sleep(50);
 						}
-					}));
-					
-					//wait for summoning action to end
-					while(!opptSummoningFinished.get()) {
-						Thread.sleep(50);
+						
+						summonedCreature.onSummoned();
+						
+						//TODO add summoning description to log
+						
+					} else {
+						
+						//cast a spell towards the player			
+						Spell opptSpell = SpellFactory.getSpellClass(opptPick.getCard().getName(), game, opptPick.getCard(), opptPick, opponent, player);					
+						opptSpell.onCast();
+	
 					}
-					
-					summonedCreature.onSummoned();
-					
-					//TODO add summoning description to log
-					
+						
 				} else {
 					
+					System.out.println("No open top slots available for opponent to summon creature, casting a spell instead.");
+					//TODO
 					//cast a spell towards the player			
-					Spell opptSpell = SpellFactory.getSpellClass(opptPick.getCard().getName(), game, opptPick.getCard(), opptPick, true);					
-					opptSpell.onCast();
-
-				}
+					//Spell opptSpell = SpellFactory.getSpellClass(opptPick.getCard().getName(), game, opptPick.getCard(), opptPick, true);					
+					//opptSpell.onCast();
 					
-			} else {
-				
-				System.out.println("No open top slots available for opponent to summon creature, casting a spell instead.");
-				//TODO
-				//cast a spell towards the player			
-				//Spell opptSpell = SpellFactory.getSpellClass(opptPick.getCard().getName(), game, opptPick.getCard(), opptPick, true);					
-				//opptSpell.onCast();
-				
-			}
-						
-			//go through all other opponent slots and do battle
-			int j = -1;
-			for (CardImage attacker : topCards) {
-				j++;
-				if (opptSummons != null  && j == si.getIndex()) continue;
-				if (opptSummons != null  && attacker != null &&
-						opptSummons.getCard().getName().equalsIgnoreCase("giantspider") && 
-						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
-				if (attacker == null) continue;
-				
-				attacker.getCreature().onAttack();
+				}
+							
+				//go through all other opponent slots and do battle
+				int j = -1;
+				for (CardImage attacker : opponent.getSlotCards()) {
+					j++;
+					if (opptSummons != null  && j == si.getIndex()) continue;
+					if (opptSummons != null  && attacker != null &&
+							opptSummons.getCard().getName().equalsIgnoreCase("giantspider") && 
+							attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
+					if (attacker == null) continue;
+					
+					attacker.getCreature().onAttack();
+				}
+			
 			}
 						
 			
@@ -212,7 +202,7 @@ public class BattleRoundThread extends Thread {
 			}
 			
 			//start of turn for player
-			startOfTurnCheck(false, player);
+			startOfTurnCheck(player);
 			
 		} catch (GameOverException e) {
 			game.handleGameOver();
@@ -227,19 +217,19 @@ public class BattleRoundThread extends Thread {
 		
 	}
 	
-	private void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		CardImage[] cards = isComputer?game.getTopSlotCards():game.getBottomSlotCards();
+	private void startOfTurnCheck(PlayerImage player) {
+		CardImage[] cards = player.getSlotCards();
 		for (int index = 0;index<6;index++) {
 			CardImage ci = cards[index];
 			if (ci == null) continue;
-			ci.getCreature().startOfTurnCheck(isComputer, player);
+			ci.getCreature().startOfTurnCheck(player);
 		}
 	}
 		
 	public SlotImage getOpponentSlot() {
 		
 		SlotImage si = null;
-		SlotImage[] slots = game.getTopSlots();
+		SlotImage[] slots = opponent.getSlots();
 		
 		boolean hasOpenSlot = false;
 		for (SlotImage slot : slots) {

@@ -3,14 +3,15 @@ package org.antinori.cards;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.color;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.antinori.cards.network.NetworkGame;
-import org.antinori.cards.network.SelectHostsDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -41,6 +42,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class Cards extends SimpleGame {
 	
+	
+	public static NetworkGame NET_GAME;
+
 	public static TextureAtlas smallCardAtlas;
 	public static TextureAtlas smallTGACardAtlas;
 	static TextureAtlas largeCardAtlas;
@@ -63,8 +67,8 @@ public class Cards extends SimpleGame {
 	public static Label.LabelStyle greenStyle;
 
 	
-	static int SCREEN_WIDTH = 1024;
-	static int SCREEN_HEIGHT = 768;
+	public static int SCREEN_WIDTH = 1024;
+	public static int SCREEN_HEIGHT = 768;
 		
 	static Texture background;
 	static Sprite sprBg;
@@ -77,7 +81,6 @@ public class Cards extends SimpleGame {
 	
 	ImageButton skipTurnButton;
 	Button showOpptCardsButton;
-	Button selectHostsButton;
 
 	
 	Label[] topStrengthLabels = new Label[5];
@@ -98,11 +101,11 @@ public class Cards extends SimpleGame {
 	public ShowDescriptionListener sdl;
 	public SlotListener sl;
 	
-	private SlotImage[] topSlots = new SlotImage[6];
-	private SlotImage[] bottomSlots = new SlotImage[6];
-
-	private CardImage[] topSlotCards = new CardImage[6];
-	private CardImage[] bottomSlotCards = new CardImage[6];
+//	private SlotImage[] topSlots = new SlotImage[6];
+//	private SlotImage[] bottomSlots = new SlotImage[6];
+//
+//	private CardImage[] topSlotCards = new CardImage[6];
+//	private CardImage[] bottomSlotCards = new CardImage[6];
 
 	SingleDuelChooser chooser;
 	
@@ -111,9 +114,7 @@ public class Cards extends SimpleGame {
 	
 	private boolean gameOver = false;
 	private boolean opptCardsShown = false;
-	private boolean selectHostsShown = false;
 	
-	public NetworkGame ng;
 
 	
 	public static void main(String[] args) {
@@ -134,10 +135,10 @@ public class Cards extends SimpleGame {
 		
 		batch = new SpriteBatch();
 		
-		bgm = Gdx.audio.newMusic(Gdx.files.classpath("audio/combat3.ogg"));
-		bgm.setLooping(true);
-		bgm.setVolume(0.2f);
-		bgm.play();
+//		bgm = Gdx.audio.newMusic(Gdx.files.classpath("audio/combat3.ogg"));
+//		bgm.setLooping(true);
+//		bgm.setVolume(0.2f);
+//		bgm.play();
 		
 		attackSound = Gdx.audio.newMusic(Gdx.files.classpath("audio/attack.ogg"));
 		attackSound.setVolume(0.3f);
@@ -163,8 +164,8 @@ public class Cards extends SimpleGame {
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprBg = new Sprite(background, 0, 0, background.getWidth(), background.getHeight());
 		
-		player = new PlayerImage(faceCardAtlas.createSprite("face60"), portraitramka, greenfont, null, 80, ydown(300));
-		opponent = new PlayerImage(faceCardAtlas.createSprite("face1"), portraitramka, greenfont, null, 80, ydown(125));
+		player = new PlayerImage(null, portraitramka, greenfont, new Player(), 80, ydown(300));
+		opponent = new PlayerImage(null, portraitramka, greenfont, new Player(), 80, ydown(125));
 		
 		font = new BitmapFont(Gdx.files.classpath("default.fnt"), false);
 		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), false);
@@ -190,7 +191,6 @@ public class Cards extends SimpleGame {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (gameOver) return true;
 				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent);
-				t.setNetworkGame(ng);
 				t.start();
 				return true;
 			}
@@ -226,31 +226,7 @@ public class Cards extends SimpleGame {
 		stage.addActor(showOpptCardsButton);
 		
 		
-		
-		selectHostsButton = new Button(skin);
-		selectHostsButton.addListener(new InputListener() {
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (selectHostsShown) return true;
-				selectHostsShown = true;
-
-				final SelectHostsDialog window = new SelectHostsDialog("Select Remote Player on Network", Cards.this, skin);
-				
-				TextButton close = new TextButton("X", skin);
-				close.addListener(new ChangeListener() {
-					public void changed (ChangeEvent event, Actor actor) {
-						window.setAlive(false);
-						window.remove();
-						selectHostsShown = false;
-					}
-				});
-				window.getButtonTable().add(close).height(window.getPadTop());
-				window.setPosition(200, 100);
-				stage.addActor(window);
-				return true;
-			}
-		});
-		selectHostsButton.setPosition(100, ydown(150));
-		stage.addActor(selectHostsButton);
+	
 		
 		
 		int x = 420;
@@ -284,8 +260,8 @@ public class Cards extends SimpleGame {
 		tl = new TargetedCardListener();
 		sdl = new ShowDescriptionListener();
 		
-		addSlotImages(330,ydown(170), false);
-		addSlotImages(330,ydown(290), true);
+		addSlotImages(opponent, 330, ydown(170), false);
+		addSlotImages(player, 330, ydown(290), true);
 		
 		chooser = new SingleDuelChooser();
 		chooser.init(this);  
@@ -306,7 +282,7 @@ public class Cards extends SimpleGame {
 				chooser.draw(delta);
 			} else {
 				
-				Thread t = new Thread(new InitCardsThread());
+				Thread t = new Thread(new InitializeGameThread());
 				t.start();
 				
 				Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
@@ -316,6 +292,9 @@ public class Cards extends SimpleGame {
 		
 			batch.begin();
 			sprBg.draw(batch);
+			if (NET_GAME != null) {
+				font.draw(batch, (NET_GAME.isMyTurn()?"Your Turn":"Their Turn") + " [" + NET_GAME.getConnectedHost() + "]", 70, ydown(320));
+			}
 			batch.end();
 			
 			Player pInfo = player.getPlayerInfo();
@@ -347,33 +326,43 @@ public class Cards extends SimpleGame {
 
 	}
 	
-	class InitCardsThread implements Runnable {
+	class InitializeGameThread implements Runnable {
 		public void run() {
 			try {
-				initCards();
+				initialize();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public synchronized void initCards() throws Exception {
+	public void initialize() throws Exception {
 		
-		if (chooser == null) return; 
+		synchronized(this) {
 		
-		Player plInfo = chooser.pi.getPlayerInfo();
-		Player oplInfo = chooser.oi.getPlayerInfo();
-
-		player.setImg(chooser.pi.getImg());
-		player.setPlayerInfo(plInfo);
-
-		opponent.setImg(chooser.oi.getImg());
-		opponent.setPlayerInfo(oplInfo);
+			if (chooser == null) return; 
+			
+			Player plInfo = chooser.pi.getPlayerInfo();
+			Player oplInfo = chooser.oi.getPlayerInfo();
+	
+			player.setImg(chooser.pi.getImg());
+			player.setPlayerInfo(plInfo);
+	
+			opponent.setImg(chooser.oi.getImg());
+			opponent.setPlayerInfo(oplInfo);
+			
+			initializePlayerCards(plInfo, true);
+			initializePlayerCards(oplInfo, false);
+			
+			chooser = null;
+		}
 		
-		initializePlayerCards(plInfo, true);
-		initializePlayerCards(oplInfo, false);
+		//if we are client then the server side takes the first turn
+		if (NET_GAME != null && !NET_GAME.isServer()) {
+			//block here until far side has taken turn
+			NET_GAME.read();
+		}
 		
-		chooser = null;
 	}
 	
 	public void initializePlayerCards(Player player, boolean visible) throws Exception {
@@ -438,10 +427,11 @@ public class Cards extends SimpleGame {
 		
 	}
 	
-	public void addSlotImages(int x, int y, boolean bottom) {
+	public void addSlotImages(PlayerImage pi, int x, int y, boolean bottom) {
 		float x1 = x;
 		int spacing = 5;
 		for (int i=0;i<6;i++) {
+			
 			SlotImage s = new SlotImage(slotTexture, i, bottom);
 			s.setBounds(x1, y, s.getWidth(), s.getHeight());
 			x1 += (spacing + s.getWidth());
@@ -449,11 +439,7 @@ public class Cards extends SimpleGame {
 
 			stage.addActor(s);
 			
-			if (bottom) {
-				bottomSlots[i] = s;
-			} else {
-				topSlots[i] = s;
-			}
+			pi.getSlots()[i] = s;
 			
 		}
 	}
@@ -471,11 +457,12 @@ public class Cards extends SimpleGame {
 				
 				clearHighlights();
 				
-				if (!activeTurn && selectedCard.getCard().isSpell() && selectedCard.isEnabled()) {
+				if (canStartMyTurn() && selectedCard.getCard().isSpell() && selectedCard.isEnabled()) {
 					
 					if (selectedCard.getCard().isTargetable()) {
 						
-						CardImage[] cards = selectedCard.getCard().isDamagingSpell()?topSlotCards:bottomSlotCards;
+						CardImage[] cards = selectedCard.getCard().isDamagingSpell()?opponent.getSlotCards():player.getSlotCards();
+						
 						//highlight targets
 						for (CardImage ci : cards) {
 							if (ci != null) {
@@ -486,7 +473,6 @@ public class Cards extends SimpleGame {
 					} else {
 						//cast the spell
 						BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard);
-						t.setNetworkGame(ng);
 						t.start();
 					}
 				}
@@ -509,7 +495,6 @@ public class Cards extends SimpleGame {
 				
 				//cast the spell to target
 				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard);
-				t.setNetworkGame(ng);
 				t.start();
 			}
 			return true;
@@ -552,14 +537,14 @@ public class Cards extends SimpleGame {
 	}
 	
 	public void clearHighlights() {
-		for (CardImage ci : topSlotCards) {
+		for (CardImage ci : player.getSlotCards()) {
 			if (ci != null) {
 				ci.setHighlighted(false);
 				ci.clearActions();
 				ci.setColor(Color.WHITE);
 			}
 		}
-		for (CardImage ci : bottomSlotCards) {
+		for (CardImage ci : opponent.getSlotCards()) {
 			if (ci != null) {
 				ci.setHighlighted(false);
 				ci.clearActions();
@@ -579,7 +564,7 @@ public class Cards extends SimpleGame {
 			if (actor instanceof SlotImage) {
 				final SlotImage si = (SlotImage) actor;
 
-				if (selectedCard != null && selectedCard.isEnabled() && !activeTurn && si.isBottomSlots()) {
+				if (canStartMyTurn() && selectedCard != null && selectedCard.isEnabled() && si.isBottomSlots()) {
 					
 					if (!selectedCard.getCard().isSpell()) {
 						final CardImage clone = selectedCard.clone();
@@ -588,19 +573,18 @@ public class Cards extends SimpleGame {
 						clone.addListener(tl);
 						clone.addListener(sdl);
 
-						CardImage[] imgs = getBottomSlotCards();
+						CardImage[] imgs = player.getSlotCards();
 						imgs[si.getIndex()] = clone;
 						
-						SlotImage[] slots = getBottomSlots();
+						SlotImage[] slots = player.getSlots();
 						slots[si.getIndex()].setOccupied(true);
 						
-						Creature summonedCreature = CreatureFactory.getCreatureClass(clone.getCard().getName(), Cards.this, clone.getCard(), clone, false, si.getIndex());
+						Creature summonedCreature = CreatureFactory.getCreatureClass(clone.getCard().getName(), Cards.this, clone.getCard(), clone, si.getIndex(), player, opponent);
 						clone.setCreature(summonedCreature);
 						
 						clone.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
 							public boolean act(float delta) {
 								BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, clone, si.getIndex());
-								t.setNetworkGame(ng);
 								t.start();
 								return true;
 							}
@@ -630,6 +614,102 @@ public class Cards extends SimpleGame {
 		label.addAction(sequence(moveTo(dx, dy, 3),fadeOut(1),removeActor(label)));
 	}
 	
+	public void moveCardActorOnBattle(CardImage ci, PlayerImage pi) {
+
+		attackSound.play();
+		
+		final AtomicBoolean doneBattle = new AtomicBoolean(false);
+		
+		boolean isBottom = pi.getSlots()[0].isBottomSlots();
+		
+		ci.addAction(sequence(moveBy(0, isBottom?20:-20, 0.5f), moveBy(0, isBottom?-20:20, 0.5f), new Action() {
+			public boolean act(float delta) {
+				doneBattle.set(true);
+				return true;
+			}
+		}));
+		
+		//wait for battle action to end
+		while(!doneBattle.get()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+		}
+				
+	}
+	
+	public void moveCardActorOnMagic(CardImage ci, PlayerImage pi) {
+
+		magicSound.play();
+		
+		final AtomicBoolean done = new AtomicBoolean(false);
+		
+		boolean isBottom = pi.getSlots()[0].isBottomSlots();
+    
+		pi.addAction(sequence(moveBy(0, isBottom?-20:20, 0.5f), moveBy(0, isBottom?20:-20, 0.5f), new Action() {
+			public boolean act(float delta) {
+				done.set(true);
+				return true;
+			}
+		}));
+		
+		//wait for spell action to end
+		while(!done.get()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+		}
+				
+	}
+	
+	
+
+
+	public CardImage getSelectedCard() {
+		return selectedCard;
+	}
+
+	
+	public void handleGameOver() {
+		gameOver = true;
+	}
+	
+	public PlayerImage getPlayerImage(String id) throws Exception {
+		
+		PlayerImage ret = null;
+		if (player.getPlayerInfo().getId().equalsIgnoreCase(id)) 
+			ret = player;
+		
+		if (opponent.getPlayerInfo().getId().equalsIgnoreCase(id)) 
+			ret = opponent;
+		
+		if (ret == null)
+			throw new Exception("Could not find player with id: " + id);
+		
+		return ret;
+	}
+	
+	public void setOpposingPlayerId(String id) {
+		opponent.getPlayerInfo().setId(id);
+	}
+	
+	public PlayerImage getOpposingPlayerImage(String id) throws Exception {
+		
+		PlayerImage ret = null;
+		if (player.getPlayerInfo().getId().equalsIgnoreCase(id)) 
+			ret = opponent;
+		
+		if (opponent.getPlayerInfo().getId().equalsIgnoreCase(id)) 
+			ret = player;
+		
+		if (ret == null)
+			throw new Exception("Could not find player with id: " + id);
+		
+		return ret;
+	}
+	
 	
 	public void startTurn() {
 		activeTurn = true;
@@ -639,29 +719,15 @@ public class Cards extends SimpleGame {
 		this.activeTurn = false;
 		this.selectedCard = null;
 	}
-
-	public CardImage getSelectedCard() {
-		return selectedCard;
-	}
-
-	public SlotImage[] getTopSlots() {
-		return topSlots;
-	}
-
-	public SlotImage[] getBottomSlots() {
-		return bottomSlots;
-	}
-
-	public CardImage[] getTopSlotCards() {
-		return topSlotCards;
-	}
-
-	public CardImage[] getBottomSlotCards() {
-		return bottomSlotCards;
-	}
 	
-	public void handleGameOver() {
-		gameOver = true;
+	public boolean canStartMyTurn() {
+		
+		if (NET_GAME != null && NET_GAME.isConnected()) {
+			return NET_GAME.isMyTurn();
+		}
+			
+		return !activeTurn;
+		
 	}
 
 

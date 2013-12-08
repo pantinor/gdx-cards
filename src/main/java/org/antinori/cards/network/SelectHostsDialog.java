@@ -9,6 +9,7 @@ import org.antinori.cards.Cards;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -26,7 +27,7 @@ public class SelectHostsDialog extends Window {
 	private List entries;
 	private boolean alive = true;
 
-	public SelectHostsDialog(String title, Cards game, Skin skin) {
+	public SelectHostsDialog(String title, Cards game, final Stage stage, Skin skin) {
 		
 		super(title, skin);
 		this.game = game;
@@ -72,7 +73,7 @@ public class SelectHostsDialog extends Window {
 					}
 				}.text("Connect to "+selectedHost+"?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
 				
-				dialog.show(SelectHostsDialog.this.game.stage);
+				dialog.show(stage);
 			}
 		});
 
@@ -103,7 +104,12 @@ public class SelectHostsDialog extends Window {
 	}
 	
 	public void doConnection(String host) {
-		System.out.println("Chosen: " + host);
+		Cards.NET_GAME = new NetworkGame(this.game, false);
+		boolean connected = Cards.NET_GAME.connectToServer(host);
+		if (connected) {
+			setAlive(false);
+			this.remove();
+		}
 	}
 
 	class HostsListenerThread implements Runnable {
@@ -129,7 +135,9 @@ public class SelectHostsDialog extends Window {
 
 					System.out.println("Found host: " + host);
 
-					foundHosts.add(host);
+					if (!foundHosts.contains(host)) 
+						foundHosts.add(host);
+					
 					Object[] items = foundHosts.toArray();
 					entries.setItems(items);
 					SelectHostsDialog.this.pack();

@@ -3,18 +3,25 @@ package org.antinori.cards;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.antinori.cards.network.NetworkGame;
+import org.antinori.cards.network.SelectHostsDialog;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class SingleDuelChooser {
 	
@@ -41,6 +48,8 @@ public class SingleDuelChooser {
 
 	SelectBox classesPlayer;
 	SelectBox classesOpponent;
+	
+	private boolean selectHostsShown = false;
 
 	public void init (Cards game) {
 		this.game = game;
@@ -57,11 +66,11 @@ public class SingleDuelChooser {
 
 		Sprite spP = Cards.faceCardAtlas.createSprite("face10");
 		spP.flip(false, true);
-		pi = new PlayerImage(spP, Cards.portraitramka, new Player());
+		pi = new PlayerImage(spP, Cards.portraitramka, game.player.getPlayerInfo());
 		
 		Sprite spO = Cards.faceCardAtlas.createSprite("face1");
 		spO.flip(false, true);
-		oi = new PlayerImage(spO, Cards.portraitramka, new Player());
+		oi = new PlayerImage(spO, Cards.portraitramka, game.opponent.getPlayerInfo());
 		
 		TextButton play = new TextButton("Play", game.skin);
 		play.addListener(new InputListener() {
@@ -79,6 +88,46 @@ public class SingleDuelChooser {
 				done.set(true);
 				
 				return true;
+			}
+		});
+		
+		
+		final Cards temp = game;
+		TextButton selectHostsButton = new TextButton("Network", game.skin);
+		selectHostsButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (selectHostsShown || Cards.NET_GAME != null) return true;
+				selectHostsShown = true;
+
+				final SelectHostsDialog window = new SelectHostsDialog("Select Remote Player on Network", temp, SingleDuelChooser.this.stage, temp.skin);
+				
+				TextButton close = new TextButton("X", temp.skin);
+				close.addListener(new ChangeListener() {
+					public void changed (ChangeEvent event, Actor actor) {
+						window.setAlive(false);
+						window.remove();
+						selectHostsShown = false;
+					}
+				});
+				window.getButtonTable().add(close).height(window.getPadTop());
+				window.setPosition(200, 100);
+				stage.addActor(window);
+				return true;
+			}
+		});
+		
+		TextButton startNetworkServer = new TextButton("Server", game.skin);
+		startNetworkServer.addListener(new ChangeListener() {
+			public void changed (ChangeEvent event, Actor actor) {
+				if (Cards.NET_GAME != null) return;
+				Dialog dialog = new Dialog("Start Server", temp.skin, "dialog") {
+					protected void result (Object object) {
+						if (object.toString().equalsIgnoreCase("true"))
+							Cards.NET_GAME = new NetworkGame(SingleDuelChooser.this.game, true);
+					}
+				}.text("Start a network server?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
+				
+				dialog.show(SingleDuelChooser.this.stage);
 			}
 		});
 		
@@ -102,7 +151,9 @@ public class SingleDuelChooser {
 		Label lbl = new Label("Single Duel", game.skin);
 		lbl.setPosition(465, 430);
 		
-		play.setBounds(430, 133, 150, 25);
+		play.setBounds(410, 133, 60, 25);
+		selectHostsButton.setBounds(475, 133, 60, 25);
+		startNetworkServer.setBounds(540, 133, 60, 25);
 
 				
 		stage.addActor(cbgimg);
@@ -128,8 +179,10 @@ public class SingleDuelChooser {
 		classesOpponent.setWidth(123);
 
 		stage.addActor(play);
+		stage.addActor(selectHostsButton);
+		stage.addActor(startNetworkServer);
 
-				
+
 	}
 	
 	private Button createButton(int x, int y, PlayerImage img, AtomicInteger index, boolean left) {

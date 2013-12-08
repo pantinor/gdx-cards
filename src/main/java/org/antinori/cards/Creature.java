@@ -7,7 +7,7 @@ public interface Creature {
 	public void onAttack() ;
 	public void onAttacked() ;
 	public void onDying();
-	public void startOfTurnCheck(boolean isComputer, PlayerImage player);
-
+	
+	public void startOfTurnCheck(PlayerImage player);
 
 }

@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Date;
+import java.util.Random;
 
 public class BroadcastThread extends Thread {
 
@@ -32,8 +33,12 @@ public class BroadcastThread extends Thread {
 
 					DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
 					socket.send(packet);
+					
+					System.out.println("sent packet");
 
-					sleep((long) Math.random() * 5000);
+					int factor = new Random().nextInt(10);
+					
+					sleep(factor * 1000);
 
 				} catch (Exception e) {
 					e.printStackTrace();

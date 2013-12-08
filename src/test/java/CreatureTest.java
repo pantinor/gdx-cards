@@ -18,25 +18,25 @@ public class CreatureTest {
 		Set<Card> spells = cs.getSpellCards();
 		
 		String template1 = 
-				"package org.antinori.cards.characters;\n\n"+
+				"package org.antinori.cards.characters;import org.antinori.cards.PlayerImage;\n\n"+
 				"import org.antinori.cards.Card;\n"+
 				"import org.antinori.cards.CardImage;\n"+
 				"import org.antinori.cards.Cards;\n\n"+
 				"public class %s extends BaseCreature {\n"+
-				"public %s(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {\n"+
-				"super(game, card, cardImage, isComputer, slotIndex);\n}\n"+
+				"public %s(Cards game, Card card, CardImage cardImage, int slotIndex, PlayerImage owner, PlayerImage opponent) {\n"+
+				"super(game, card, cardImage, slotIndex, owner, opponent);\n}\n"+
 				"public void onSummoned() {\nsuper.onSummoned();\n}\n"+
 				"public void onAttack() {\nsuper.onAttack();\n}\n}\n";
 
 
 		String template2 = 
-				"package org.antinori.cards.spells;\n\n"+
+				"package org.antinori.cards.spells;import org.antinori.cards.PlayerImage;\n\n"+
 				"import org.antinori.cards.Card;\n"+
 				"import org.antinori.cards.CardImage;\n"+
 				"import org.antinori.cards.Cards;\n\n"+
 				"public class %s extends BaseSpell {\n"+
-				"public %s(Cards game, Card card, CardImage cardImage, boolean isComputer) {\n"+
-				"super(game, card, cardImage, isComputer);\n}\n"+
+				"public %s(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {\n"+
+				"super(game, card, cardImage, owner, opponent);\n}\n"+
 				"public void onCast() {\nsuper.onCast();\n}\n}\n";
 		
 		for (Card c : creatures) {

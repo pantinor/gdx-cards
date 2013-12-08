@@ -7,10 +7,10 @@ import org.antinori.cards.PlayerImage;
 
 public class GoblinBerserker extends BaseCreature {
 
-	public GoblinBerserker(Cards game, Card card, CardImage cardImage, boolean isComputer, int slotIndex) {
-		super(game, card, cardImage, isComputer, slotIndex);
+	public GoblinBerserker(Cards game, Card card, CardImage cardImage, int slotIndex, PlayerImage owner, PlayerImage opponent) {
+		super(game, card, cardImage, slotIndex, owner, opponent);
 	}
-	
+
 	public void onSummoned() {
 		super.onSummoned();
 	}
@@ -18,8 +18,8 @@ public class GoblinBerserker extends BaseCreature {
 	public void onAttack() {
 		super.onAttack();
 	}
-	
+
 	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		damageNeighbors(true, 2);
+		damageNeighbors(2);
 	}
 }
