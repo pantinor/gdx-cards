@@ -2,6 +2,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
@@ -14,11 +16,32 @@ public class SerializationTest {
 	
 	public static void main(String[] args) {
 		
+//		for (String s : Specializations.titles()) {
+//			Specializations sp = Specializations.fromTitleString(s);
+//			System.out.println(sp);
+//		}
+		
 		try {
 		
 			Player player1 = new Player();
 			player1.setPlayerClass(Specializations.Beastmaster);
 			player1.setImgName("test");
+			
+			CardImage card1 = new CardImage();
+			card1.setEnabled(true);
+			card1.setHighlighted(true);
+			Card c = new Card(CardType.AIR);
+			c.setName("test");
+			card1.setCard(c);
+			
+			List<CardImage> cards = new ArrayList<CardImage>();
+			cards.add(card1);
+			player1.setCards(CardType.FIRE, cards);
+			player1.setCards(CardType.AIR, cards);
+			player1.setCards(CardType.WATER, cards);
+			player1.setCards(CardType.EARTH, cards);
+			player1.setCards(CardType.OTHER, cards);
+
 			
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream out = new ObjectOutputStream(baos);

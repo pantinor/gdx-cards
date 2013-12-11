@@ -11,13 +11,13 @@ public enum Specializations {
 	Demonologist ("Demonologist", CardType.DEMONIC), 
 	Sorcerer ("Sorcerer", CardType.SORCERY), 
 	Beastmaster ("Beastmaster", CardType.BEAST), 
-	Goblin_Chieftan ("Goblin Chieftan", CardType.GOBLINS), 
+	GoblinChieftan ("Goblin Chieftan", CardType.GOBLINS), 
 	Mad_Hermit ("Mad Hermit", CardType.FOREST), 
 	Chronomancer ("Chronomancer", CardType.TIME), 
-	Warror_Priest ("Warror Priest", CardType.SPIRIT),
-	Vampire_Lord ("Vampire Lord", CardType.VAMPIRIC),
+	WarriorPriest ("Warrior Priest", CardType.SPIRIT),
+	VampireLord ("Vampire Lord", CardType.VAMPIRIC),
 	Cultist	("Cultist", CardType.CULT),
-	Golem_Master ("Golem Master", CardType.GOLEM),
+	GolemMaster ("Golem Master", CardType.GOLEM),
 	Random ("Random", CardType.HOLY);
 
 	String title;
@@ -28,7 +28,7 @@ public enum Specializations {
 		this.type = type;
 	}
 	
-	public static String[] names() {
+	public static String[] titles() {
 		Specializations[] states = values();
 		String[] names = new String[states.length];
 
@@ -39,7 +39,7 @@ public enum Specializations {
 		return names;
 	}
 	
-	public static Specializations fromString(String title) {
+	public static Specializations fromTitleString(String title) {
 		if (title != null) {
 			for (Specializations b : Specializations.values()) {
 				if (title.equalsIgnoreCase(b.getTitle())) {

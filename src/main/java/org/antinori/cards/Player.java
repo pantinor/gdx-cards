@@ -246,8 +246,8 @@ public class Player implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("Player [imgName=%s, playerClass=%s, life=%s, strengthFire=%s, strengthAir=%s, strengthEarth=%s, strengthWater=%s, strengthSpecial=%s, fireCards=%s, airCards=%s, waterCards=%s, earthCards=%s, specialCards=%s]", imgName,
-				playerClass, life, strengthFire, strengthAir, strengthEarth, strengthWater, strengthSpecial, fireCards, airCards, waterCards, earthCards, specialCards);
+		return String.format("Player [id=%s imgName=%s, playerClass=%s, life=%s, strengthFire=%s, strengthAir=%s, strengthEarth=%s, strengthWater=%s, strengthSpecial=%s, fireCards=%s, airCards=%s, waterCards=%s, earthCards=%s, specialCards=%s]", 
+				id, imgName, playerClass, life, strengthFire, strengthAir, strengthEarth, strengthWater, strengthSpecial, fireCards, airCards, waterCards, earthCards, specialCards);
 	}
 
 	public String getId() {

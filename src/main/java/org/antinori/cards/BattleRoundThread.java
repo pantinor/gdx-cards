@@ -5,6 +5,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.antinori.cards.network.Event;
+import org.antinori.cards.network.NetworkEvent;
 import org.antinori.cards.network.NetworkGame;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -96,7 +98,9 @@ public class BattleRoundThread extends Thread {
 			}
 			
 			if (ng != null) {
-				ng.sendPlayer(oi);
+				
+				NetworkEvent info = new NetworkEvent(Event.REMOTE_PLAYER_CARDS_INIT, oi);
+				ng.sendEvent(info);
 				
 				ng.sendYourTurnSignal();
 				

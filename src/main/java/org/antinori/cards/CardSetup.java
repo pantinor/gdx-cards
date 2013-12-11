@@ -246,13 +246,13 @@ public class CardSetup {
 		
 		List<Card> result = new ArrayList<Card>();
 		//debugging
-		if (type == CardType.AIR) {
-			result.add(getCardByName("FaerieApprentice"));
-			result.add(getCardByName("FaerieSage"));
-			result.add(getCardByName("CalltoThunder"));
-			result.add(getCardByName("Titan"));
-			return result;
-		}
+//		if (type == CardType.AIR) {
+//			result.add(getCardByName("FaerieApprentice"));
+//			result.add(getCardByName("FaerieSage"));
+//			result.add(getCardByName("CalltoThunder"));
+//			result.add(getCardByName("Titan"));
+//			return result;
+//		}
 		
 		
 		

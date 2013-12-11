@@ -3,6 +3,8 @@ package org.antinori.cards;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.antinori.cards.network.Event;
+import org.antinori.cards.network.NetworkEvent;
 import org.antinori.cards.network.NetworkGame;
 import org.antinori.cards.network.SelectHostsDialog;
 
@@ -76,11 +78,8 @@ public class SingleDuelChooser {
 		play.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				
-				pi.getPlayerInfo().setPlayerClass(Specializations.fromString(classesPlayer.getSelection()));
-				oi.getPlayerInfo().setPlayerClass(Specializations.fromString(classesOpponent.getSelection()));
-				
-				//pi.getImg().flip(false, true);
-				//oi.getImg().flip(false, true);
+				pi.getPlayerInfo().setPlayerClass(Specializations.fromTitleString(classesPlayer.getSelection()));
+				oi.getPlayerInfo().setPlayerClass(Specializations.fromTitleString(classesOpponent.getSelection()));
 				
 				stage.clear();
 				stage.dispose();
@@ -132,8 +131,8 @@ public class SingleDuelChooser {
 		});
 		
 		
-		classesPlayer = new SelectBox(Specializations.names(), game.skin);
-		classesOpponent = new SelectBox(Specializations.names(), game.skin);
+		classesPlayer = new SelectBox(Specializations.titles(), game.skin);
+		classesOpponent = new SelectBox(Specializations.titles(), game.skin);
 
 		int x = 300;
 		int y = 253;

@@ -3,6 +3,7 @@ package org.antinori.cards.network;
 import java.io.Serializable;
 
 import org.antinori.cards.CardType;
+import org.antinori.cards.Player;
 
 public class NetworkEvent implements Serializable {
 	
@@ -10,14 +11,19 @@ public class NetworkEvent implements Serializable {
 		
 	private Event event;
 	private int slot;
+	
 	private int healthAffectedAmount;
 	private int attackAffectedAmount;
 	private String spellName;
 	private String cardName;
-	private String id;
 	private boolean damageViaSpell;
+
+	private String id;
+	private String playerIcon;
+	private String playerClass;
 	private CardType typeStrengthAffected;
 	private int strengthAffected;
+	private Player player;
 	
 	public NetworkEvent(Event event, String id) {
 		this.event = event;
@@ -45,6 +51,14 @@ public class NetworkEvent implements Serializable {
 		this.id = id;
 		this.typeStrengthAffected = typeStrengthAffected;
 		this.strengthAffected = strengthAffected;
+	}
+	
+	public NetworkEvent(Event event, Player player) {
+		this.event = event;
+		this.player = player;
+		this.id = player.getId();
+		this.playerIcon = player.getImgName();
+		this.playerClass = player.getPlayerClass().getTitle();
 	}
 	
 	public Event getEvent() {
@@ -111,10 +125,34 @@ public class NetworkEvent implements Serializable {
 		this.id = id;
 	}
 
+	public String getPlayerIcon() {
+		return playerIcon;
+	}
+
+	public void setPlayerIcon(String playerIcon) {
+		this.playerIcon = playerIcon;
+	}
+
+	public String getPlayerClass() {
+		return playerClass;
+	}
+
+	public void setPlayerClass(String playerClass) {
+		this.playerClass = playerClass;
+	}
+
 	@Override
 	public String toString() {
-		return String.format("NetworkEvent [event=%s, slot=%s, healthAffectedAmount=%s, attackAffectedAmount=%s, spellName=%s, cardName=%s, id=%s, damageViaSpell=%s, typeStrengthAffected=%s, strengthAffected=%s]", event, slot, healthAffectedAmount,
-				attackAffectedAmount, spellName, cardName, id, damageViaSpell, typeStrengthAffected, strengthAffected);
+		return String.format("NetworkEvent [event=%s, slot=%s, healthAffectedAmount=%s, attackAffectedAmount=%s, spellName=%s, cardName=%s, damageViaSpell=%s, id=%s, playerIcon=%s, playerClass=%s, typeStrengthAffected=%s, strengthAffected=%s]",
+				event, slot, healthAffectedAmount, attackAffectedAmount, spellName, cardName, damageViaSpell, id, playerIcon, playerClass, typeStrengthAffected, strengthAffected);
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 	
 	

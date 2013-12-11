@@ -47,9 +47,9 @@ public class Cards extends SimpleGame {
 
 	public static TextureAtlas smallCardAtlas;
 	public static TextureAtlas smallTGACardAtlas;
-	static TextureAtlas largeCardAtlas;
-	static TextureAtlas largeTGACardAtlas;
-	static TextureAtlas faceCardAtlas;
+	public static TextureAtlas largeCardAtlas;
+	public static TextureAtlas largeTGACardAtlas;
+	public static TextureAtlas faceCardAtlas;
 	
 	public static Texture ramka;
 	public static Texture spellramka;
@@ -337,31 +337,34 @@ public class Cards extends SimpleGame {
 	}
 	
 	public void initialize() throws Exception {
-		
+	
 		synchronized(this) {
 		
 			if (chooser == null) return; 
-			
-			Player plInfo = chooser.pi.getPlayerInfo();
-			Player oplInfo = chooser.oi.getPlayerInfo();
-	
+
 			player.setImg(chooser.pi.getImg());
-			player.setPlayerInfo(plInfo);
-	
+			player.setPlayerInfo(chooser.pi.getPlayerInfo());
+
 			opponent.setImg(chooser.oi.getImg());
-			opponent.setPlayerInfo(oplInfo);
-			
-			initializePlayerCards(plInfo, true);
-			initializePlayerCards(oplInfo, false);
+			opponent.setPlayerInfo(chooser.oi.getPlayerInfo());
 			
 			chooser = null;
 		}
 		
-		//if we are client then the server side takes the first turn
-		if (NET_GAME != null && !NET_GAME.isServer()) {
-			//block here until far side has taken turn
-			NET_GAME.read();
+		initializePlayerCards(player.getPlayerInfo(), true);
+		initializePlayerCards(opponent.getPlayerInfo(), false);
+		
+		if (NET_GAME != null) {
+			//block until handshake
+			NET_GAME.waitForPlayerInitHandshake();
+			
+			//if we are client then the server side takes the first turn
+			if (!NET_GAME.isServer()) {
+				//block here until far side has taken turn
+				NET_GAME.read();
+			}
 		}
+		
 		
 	}
 	
@@ -615,6 +618,11 @@ public class Cards extends SimpleGame {
 	}
 	
 	public void moveCardActorOnBattle(CardImage ci, PlayerImage pi) {
+		
+		if (ci == null || pi == null) {
+			System.err.println("moveCardActorOnBattle: null ci or pi");
+			return;
+		}
 
 		attackSound.play();
 		
@@ -640,6 +648,11 @@ public class Cards extends SimpleGame {
 	}
 	
 	public void moveCardActorOnMagic(CardImage ci, PlayerImage pi) {
+		
+		if (ci == null || pi == null) {
+			System.err.println("moveCardActorOnMagic: null ci or pi");
+			return;
+		}
 
 		magicSound.play();
 		
