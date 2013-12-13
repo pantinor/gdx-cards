@@ -13,8 +13,8 @@ public class Player implements Serializable {
 
 	public static CardType[] TYPES = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, CardType.OTHER};
 		
-	private String imgName;
-	private Specializations playerClass;
+	private String imgName = "face1";
+	private Specializations playerClass = Specializations.Cleric;
 	private int life = 60;
 	private String id = UUID.randomUUID().toString();
 	
@@ -24,6 +24,8 @@ public class Player implements Serializable {
 	private int strengthWater = 0;
 	private int strengthSpecial = 0;
 	
+	private transient PlayerListener listener;
+	
 	private List<CardImage> fireCards = new ArrayList<CardImage>();
 	private List<CardImage> airCards = new ArrayList<CardImage>();
 	private List<CardImage> waterCards = new ArrayList<CardImage>();
@@ -32,6 +34,7 @@ public class Player implements Serializable {
 
 	
 	public Player() {
+				
 		Dice dice = new Dice(1,6);
 		strengthFire = dice.roll();
 		strengthAir = dice.roll();
@@ -55,9 +58,21 @@ public class Player implements Serializable {
 	public int getLife() {
 		return life;
 	}
-	public void setLife(int life) {
+	
+	public void setLife(int life) {		
 		this.life = life;
 	}
+	
+	public void incrementLife(int inc, boolean notify) {
+		this.life += inc;
+		if (notify && listener != null) listener.incrementLife(this, inc);
+
+	}
+	public void decrementLife(int dec, boolean notify) {
+		this.life -= dec;
+		if (notify && listener != null) listener.decrementLife(this, dec);
+	}
+	
 	public int getStrengthFire() {
 		return strengthFire;
 	}
@@ -257,8 +272,11 @@ public class Player implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
+
+
+	public void setListener(PlayerListener listener) {
+		this.listener = listener;
+	}	
 	
 
 }

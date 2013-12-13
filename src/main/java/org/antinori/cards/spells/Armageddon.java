@@ -17,7 +17,7 @@ public class Armageddon extends BaseSpell {
 		int value = 8 + ownerPlayer.getStrengthFire();
 		damageAll(opponent, value);
 		damageAll(owner, value);
-		this.opponent.decrementLife(value, game, true);
+		this.opponent.decrementLife(value, game, true, true);
 
 	}
 

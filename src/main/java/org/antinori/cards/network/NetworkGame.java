@@ -6,6 +6,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -16,12 +17,14 @@ import java.util.concurrent.Executors;
 import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
+import org.antinori.cards.CardListener;
 import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
 import org.antinori.cards.CreatureFactory;
 import org.antinori.cards.Player;
 import org.antinori.cards.PlayerImage;
+import org.antinori.cards.PlayerListener;
 import org.antinori.cards.SlotImage;
 import org.antinori.cards.Specializations;
 
@@ -37,6 +40,7 @@ public class NetworkGame {
 	private boolean server = false;
 	private boolean isMyTurn = false;
 	private boolean playersInitialized = false;
+	private Object lock = new Object();
 	
 	private ExecutorService executor = Executors.newFixedThreadPool(5);
 
@@ -112,6 +116,8 @@ public class NetworkGame {
 			
 			if (socket == null) throw new Exception("socket is not connected (null).");
 			
+			game.player.getPlayerInfo().setListener(new PlayerListener(game.player.getPlayerInfo().getId()));
+			
 			NetworkEvent info = new NetworkEvent(Event.REMOTE_PLAYER_INFO_INIT, game.player.getPlayerInfo());
 			
 			SendInitPlayerInfoThread thread = new SendInitPlayerInfoThread(info);
@@ -141,6 +147,8 @@ public class NetworkGame {
 						
 						pi.getPlayerInfo().setPlayerClass(Specializations.fromTitleString(pclass));
 						pi.getPlayerInfo().setImgName(pimg);
+						pi.getPlayerInfo().setListener(new PlayerListener(id));
+
 						
 						System.out.println("######");
 						System.out.println("Got remote id: " + id);
@@ -215,8 +223,11 @@ public class NetworkGame {
 			boolean stillMoreToCome = true;
 			while(stillMoreToCome) {
 			
-				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-				Object obj = in.readObject();
+				Object obj = null;
+				synchronized(lock) {
+					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+					obj = in.readObject();
+				}
 				
 				System.out.println("Received: "+ obj);
 				
@@ -228,7 +239,7 @@ public class NetworkGame {
 				} else if (obj instanceof String) {
 					stillMoreToCome = false;
 				}
-				
+								
 			}
 			
 			isMyTurn = true;
@@ -252,8 +263,6 @@ public class NetworkGame {
 				
 				Event evt = ne.getEvent();
 				int index = ne.getSlot();
-				int val = ne.getAttackAffectedAmount();
-				int health = ne.getHealthAffectedAmount();
 				String id = ne.getId();
 				
 
@@ -264,17 +273,25 @@ public class NetworkGame {
 					
 				switch(evt) {
 				
-				case ATTACK_AFFECTED:
-					if (val > 0) {
-						existingCardImage.getCard().incrementAttack(val);
-					} else {
-						existingCardImage.getCard().decrementAttack(val);
-					}
+				case CARD_SET_ATTACK:
+					existingCardImage.getCard().setAttack(ne.getAttack(), false);
+					break;
+
+				case CARD_SET_LIFE:
+					existingCardImage.getCard().setLife(ne.getLife(), false);
+					break;
+				case CARD_INCR_LIFE:
+					existingCardImage.incrementLife(ne.getLifeIncr(), game, false);
+					break;
+				case CARD_DECR_LIFE:
+					existingCardImage.decrementLife(ne.getLifeDecr(), game, false);
+					PlayerImage oi = game.getOpposingPlayerImage(id);
+					game.moveCardActorOnBattle(oi.getSlotCards()[index], oi);
 					break;
 				case CARD_ADDED:
-					
 					CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());
-					CardImage ci = orig.clone();
+					CardListener cardListener = new CardListener(index, id);
+					CardImage ci = orig.clone(cardListener);
 					
 					Creature sp1 = CreatureFactory.getCreatureClass(ne.getCardName(), game, ci.getCard(), ci, index, pi, game.getOpposingPlayerImage(id));
 					ci.setCreature(sp1);
@@ -290,29 +307,18 @@ public class NetworkGame {
 					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
 					
 					break;
-				case CARD_HEALTH_AFFECTED:
-					if (health > 0) {
-						existingCardImage.incrementLife(Math.abs(health), game);
-					} else {
-						existingCardImage.decrementLife(Math.abs(health), game);
-						PlayerImage oi = game.getOpposingPlayerImage(id);
-						game.moveCardActorOnBattle(oi.getSlotCards()[index], oi);
-					}
-					break;
 				case CARD_REMOVED:
-					
 					BaseFunctions bf = (BaseFunctions)existingCardImage.getCreature();
 					bf.disposeCardImage(pi, index);
-					
 					break;
-				case PLAYER_HEALTH_AFFECTED:
-					if (health > 0) {
-						pi.incrementLife(Math.abs(health), game);
-					} else {
-						pi.decrementLife(Math.abs(health), game, ne.isDamageViaSpell());
-					}
+				case PLAYER_INCR_LIFE:
+					pi.incrementLife(ne.getLifeIncr(), game, false);
+					break;
+				case PLAYER_DECR_LIFE:
+					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell(), false);
 					break;
 				case SPELL_CAST:
+					//TODO
 					break;
 				case PLAYER_STRENGTH_AFFECTED:
 					int str = ne.getStrengthAffected();
@@ -326,6 +332,15 @@ public class NetworkGame {
 				case REMOTE_PLAYER_CARDS_INIT:
 										
 					Player pl = game.getPlayerImage(ne.getId()).getPlayerInfo();
+					
+//					pl.setLife(ne.getPlayer().getLife());
+//					
+//					pl.setStrengthFire(ne.getPlayer().getStrengthFire());
+//					pl.setStrengthAir(ne.getPlayer().getStrengthAir());
+//					pl.setStrengthWater(ne.getPlayer().getStrengthWater());
+//					pl.setStrengthEarth(ne.getPlayer().getStrengthEarth());
+//					pl.setStrengthSpecial(ne.getPlayer().getStrengthSpecial());
+
 							
 					setPlayerCardsAfterSerialization(ne.getPlayer());
 
@@ -358,9 +373,11 @@ public class NetworkGame {
 		try {
 			if (socket == null) throw new Exception("socket is connected (null).");
 
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject(event);
-			out.flush();
+			synchronized(lock) {
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				out.writeObject(event);
+				out.flush();
+			}
 			
 			System.out.println("Sent event: "+ event);
 			
@@ -375,9 +392,11 @@ public class NetworkGame {
 		try {
 			if (socket == null) throw new Exception("socket is connected (null).");
 
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject("Your turn.");
-			out.flush();
+			synchronized(lock) {
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				out.writeObject("Your turn.");
+				out.flush();
+			}
 			
 			System.out.println("Sent \"your turn\" signal.");
 			isMyTurn = false;

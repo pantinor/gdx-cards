@@ -1,16 +1,8 @@
 package org.antinori.cards;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.antinori.cards.network.Event;
-import org.antinori.cards.network.NetworkEvent;
-
-import com.badlogic.gdx.scenes.scene2d.Action;
 
 public class BaseFunctions {
 	
@@ -40,21 +32,6 @@ public class BaseFunctions {
 		
 	}
 	
-	protected void sendNetworkEventAttackAffected(int index, String name, String id, int value) {
-		if (Cards.NET_GAME != null) {
-			NetworkEvent ne = new NetworkEvent(Event.ATTACK_AFFECTED, index, name, id, value, 0);
-			Cards.NET_GAME.sendEvent(ne);
-		}
-	}
-	
-	protected void sendNetworkEventHealthAffected(int index, String name, String id, int value) {
-		if (Cards.NET_GAME != null) {
-			NetworkEvent ne = new NetworkEvent(Event.CARD_HEALTH_AFFECTED, index, name, id, 0, value);
-			Cards.NET_GAME.sendEvent(ne);
-		}
-	}
-
-	
 	protected void damageSlots(int[] indexes, PlayerImage pi, int value) {
 		
 		for (int index : indexes) {
@@ -64,7 +41,7 @@ public class BaseFunctions {
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
 						
-			ci.decrementLife(value, game);
+			ci.decrementLife(value, game, true);
 			
 			int remainingLife = ci.getCard().getLife();
 			boolean died = (remainingLife < 1);
@@ -113,8 +90,7 @@ public class BaseFunctions {
 			if (index < 0 || index > 5 || index == slotIndex) continue;
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
-			ci.getCard().incrementAttack(value);
-			sendNetworkEventAttackAffected(index, ci.getCard().getName(), pi.getPlayerInfo().getId(), value);
+			ci.getCard().incrementAttack(value, true);
 		}
 	}
 		

@@ -14,7 +14,7 @@ public class FaerieSage extends BaseCreature {
 		super.onSummoned();
 		int value = this.owner.getPlayerInfo().getStrength(CardType.EARTH);
 		if (value>10) value = 10;
-		this.owner.incrementLife(value, game);
+		this.owner.incrementLife(value, game, true);
 	}
 
 	public void onAttack() {

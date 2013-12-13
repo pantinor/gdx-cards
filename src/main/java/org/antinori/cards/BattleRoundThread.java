@@ -65,6 +65,9 @@ public class BattleRoundThread extends Thread {
 			if (game == null || player == null || opponent == null) {
 				throw new Exception("Null parameter, cannot take a round.");
 			}
+			
+			//start of turn for player
+			startOfTurnCheck(player);
 
 			Player pi = player.getPlayerInfo();
 			Player oi = opponent.getPlayerInfo();
@@ -93,7 +96,7 @@ public class BattleRoundThread extends Thread {
 						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
 				if (attacker == null) continue;
 				
-				attacker.getCreature().onAttack();
+				attacker.getCreature().onAttack(); 
 				
 			}
 			
@@ -127,7 +130,7 @@ public class BattleRoundThread extends Thread {
 					} while (opptPick == null);
 					
 					if (!opptPick.getCard().isSpell()) {
-				
+										
 						//summon the opponents creature card to an open slot
 						opptSummons = opptPick.clone();
 						
@@ -205,8 +208,7 @@ public class BattleRoundThread extends Thread {
 				oi.enableDisableCards(type);
 			}
 			
-			//start of turn for player
-			startOfTurnCheck(player);
+
 			
 		} catch (GameOverException e) {
 			game.handleGameOver();

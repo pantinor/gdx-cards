@@ -35,8 +35,6 @@ public class PlayerImage extends Actor {
 		this.playerInfo = info;
 		this.font = font;
 		
-		//this.img.flip(false, true);
-
 		setX(x);
 		setY(y);
 	}
@@ -54,20 +52,19 @@ public class PlayerImage extends Actor {
 		
 	}
 	
-	public void decrementLife(float value, Cards game, boolean viaSpell) {
+	public void decrementLife(int value, Cards game, boolean viaSpell, boolean notify) {
 		
 		float modifier = viaSpell?(receivedSpellDamageModifier*value):(receivedDamageModifier*value);
-		value = value + modifier;
-		
-		int life = playerInfo.getLife();
-		playerInfo.setLife(life - (int)value);
-		game.animateDamageText((int)value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
-
+		float temp = value + modifier;
+		value = (int)temp;
+				
+		playerInfo.decrementLife(value, notify);
+		game.animateDamageText(value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
+	
 	}
 	
-	public void incrementLife(int value, Cards game) {
-		int life = playerInfo.getLife();
-		playerInfo.setLife(life + value);
+	public void incrementLife(int value, Cards game, boolean notify) {
+		playerInfo.incrementLife(value, notify);
 		game.animateHealingText(value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
 	}
 

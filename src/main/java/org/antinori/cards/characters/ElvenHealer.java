@@ -12,7 +12,7 @@ public class ElvenHealer extends BaseCreature {
 	
 	public void onAttack() {
 		
-		owner.incrementLife(3, game);
+		owner.incrementLife(3, game, true);
 		
 		super.onAttack();
 		

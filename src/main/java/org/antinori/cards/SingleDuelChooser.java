@@ -3,8 +3,6 @@ package org.antinori.cards;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.antinori.cards.network.Event;
-import org.antinori.cards.network.NetworkEvent;
 import org.antinori.cards.network.NetworkGame;
 import org.antinori.cards.network.SelectHostsDialog;
 
@@ -66,11 +64,11 @@ public class SingleDuelChooser {
 		chooserBg = new TextureRegion(new Texture(Gdx.files.classpath("images/singleduel1.png")));
 		cbgimg = new Image(chooserBg);
 
-		Sprite spP = Cards.faceCardAtlas.createSprite("face10");
+		Sprite spP = Cards.faceCardAtlas.createSprite(game.player.getPlayerInfo().getImgName());
 		spP.flip(false, true);
 		pi = new PlayerImage(spP, Cards.portraitramka, game.player.getPlayerInfo());
 		
-		Sprite spO = Cards.faceCardAtlas.createSprite("face1");
+		Sprite spO = Cards.faceCardAtlas.createSprite(game.opponent.getPlayerInfo().getImgName());
 		spO.flip(false, true);
 		oi = new PlayerImage(spO, Cards.portraitramka, game.opponent.getPlayerInfo());
 		

@@ -36,7 +36,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (Cards.NET_GAME != null) {
 			NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, slotIndex, card.getName(), ownerPlayer.getId());
 			Cards.NET_GAME.sendEvent(ne);
-			NetworkEvent ne2 = new NetworkEvent(Event.PLAYER_STRENGTH_AFFECTED, ownerPlayer.getId(), card.getType(), -1);
+			
+			NetworkEvent ne2 = new NetworkEvent(Event.PLAYER_STRENGTH_AFFECTED, ownerPlayer.getId());
+			ne2.setStrengthAffected(-1);
+			ne2.setTypeStrengthAffected(card.getType());
 			Cards.NET_GAME.sendEvent(ne2);
 		}
 
@@ -58,8 +61,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (ci == null)
 				continue;
 			if (ci.getCard().getName().equalsIgnoreCase("minotaurcommander")) {
-				this.card.incrementAttack(1);
-				sendNetworkEventAttackAffected(slotIndex, card.getName(), ownerPlayer.getId(), 1);
+				this.card.incrementAttack(1, true);
 			}
 		}
 
@@ -72,13 +74,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 
 			if (leftNeighbor.equalsIgnoreCase("orcchieftain")) {
-				this.card.incrementAttack(2);
-				sendNetworkEventAttackAffected(nl, card.getName(), ownerPlayer.getId(), 2);
+				this.card.incrementAttack(2, true);
 			}
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nl].getCard().incrementAttack(2);
-				sendNetworkEventAttackAffected(nl, teamCards[nl].getCard().getName(), ownerPlayer.getId(), 2);
+				teamCards[nl].getCard().incrementAttack(2, true);
 			}
 
 		}
@@ -92,13 +92,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 
 			if (rightNeighbor.equalsIgnoreCase("orcchieftain")) {
-				this.card.incrementAttack(2);
-				sendNetworkEventAttackAffected(nr, card.getName(), ownerPlayer.getId(), 2);
+				this.card.incrementAttack(2, true);
 			}
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nr].getCard().incrementAttack(2);
-				sendNetworkEventAttackAffected(nr, teamCards[nr].getCard().getName(), ownerPlayer.getId(), 2);
+				teamCards[nr].getCard().incrementAttack(2, true);
 			}
 
 		}
@@ -117,29 +115,24 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (enemyCards[slotIndex] != null) {
 
 			// damage opposing creature
-			enemyCards[slotIndex].decrementLife(attack, game);
-			sendNetworkEventHealthAffected(slotIndex, enemyCards[slotIndex].getCard().getName(), opposingPlayer.getId(), -attack);
+			enemyCards[slotIndex].decrementLife(attack, game, true);
 
 			int remainingLife = enemyCards[slotIndex].getCard().getLife();
 			died = (remainingLife < 1);
 
 			if (died) {
-				disposeCardImage(opponent, slotIndex);
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.CARD_REMOVED, slotIndex, enemyCards[slotIndex].getCard().getName(), opposingPlayer.getId());
 					Cards.NET_GAME.sendEvent(ne);
 				}
+				disposeCardImage(opponent, slotIndex);
 			}
 
 			// TODO add battle description to log
 
 		} else {
 
-			opponent.decrementLife(attack, game, false);
-			if (Cards.NET_GAME != null) {
-				NetworkEvent ne = new NetworkEvent(Event.PLAYER_HEALTH_AFFECTED, 0, "", opposingPlayer.getId(), 0, -attack);
-				Cards.NET_GAME.sendEvent(ne);
-			}
+			opponent.decrementLife(attack, game, false, true);
 
 			int remainingLife = opposingPlayer.getLife();
 			died = (remainingLife < 1);
@@ -177,12 +170,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (nl >= 0 && teamCards[nl] != null) {
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nl].getCard().decrementAttack(2);
-				sendNetworkEventAttackAffected(nr, teamCards[nl].getName(), ownerPlayer.getId(), -2);
+				teamCards[nl].getCard().decrementAttack(2, true);
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
-				teamCards[nl].getCard().decrementAttack(1);
-				sendNetworkEventAttackAffected(nr, teamCards[nl].getName(), ownerPlayer.getId(), -1);
+				teamCards[nl].getCard().decrementAttack(1, true);
 			}
 
 		}
@@ -190,13 +181,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (nr <= 5 && teamCards[nr] != null) {
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nr].getCard().decrementAttack(2);
-				sendNetworkEventAttackAffected(nr, teamCards[nr].getName(), ownerPlayer.getId(), -2);
+				teamCards[nr].getCard().decrementAttack(2, true);
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
-				teamCards[nr].getCard().decrementAttack(1);
-				sendNetworkEventAttackAffected(nr, teamCards[nr].getName(), ownerPlayer.getId(), -1);
-
+				teamCards[nr].getCard().decrementAttack(1, true);
 			}
 
 		}
@@ -205,10 +193,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	protected void damagePlayer(PlayerImage pi, int value) {
 
-		pi.decrementLife(value, game, false);
+		pi.decrementLife(value, game, false, true);
 
 		if (Cards.NET_GAME != null) {
-			NetworkEvent ne = new NetworkEvent(Event.PLAYER_HEALTH_AFFECTED, 0, "", pi.getPlayerInfo().getId(), 0, -value);
+			NetworkEvent ne = new NetworkEvent(Event.PLAYER_DECR_LIFE, 0, "", pi.getPlayerInfo().getId());
+			ne.setLifeDecr(value);
 			Cards.NET_GAME.sendEvent(ne);
 		}
 

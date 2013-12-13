@@ -146,8 +146,8 @@ public class CardSetup {
                     c.setCardname(getAttrText( n1, "cardname" ));
                     c.setDesc(getAttrText( n1, "desc" ));
                     
-                    c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )));
-                    c.setLife(Integer.parseInt(getAttrText( n1, "life" )));
+                    c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )), false);
+                    c.setLife(Integer.parseInt(getAttrText( n1, "life" )), false);
                     
                     Boolean spell = Boolean.parseBoolean(getAttrText( n1, "spell" ));
                     c.setSpell(spell);
@@ -246,13 +246,34 @@ public class CardSetup {
 		
 		List<Card> result = new ArrayList<Card>();
 		//debugging
+		if (type == CardType.FIRE) {
+			result.add(getCardByName("walloffire"));
+			result.add(getCardByName("MinotaurCommander"));
+			result.add(getCardByName("PriestofFire"));
+			result.add(getCardByName("OrcChieftain"));
+			return result;
+		}
+//		if (type == CardType.WATER) {
+//		result.add(getCardByName("FaerieApprentice"));
+//		result.add(getCardByName("FaerieSage"));
+//		result.add(getCardByName("CalltoThunder"));
+//		result.add(getCardByName("Titan"));
+//		return result;
+//	}
 //		if (type == CardType.AIR) {
-//			result.add(getCardByName("FaerieApprentice"));
-//			result.add(getCardByName("FaerieSage"));
-//			result.add(getCardByName("CalltoThunder"));
-//			result.add(getCardByName("Titan"));
-//			return result;
-//		}
+//		result.add(getCardByName("FaerieApprentice"));
+//		result.add(getCardByName("FaerieSage"));
+//		result.add(getCardByName("CalltoThunder"));
+//		result.add(getCardByName("Titan"));
+//		return result;
+//	}
+//		if (type == CardType.EARTH) {
+//		result.add(getCardByName("FaerieApprentice"));
+//		result.add(getCardByName("FaerieSage"));
+//		result.add(getCardByName("CalltoThunder"));
+//		result.add(getCardByName("Titan"));
+//		return result;
+//	}
 		
 		
 		

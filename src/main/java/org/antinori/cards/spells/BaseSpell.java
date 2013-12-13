@@ -1,6 +1,5 @@
-package org.antinori.cards.spells;import org.antinori.cards.PlayerImage;
+package org.antinori.cards.spells;import org.antinori.cards.BaseFunctions;
 
-import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;

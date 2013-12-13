@@ -1,19 +1,27 @@
 package org.antinori.cards.network;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.antinori.cards.CardType;
 import org.antinori.cards.Player;
 
 public class NetworkEvent implements Serializable {
 	
+
 	private static final long serialVersionUID = 1L;
+	
+	private final String eventid = UUID.randomUUID().toString();
+
 		
 	private Event event;
 	private int slot;
 	
-	private int healthAffectedAmount;
-	private int attackAffectedAmount;
+	private int life;
+	private int lifeIncr;
+	private int lifeDecr;
+	private int attack;
+	
 	private String spellName;
 	private String cardName;
 	private boolean damageViaSpell;
@@ -37,22 +45,6 @@ public class NetworkEvent implements Serializable {
 		this.id = id;
 	}
 	
-	public NetworkEvent(Event event, int slot, String cardName, String id, int attackAffected, int healthAffected) {
-		this.event = event;
-		this.slot = slot;
-		this.cardName = cardName;
-		this.id = id;
-		this.attackAffectedAmount = attackAffected;
-		this.healthAffectedAmount = healthAffected;
-	}
-	
-	public NetworkEvent(Event event, String id, CardType typeStrengthAffected, int strengthAffected) {
-		this.event = event;
-		this.id = id;
-		this.typeStrengthAffected = typeStrengthAffected;
-		this.strengthAffected = strengthAffected;
-	}
-	
 	public NetworkEvent(Event event, Player player) {
 		this.event = event;
 		this.player = player;
@@ -67,12 +59,6 @@ public class NetworkEvent implements Serializable {
 	public int getSlot() {
 		return slot;
 	}
-	public int getHealthAffectedAmount() {
-		return healthAffectedAmount;
-	}
-	public int getAttackAffectedAmount() {
-		return attackAffectedAmount;
-	}
 	public String getSpellName() {
 		return spellName;
 	}
@@ -84,12 +70,6 @@ public class NetworkEvent implements Serializable {
 	}
 	public void setSlot(int slot) {
 		this.slot = slot;
-	}
-	public void setHealthAffectedAmount(int healthAffectedAmount) {
-		this.healthAffectedAmount = healthAffectedAmount;
-	}
-	public void setAttackAffectedAmount(int attackAffectedAmount) {
-		this.attackAffectedAmount = attackAffectedAmount;
 	}
 	public void setSpellName(String spellName) {
 		this.spellName = spellName;
@@ -141,12 +121,6 @@ public class NetworkEvent implements Serializable {
 		this.playerClass = playerClass;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("NetworkEvent [event=%s, slot=%s, healthAffectedAmount=%s, attackAffectedAmount=%s, spellName=%s, cardName=%s, damageViaSpell=%s, id=%s, playerIcon=%s, playerClass=%s, typeStrengthAffected=%s, strengthAffected=%s]",
-				event, slot, healthAffectedAmount, attackAffectedAmount, spellName, cardName, damageViaSpell, id, playerIcon, playerClass, typeStrengthAffected, strengthAffected);
-	}
-
 	public Player getPlayer() {
 		return player;
 	}
@@ -154,7 +128,45 @@ public class NetworkEvent implements Serializable {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+
+	public int getLife() {
+		return life;
+	}
+
+	public int getLifeIncr() {
+		return lifeIncr;
+	}
+
+	public int getLifeDecr() {
+		return lifeDecr;
+	}
+
+	public int getAttack() {
+		return attack;
+	}
+
+	public void setLife(int life) {
+		this.life = life;
+	}
+
+	public void setLifeIncr(int lifeIncr) {
+		this.lifeIncr = lifeIncr;
+	}
+
+	public void setLifeDecr(int lifeDecr) {
+		this.lifeDecr = lifeDecr;
+	}
+
+	public void setAttack(int attack) {
+		this.attack = attack;
+	}
 	
+	@Override
+	public String toString() {
+		return String.format(
+				"NetworkEvent %s (%s) slot=%s, life=%s, lifeIncr=%s, lifeDecr=%s, attack=%s, spellName=%s, cardName=%s, damageViaSpell=%s, id=%s, playerIcon=%s, playerClass=%s, typeStrengthAffected=%s, strengthAffected=%s, player=%s]", event,
+				eventid, slot, life, lifeIncr, lifeDecr, attack, spellName, cardName, damageViaSpell, id, playerIcon, playerClass, typeStrengthAffected, strengthAffected, player);
+	}
 	
 
 }

@@ -23,12 +23,12 @@ public class MasterHealer extends BaseCreature {
 			CardImage ci = player.getSlotCards()[index];
 			if (ci == null)
 				continue;
-			player.incrementLife(3, game);
+			player.incrementLife(3, game, true);
 			for (int j = 0; j < 6; j++) {
 				CardImage ci2 = player.getSlotCards()[j];
 				if (ci2 == null)
 					continue;
-				ci2.incrementLife(3, game);
+				ci2.incrementLife(3, game, true);
 			}
 		}
 	}

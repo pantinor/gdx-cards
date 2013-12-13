@@ -10,7 +10,7 @@ public class WallofLightning extends BaseCreature {
 	}
 
 	public void onAttack() {
-		opponent.decrementLife(4, game, false);
+		opponent.decrementLife(4, game, false, true);
 		super.onAttack();
 	}
 }

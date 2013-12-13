@@ -20,6 +20,6 @@ public class FireElemental extends BaseCreature {
 	}
 
 	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.FIRE));
+		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.FIRE), true);
 	}
 }

@@ -101,12 +101,6 @@ public class Cards extends SimpleGame {
 	public ShowDescriptionListener sdl;
 	public SlotListener sl;
 	
-//	private SlotImage[] topSlots = new SlotImage[6];
-//	private SlotImage[] bottomSlots = new SlotImage[6];
-//
-//	private CardImage[] topSlotCards = new CardImage[6];
-//	private CardImage[] bottomSlotCards = new CardImage[6];
-
 	SingleDuelChooser chooser;
 	
 	private CardImage selectedCard;
@@ -570,7 +564,10 @@ public class Cards extends SimpleGame {
 				if (canStartMyTurn() && selectedCard != null && selectedCard.isEnabled() && si.isBottomSlots()) {
 					
 					if (!selectedCard.getCard().isSpell()) {
-						final CardImage clone = selectedCard.clone();
+						
+						CardListener cardListener = new CardListener(si.getIndex(), player.getPlayerInfo().getId());
+						
+						final CardImage clone = selectedCard.clone(cardListener);
 						
 						stage.addActor(clone);
 						clone.addListener(tl);
