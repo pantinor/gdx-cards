@@ -14,11 +14,11 @@ public class MindMaster extends BaseCreature {
 
 		super.onSummoned();
 
-		ownerPlayer.incrementStrength(CardType.FIRE, 1);
-		ownerPlayer.incrementStrength(CardType.AIR, 1);
-		ownerPlayer.incrementStrength(CardType.EARTH, 1);
-		ownerPlayer.incrementStrength(CardType.WATER, 1);
-		ownerPlayer.incrementStrength(CardType.OTHER, 1);
+		ownerPlayer.incrementStrength(CardType.FIRE, 1, true);
+		ownerPlayer.incrementStrength(CardType.AIR, 1, true);
+		ownerPlayer.incrementStrength(CardType.EARTH, 1, true);
+		ownerPlayer.incrementStrength(CardType.WATER, 1, true);
+		ownerPlayer.incrementStrength(CardType.OTHER, 1, true);
 	}
 
 

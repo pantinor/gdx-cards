@@ -12,8 +12,8 @@ public class Meditation extends BaseSpell {
 
 	public void onCast() {
 		super.onCast();
-		ownerPlayer.incrementStrength(CardType.AIR, 1);
-		ownerPlayer.incrementStrength(CardType.FIRE, 1);
-		ownerPlayer.incrementStrength(CardType.EARTH, 1);
+		ownerPlayer.incrementStrength(CardType.AIR, 1, true);
+		ownerPlayer.incrementStrength(CardType.FIRE, 1, true);
+		ownerPlayer.incrementStrength(CardType.EARTH, 1, true);
 	}
 }

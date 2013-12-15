@@ -14,7 +14,7 @@ public class MerfolkElder extends BaseCreature {
 
 		super.onSummoned();
 
-		ownerPlayer.incrementStrength(CardType.AIR, 1);
+		ownerPlayer.incrementStrength(CardType.AIR, 1, true);
 
 	}
 

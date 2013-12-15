@@ -79,6 +79,7 @@ public class Cards extends SimpleGame {
 	Label playerInfoLabel;
 	Label opptInfoLabel;
 	
+	Button shuffleCardsButton;
 	ImageButton skipTurnButton;
 	Button showOpptCardsButton;
 
@@ -180,17 +181,6 @@ public class Cards extends SimpleGame {
 		TextureRegion tr = new TextureRegion(new Texture(Gdx.files.classpath("images/endturnbutton.png")));
 		style.imageUp = new TextureRegionDrawable(tr);
 		style.imageDown = new TextureRegionDrawable(tr);
-		skipTurnButton = new ImageButton(style);
-		skipTurnButton.addListener(new InputListener() {
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (gameOver) return true;
-				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent);
-				t.start();
-				return true;
-			}
-		});
-		skipTurnButton.setPosition(30, ydown(150));
-		stage.addActor(skipTurnButton);
 		
 		
 		
@@ -216,11 +206,36 @@ public class Cards extends SimpleGame {
 				return true;
 			}
 		});
-		showOpptCardsButton.setPosition(80, ydown(150));
+		showOpptCardsButton.setBounds(10, ydown(50), 50, 50);
 		stage.addActor(showOpptCardsButton);
 		
 		
-	
+		skipTurnButton = new ImageButton(style);
+		skipTurnButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (gameOver) return true;
+				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent);
+				t.start();
+				return true;
+			}
+		});
+		skipTurnButton.setBounds(10, ydown(110), 50, 50);
+		stage.addActor(skipTurnButton);
+		
+		
+		shuffleCardsButton = new Button(skin);
+		shuffleCardsButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				try {
+					initializePlayerCards(player.getPlayerInfo(), true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return true;
+			}
+		});
+		shuffleCardsButton.setBounds(10, ydown(170), 50, 50);
+		stage.addActor(shuffleCardsButton);
 		
 		
 		int x = 420;
@@ -364,12 +379,21 @@ public class Cards extends SimpleGame {
 	
 	public void initializePlayerCards(Player player, boolean visible) throws Exception {
 		
+		selectedCard = null;
+		
 		int x = 405;
 		int y = ydown(328);
 		
 		CardType[] types = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, player.getPlayerClass().getType()};
 		
 		for (CardType type : types) {
+			
+			if (player.getCards(type) != null && player.getCards(type).size() > 0) {
+				for (CardImage ci : player.getCards(type)) {
+					ci.remove();
+				}
+			}
+			
 			List<CardImage> v1 = cs.getCardImagesByType(smallCardAtlas, smallTGACardAtlas,  type, 4);
 			x += 104;
 			addVerticalGroupCards(x,y,v1, player, type, visible);

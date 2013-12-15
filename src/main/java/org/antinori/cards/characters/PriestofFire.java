@@ -13,7 +13,7 @@ public class PriestofFire extends BaseCreature {
 	
 	public void onSummoned() {
 		super.onSummoned();
-		ownerPlayer.incrementStrength(CardType.FIRE, 1);
+		ownerPlayer.incrementStrength(CardType.FIRE, 1, true);
 	}
 
 

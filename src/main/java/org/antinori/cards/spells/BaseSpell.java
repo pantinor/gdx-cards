@@ -32,7 +32,7 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		
 		System.out.println("onCast: " + card);
 		
-		ownerPlayer.decrementStrength(card.getType(), card.getCost());
+		ownerPlayer.decrementStrength(card.getType(), card.getCost(), true);
 
 		game.moveCardActorOnMagic(cardImage, owner);
 

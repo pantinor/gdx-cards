@@ -12,7 +12,7 @@ public class MerfolkApostate extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
-		ownerPlayer.incrementStrength(CardType.FIRE, 2);
+		ownerPlayer.incrementStrength(CardType.FIRE, 2, true);
 	}
 
 }

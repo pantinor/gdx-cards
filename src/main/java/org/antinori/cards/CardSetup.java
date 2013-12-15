@@ -199,6 +199,9 @@ public class CardSetup {
 		return result;
 	}
 	
+	/**
+	 * Get shuffled selection of cards of the number indicated.
+	 */
 	public List<CardImage> getCardImagesByType(TextureAtlas atlas1, TextureAtlas atlas2, CardType type, int maxNumber) throws Exception {
     	List<Card> picks = getCardsByType(type, maxNumber);
     	List<CardImage> images = new ArrayList<CardImage>();
@@ -244,15 +247,15 @@ public class CardSetup {
 	
 	public List<Card> getCardsByType(CardType type, int maxNumber) {
 		
-		List<Card> result = new ArrayList<Card>();
-		//debugging
-		if (type == CardType.FIRE) {
-			result.add(getCardByName("walloffire"));
-			result.add(getCardByName("MinotaurCommander"));
-			result.add(getCardByName("PriestofFire"));
-			result.add(getCardByName("OrcChieftain"));
-			return result;
-		}
+//		List<Card> result = new ArrayList<Card>();
+//		//debugging
+//		if (type == CardType.FIRE) {
+//			result.add(getCardByName("walloffire"));
+//			result.add(getCardByName("MinotaurCommander"));
+//			result.add(getCardByName("PriestofFire"));
+//			result.add(getCardByName("OrcChieftain"));
+//			return result;
+//		}
 //		if (type == CardType.WATER) {
 //		result.add(getCardByName("FaerieApprentice"));
 //		result.add(getCardByName("FaerieSage"));

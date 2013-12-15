@@ -102,6 +102,14 @@ public class BattleRoundThread extends Thread {
 			
 			if (ng != null) {
 				
+				//end this player network game turn
+				
+				pi.incrementStrengthAll(1, true);
+				
+				for (CardType type : Player.TYPES) {
+					pi.enableDisableCards(type);
+				}
+				
 				NetworkEvent info = new NetworkEvent(Event.REMOTE_PLAYER_CARDS_INIT, oi);
 				ng.sendEvent(info);
 				
@@ -109,15 +117,15 @@ public class BattleRoundThread extends Thread {
 				
 				//wait until the far end has sent over all cards and player info
 				ng.read();
-			}
-			
-			
-			//start computer turn
-			startOfTurnCheck(opponent);
-
-		
-			if (ng == null) {
-				//do single duel computer turn
+				
+				
+			} else {
+				
+				//start computer turn
+				startOfTurnCheck(opponent);
+				
+				
+				//do single player duel computer turn
 				CardImage opptSummons = null;
 	
 				SlotImage si = getOpponentSlot();
@@ -194,19 +202,19 @@ public class BattleRoundThread extends Thread {
 					
 					attacker.getCreature().onAttack();
 				}
+				
+				oi.incrementStrengthAll(1, false);
+				pi.incrementStrengthAll(1, true);
+				
+				for (CardType type : Player.TYPES) {
+					pi.enableDisableCards(type);
+					oi.enableDisableCards(type);
+				}
 			
 			}
 						
 			
-			//increment strength by one
-			pi.incrementStrengthAll(1);
-			oi.incrementStrengthAll(1);
-			
-			CardType[] types = {CardType.FIRE, CardType.AIR, CardType.WATER, CardType.EARTH, CardType.OTHER};
-			for (CardType type : types) {
-				pi.enableDisableCards(type);
-				oi.enableDisableCards(type);
-			}
+
 			
 
 			
@@ -218,8 +226,6 @@ public class BattleRoundThread extends Thread {
 			game.finishTurn();
 		}
 		
-		System.out.println("TurnThread done");
-
 		
 	}
 	

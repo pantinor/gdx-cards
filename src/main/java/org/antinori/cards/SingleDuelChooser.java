@@ -8,6 +8,8 @@ import org.antinori.cards.network.SelectHostsDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -57,9 +59,8 @@ public class SingleDuelChooser {
 		stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 		Gdx.input.setInputProcessor(stage);
 
-		background = new TextureRegion(new Texture(Gdx.files.classpath("images/dragonFire.jpg")));
+		background = new TextureRegion(new Texture(Gdx.files.classpath("images/splash.png")));
 		bgimg = new Image(background);
-		stage.addActor(bgimg);
 
 		chooserBg = new TextureRegion(new Texture(Gdx.files.classpath("images/singleduel1.png")));
 		cbgimg = new Image(chooserBg);
@@ -72,7 +73,7 @@ public class SingleDuelChooser {
 		spO.flip(false, true);
 		oi = new PlayerImage(spO, Cards.portraitramka, game.opponent.getPlayerInfo());
 		
-		TextButton play = new TextButton("Play", game.skin);
+		TextButton play = new TextButton("Start", game.skin);
 		play.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				
@@ -90,7 +91,7 @@ public class SingleDuelChooser {
 		
 		
 		final Cards temp = game;
-		TextButton selectHostsButton = new TextButton("Network", game.skin);
+		TextButton selectHostsButton = new TextButton("Connect", game.skin);
 		selectHostsButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (selectHostsShown || Cards.NET_GAME != null) return true;
@@ -113,7 +114,7 @@ public class SingleDuelChooser {
 			}
 		});
 		
-		TextButton startNetworkServer = new TextButton("Server", game.skin);
+		TextButton startNetworkServer = new TextButton("Listen", game.skin);
 		startNetworkServer.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
 				if (Cards.NET_GAME != null) return;
@@ -153,7 +154,13 @@ public class SingleDuelChooser {
 		startNetworkServer.setBounds(540, 133, 60, 25);
 
 				
+		
+		//stage.addActor(getRectangleImage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		
+		stage.addActor(bgimg);
+
 		stage.addActor(cbgimg);
+
 		
 		stage.addActor(lbl);
 		
@@ -221,6 +228,17 @@ public class SingleDuelChooser {
 	public void draw(float delta) {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
+	}
+	
+	private Image getRectangleImage(int width, int height) {
+
+		Pixmap p = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+		p.setColor(Color.BLACK);
+		p.fill();
+		
+		Image img = new Image(new TextureRegion(new Texture(p), width, height));
+		
+		return img; 
 	}
 
 

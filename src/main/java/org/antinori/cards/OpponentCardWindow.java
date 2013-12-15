@@ -30,7 +30,7 @@ public class OpponentCardWindow extends Window {
 				add(l);
 			}
 			row();
-
+			
 			
 			List<CardImage> fire = opponent.getCards(CardType.FIRE);
 			List<CardImage> air = opponent.getCards(CardType.AIR);
@@ -40,20 +40,20 @@ public class OpponentCardWindow extends Window {
 
 			for (int i = 0; i < 4; i++) {
 				CardImage clone1 = fire.get(i).clone();
-				CardImage clone2 = water.get(i).clone();
-				CardImage clone3 = air.get(i).clone();
+				CardImage clone2 = air.get(i).clone();
+				CardImage clone3 = water.get(i).clone();
 				CardImage clone4 = earth.get(i).clone();
 				CardImage clone5 = special.get(i).clone();
 				
 				clone1.setEnabled(fire.get(i).isEnabled());
+				clone1.setEnabled(air.get(i).isEnabled());
 				clone2.setEnabled(water.get(i).isEnabled());
-				clone3.setEnabled(air.get(i).isEnabled());
 				clone4.setEnabled(earth.get(i).isEnabled());
 				clone5.setEnabled(special.get(i).isEnabled());
 				
 				clone1.setColor(fire.get(i).getColor());
-				clone2.setColor(water.get(i).getColor());
-				clone3.setColor(air.get(i).getColor());
+				clone2.setColor(air.get(i).getColor());
+				clone3.setColor(water.get(i).getColor());
 				clone4.setColor(earth.get(i).getColor());
 				clone5.setColor(special.get(i).getColor());
 				

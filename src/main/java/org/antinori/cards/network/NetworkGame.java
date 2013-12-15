@@ -174,6 +174,10 @@ public class NetworkGame {
 						pi.getPlayerInfo().setCards(CardType.EARTH, ne.getPlayer().getEarthCards());
 						pi.getPlayerInfo().setCards(CardType.OTHER, ne.getPlayer().getSpecialCards());
 						
+						for (CardType type : Player.TYPES) {
+							pi.getPlayerInfo().enableDisableCards(type);
+						}
+						
 						thread.setGotResponse(true);
 						playersInitialized = true;
 					}
@@ -320,27 +324,18 @@ public class NetworkGame {
 				case SPELL_CAST:
 					//TODO
 					break;
-				case PLAYER_STRENGTH_AFFECTED:
-					int str = ne.getStrengthAffected();
-					CardType type = ne.getTypeStrengthAffected();
-					if (str > 0) {
-						pi.getPlayerInfo().incrementStrength(type, Math.abs(str));
-					} else {
-						pi.getPlayerInfo().decrementStrength(type, Math.abs(str));
-					}
+				case PLAYER_INCR_STRENGTH_ALL:
+					pi.getPlayerInfo().incrementStrengthAll(ne.getStrengthAffected(), false);
+					break;
+				case PLAYER_DECR_STRENGTH:
+					pi.getPlayerInfo().decrementStrength(ne.getTypeStrengthAffected(), ne.getStrengthAffected(), false);
+					break;
+				case PLAYER_INCR_STRENGTH:
+					pi.getPlayerInfo().incrementStrength(ne.getTypeStrengthAffected(), ne.getStrengthAffected(), false);
 					break;
 				case REMOTE_PLAYER_CARDS_INIT:
 										
 					Player pl = game.getPlayerImage(ne.getId()).getPlayerInfo();
-					
-//					pl.setLife(ne.getPlayer().getLife());
-//					
-//					pl.setStrengthFire(ne.getPlayer().getStrengthFire());
-//					pl.setStrengthAir(ne.getPlayer().getStrengthAir());
-//					pl.setStrengthWater(ne.getPlayer().getStrengthWater());
-//					pl.setStrengthEarth(ne.getPlayer().getStrengthEarth());
-//					pl.setStrengthSpecial(ne.getPlayer().getStrengthSpecial());
-
 							
 					setPlayerCardsAfterSerialization(ne.getPlayer());
 
@@ -349,6 +344,10 @@ public class NetworkGame {
 					pl.setCards(CardType.WATER, ne.getPlayer().getWaterCards());
 					pl.setCards(CardType.EARTH, ne.getPlayer().getEarthCards());
 					pl.setCards(CardType.OTHER, ne.getPlayer().getSpecialCards());
+					
+					for (CardType t : Player.TYPES) {
+						pi.getPlayerInfo().enableDisableCards(t);
+					}
 					
 					System.out.println("Set card images after serialization on player id: " + pl.getId());
 					

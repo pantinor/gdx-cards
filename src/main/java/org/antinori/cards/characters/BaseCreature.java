@@ -31,16 +31,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 		System.out.println("onSummoned: " + card);
 
-		ownerPlayer.decrementStrength(card.getType(), card.getCost());
+		ownerPlayer.decrementStrength(card.getType(), card.getCost(), true);
 
 		if (Cards.NET_GAME != null) {
 			NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, slotIndex, card.getName(), ownerPlayer.getId());
 			Cards.NET_GAME.sendEvent(ne);
-			
-			NetworkEvent ne2 = new NetworkEvent(Event.PLAYER_STRENGTH_AFFECTED, ownerPlayer.getId());
-			ne2.setStrengthAffected(-1);
-			ne2.setTypeStrengthAffected(card.getType());
-			Cards.NET_GAME.sendEvent(ne2);
 		}
 
 		int nl = slotIndex - 1;

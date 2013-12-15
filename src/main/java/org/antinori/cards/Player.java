@@ -65,12 +65,12 @@ public class Player implements Serializable {
 	
 	public void incrementLife(int inc, boolean notify) {
 		this.life += inc;
-		if (notify && listener != null) listener.incrementLife(this, inc);
+		if (notify && listener != null) listener.incrementLife(inc);
 
 	}
 	public void decrementLife(int dec, boolean notify) {
 		this.life -= dec;
-		if (notify && listener != null) listener.decrementLife(this, dec);
+		if (notify && listener != null) listener.decrementLife(dec);
 	}
 	
 	public int getStrengthFire() {
@@ -125,15 +125,7 @@ public class Player implements Serializable {
 	public List<CardImage> getSpecialCards() {
 		return specialCards;
 	}
-
-	public void incrementStrengthAll(int incr) {
-		strengthFire += incr;
-		strengthAir += incr;
-		strengthEarth += incr;
-		strengthWater += incr;
-		strengthSpecial += incr;
-	}
-
+	
 	public int getStrength(CardType type) {
 		switch (type) {
 		case FIRE:return this.strengthFire;
@@ -143,8 +135,18 @@ public class Player implements Serializable {
 		default: return this.strengthSpecial;
 		}
 	}
+
+	public void incrementStrengthAll(int incr, boolean notify) {
+		strengthFire += incr;
+		strengthAir += incr;
+		strengthEarth += incr;
+		strengthWater += incr;
+		strengthSpecial += incr;
+		
+		if (notify && listener != null) listener.incrementStrengthAll(incr);
+	}
 	
-	public void decrementStrength(CardType type, int cost) {
+	public void decrementStrength(CardType type, int cost, boolean notify) {
 		switch (type) {
 		case FIRE:this.strengthFire -= cost;break;
 		case AIR:this.strengthAir -= cost;break;
@@ -152,9 +154,12 @@ public class Player implements Serializable {
 		case EARTH:this.strengthEarth -= cost;break;
 		default:this.strengthSpecial -= cost;break;
 		}
+		
+		if (notify && listener != null) listener.decrementStrength(cost, type);
+
 	}
 	
-	public void incrementStrength(CardType type, int cost) {
+	public void incrementStrength(CardType type, int cost, boolean notify) {
 		switch (type) {
 		case FIRE:this.strengthFire += cost;break;
 		case AIR:this.strengthAir += cost;break;
@@ -162,6 +167,8 @@ public class Player implements Serializable {
 		case EARTH:this.strengthEarth += cost;break;
 		default:this.strengthSpecial += cost;break;
 		}
+		if (notify && listener != null) listener.incrementStrength(cost, type);
+
 	}
 	
 	public void enableDisableCards(CardType type) {

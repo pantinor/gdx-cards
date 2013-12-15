@@ -14,7 +14,7 @@ public class FireElemental extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
-		ownerPlayer.incrementStrength(CardType.FIRE, 1);
+		ownerPlayer.incrementStrength(CardType.FIRE, 1, true);
 		damageAll(opponent, 3);
 		damagePlayer(opponent, 3);
 	}

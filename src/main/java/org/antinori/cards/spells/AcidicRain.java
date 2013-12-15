@@ -15,11 +15,11 @@ public class AcidicRain extends BaseSpell {
 
 		damageAll(opponent, 15);
 		
-		opposingPlayer.decrementStrength(CardType.FIRE, 1);
-		opposingPlayer.decrementStrength(CardType.AIR, 1);
-		opposingPlayer.decrementStrength(CardType.EARTH, 1);
-		opposingPlayer.decrementStrength(CardType.WATER, 1);
-		opposingPlayer.decrementStrength(CardType.OTHER, 1);
+		opposingPlayer.decrementStrength(CardType.FIRE, 1, true);
+		opposingPlayer.decrementStrength(CardType.AIR, 1, true);
+		opposingPlayer.decrementStrength(CardType.EARTH, 1, true);
+		opposingPlayer.decrementStrength(CardType.WATER, 1, true);
+		opposingPlayer.decrementStrength(CardType.OTHER, 1, true);
 
 	}
 }
