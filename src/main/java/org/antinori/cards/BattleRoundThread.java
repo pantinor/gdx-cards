@@ -25,6 +25,8 @@ public class BattleRoundThread extends Thread {
 
 	CardImage spellCardImage;
 	CardImage targetedCardImage;
+	int targetedSlot;;
+	String targetedCardOwnerId;
 	
 	NetworkGame ng = Cards.NET_GAME;
 	
@@ -35,12 +37,14 @@ public class BattleRoundThread extends Thread {
 		this.spellCardImage = spellCardImage;
 	}
 	
-	public BattleRoundThread(Cards game, PlayerImage player, PlayerImage opponent, CardImage spellCardImage, CardImage targetedCardImage) {
+	public BattleRoundThread(Cards game, PlayerImage player, PlayerImage opponent, CardImage spellCardImage, CardImage targetedCardImage, String targetedCardOwnerId, int index) {
 		this.game = game;
 		this.player = player;
 		this.opponent = opponent;
 		this.spellCardImage = spellCardImage;
 		this.targetedCardImage = targetedCardImage;
+		this.targetedCardOwnerId = targetedCardOwnerId;
+		this.targetedSlot = index;
 	}
 	
 	public BattleRoundThread(Cards game, PlayerImage player, PlayerImage opponent, CardImage summons, int summonedSlot) {
@@ -74,9 +78,26 @@ public class BattleRoundThread extends Thread {
 			
 			if (summonedCardImage != null) {
 				
+				if (Cards.NET_GAME != null) {
+					NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, summonedSlot, summonedCardImage.getCard().getName(), player.getPlayerInfo().getId());
+					Cards.NET_GAME.sendEvent(ne);
+				}
+				
 				summonedCardImage.getCreature().onSummoned();
 				
 			} else if (spellCardImage != null) {
+				
+				if (Cards.NET_GAME != null) {
+					NetworkEvent ne = new NetworkEvent(Event.SPELL_CAST, player.getPlayerInfo().getId());
+					ne.setSpellName(spellCardImage.getCard().getName());
+					if (targetedCardImage != null) {
+						ne.setSpellTargetCardName(targetedCardImage.getCard().getName());
+						ne.setSlot(this.targetedSlot);
+						ne.setTargetedCardOwnerId(this.targetedCardOwnerId);
+					}
+					ne.setCaster(player.getPlayerInfo().getId());
+					Cards.NET_GAME.sendEvent(ne);
+				}
 				
 				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
 				spell.setTargeted(targetedCardImage);
@@ -102,16 +123,7 @@ public class BattleRoundThread extends Thread {
 			
 			if (ng != null) {
 				
-				//end this player network game turn
-				
 				pi.incrementStrengthAll(1, true);
-				
-				for (CardType type : Player.TYPES) {
-					pi.enableDisableCards(type);
-				}
-				
-				NetworkEvent info = new NetworkEvent(Event.REMOTE_PLAYER_CARDS_INIT, oi);
-				ng.sendEvent(info);
 				
 				ng.sendYourTurnSignal();
 				
@@ -144,7 +156,7 @@ public class BattleRoundThread extends Thread {
 						
 						game.stage.addActor(opptSummons);
 						opptSummons.addListener(game.sdl);
-						opptSummons.addListener(game.tl);
+						opptSummons.addListener(game.new TargetedCardListener(opponent.getPlayerInfo().getId(), si.getIndex()));
 	
 						
 						CardImage[] imgs = opponent.getSlotCards();
@@ -204,17 +216,15 @@ public class BattleRoundThread extends Thread {
 				}
 				
 				oi.incrementStrengthAll(1, false);
-				pi.incrementStrengthAll(1, true);
-				
-				for (CardType type : Player.TYPES) {
-					pi.enableDisableCards(type);
-					oi.enableDisableCards(type);
-				}
-			
+				pi.incrementStrengthAll(1, false);
+							
 			}
 						
 			
-
+			for (CardType type : Player.TYPES) {
+				pi.enableDisableCards(type);
+				oi.enableDisableCards(type);
+			}
 			
 
 			

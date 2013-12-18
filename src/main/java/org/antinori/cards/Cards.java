@@ -98,7 +98,6 @@ public class Cards extends SimpleGame {
 	SpriteBatch batch;
 	
 	public MouseOverCardListener li;
-	public TargetedCardListener tl;
 	public ShowDescriptionListener sdl;
 	public SlotListener sl;
 	
@@ -266,7 +265,6 @@ public class Cards extends SimpleGame {
 		
 		sl = new SlotListener();
 		li = new MouseOverCardListener();
-		tl = new TargetedCardListener();
 		sdl = new ShowDescriptionListener();
 		
 		addSlotImages(opponent, 330, ydown(170), false);
@@ -302,7 +300,7 @@ public class Cards extends SimpleGame {
 			batch.begin();
 			sprBg.draw(batch);
 			if (NET_GAME != null) {
-				font.draw(batch, (NET_GAME.isMyTurn()?"Your Turn":"Their Turn") + " [" + NET_GAME.getConnectedHost() + "]", 70, ydown(320));
+				font.draw(batch, (NET_GAME.isMyTurn()?"Your Turn":"Their Turn") + " [" + NET_GAME.getConnectedHost() + "]", 65, ydown(310));
 			}
 			batch.end();
 			
@@ -503,7 +501,19 @@ public class Cards extends SimpleGame {
 
 	}
 	
-	class TargetedCardListener extends InputListener {	
+	public class TargetedCardListener extends InputListener {	
+		private int index;
+		private String targetedCardOwnerId;
+		public TargetedCardListener(String id, int index) {
+			this.targetedCardOwnerId = id;
+			this.index = index;
+		}
+		public int getIndex() {
+			return index;
+		}
+		public String getOwnerId() {
+			return targetedCardOwnerId;
+		}
 		
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			Actor actor = event.getListenerActor();
@@ -515,7 +525,7 @@ public class Cards extends SimpleGame {
 				clearHighlights();
 				
 				//cast the spell to target
-				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard);
+				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard, targetedCardOwnerId, index);
 				t.start();
 			}
 			return true;
@@ -594,7 +604,7 @@ public class Cards extends SimpleGame {
 						final CardImage clone = selectedCard.clone(cardListener);
 						
 						stage.addActor(clone);
-						clone.addListener(tl);
+						clone.addListener(new TargetedCardListener(player.getPlayerInfo().getId(), si.getIndex()));
 						clone.addListener(sdl);
 
 						CardImage[] imgs = player.getSlotCards();

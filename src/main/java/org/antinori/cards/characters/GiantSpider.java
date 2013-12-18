@@ -1,10 +1,9 @@
-package org.antinori.cards.characters;import org.antinori.cards.PlayerImage;
-
-import org.antinori.cards.Card;
+package org.antinori.cards.characters;import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
 import org.antinori.cards.CreatureFactory;
+import org.antinori.cards.PlayerImage;
 import org.antinori.cards.SlotImage;
 
 public class GiantSpider extends BaseCreature {
@@ -43,7 +42,7 @@ public class GiantSpider extends BaseCreature {
 		ci1.setCreature(sp1);
 		ci1.setFont(Cards.greenfont);
 		ci1.setFrame(Cards.ramka);
-		ci1.addListener(game.tl);
+		ci1.addListener(game.new TargetedCardListener(owner.getPlayerInfo().getId(), index));
 		ci1.addListener(game.sdl);
 		slot.setOccupied(true);
 		owner.getSlotCards()[index] = ci1;

@@ -3,7 +3,6 @@ package org.antinori.cards.network;
 public enum Event {
 	
 	REMOTE_PLAYER_INFO_INIT,
-	REMOTE_PLAYER_CARDS_INIT,
 	
 	PLAYER_INCR_LIFE,
 	PLAYER_DECR_LIFE,

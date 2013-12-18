@@ -23,8 +23,12 @@ public class NetworkEvent implements Serializable {
 	private int attack;
 	
 	private String spellName;
-	private String cardName;
+	private String caster;
+	private String spellTargetCardName;
+	private String targetedCardOwnerId;
 	private boolean damageViaSpell;
+	
+	private String cardName;
 
 	private String id;
 	private String playerIcon;
@@ -166,6 +170,30 @@ public class NetworkEvent implements Serializable {
 		return String.format(
 				"NetworkEvent %s (%s) slot=%s, life=%s, lifeIncr=%s, lifeDecr=%s, attack=%s, spellName=%s, cardName=%s, damageViaSpell=%s, id=%s, playerIcon=%s, playerClass=%s, typeStrengthAffected=%s, strengthAffected=%s, player=%s]", event,
 				eventid, slot, life, lifeIncr, lifeDecr, attack, spellName, cardName, damageViaSpell, id, playerIcon, playerClass, typeStrengthAffected, strengthAffected, player);
+	}
+
+	public String getSpellTargetCardName() {
+		return spellTargetCardName;
+	}
+
+	public void setSpellTargetCardName(String spellTargetCardName) {
+		this.spellTargetCardName = spellTargetCardName;
+	}
+
+	public String getCaster() {
+		return caster;
+	}
+
+	public void setCaster(String caster) {
+		this.caster = caster;
+	}
+
+	public String getTargetedCardOwnerId() {
+		return targetedCardOwnerId;
+	}
+
+	public void setTargetedCardOwnerId(String targetedCardOwnerId) {
+		this.targetedCardOwnerId = targetedCardOwnerId;
 	}
 	
 

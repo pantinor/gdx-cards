@@ -9,6 +9,7 @@ import org.antinori.cards.Cards;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -22,11 +23,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class SelectHostsDialog extends Window {
+	
 	private Cards game;
 	private java.util.List<String> foundHosts = new ArrayList<String>();
 	private List entries;
 	private boolean alive = true;
+	private EventListener closeListener;
 
+	
 	public SelectHostsDialog(String title, Cards game, final Stage stage, Skin skin) {
 		
 		super(title, skin);
@@ -69,7 +73,13 @@ public class SelectHostsDialog extends Window {
 				
 				Dialog dialog = new Dialog("Connect", skinTemp, "dialog") {
 					protected void result (Object object) {
-						doConnection(selectedHost);
+						Boolean ret = false;
+						if (object instanceof Boolean) {
+							ret = (Boolean)object;
+						}
+						if (ret)  {
+							doConnection(selectedHost);
+						}
 					}
 				}.text("Connect to "+selectedHost+"?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
 				
@@ -109,8 +119,14 @@ public class SelectHostsDialog extends Window {
 		if (connected) {
 			setAlive(false);
 			this.remove();
+			if (this.closeListener != null) closeListener.handle(null);
 		}
 	}
+		
+	public void addCloseListener(EventListener l) {
+		this.closeListener = l;
+	}
+
 
 	class HostsListenerThread implements Runnable {
 
@@ -155,28 +171,6 @@ public class SelectHostsDialog extends Window {
 		}
 	}
 	
-	
-	
-//	class TestThread implements Runnable {
-//
-//		public void run() {
-//
-//
-//			for (int i=1;i<6;i++) {
-//				try {
-//					Thread.sleep(5000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				foundHosts.add("192.168.1."+i);
-//				Object[] items = foundHosts.toArray();
-//				entries.setItems(items);
-//				
-//				SelectHostsDialog.this.pack();
-//			}
-//
-//		}
-//	}
 
 	public void setAlive(boolean alive) {
 		this.alive = alive;

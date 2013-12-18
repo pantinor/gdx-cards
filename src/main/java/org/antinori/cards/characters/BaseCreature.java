@@ -31,12 +31,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 		System.out.println("onSummoned: " + card);
 
-		ownerPlayer.decrementStrength(card.getType(), card.getCost(), true);
+		ownerPlayer.decrementStrength(card.getType(), card.getCost(), false);
 
-		if (Cards.NET_GAME != null) {
-			NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, slotIndex, card.getName(), ownerPlayer.getId());
-			Cards.NET_GAME.sendEvent(ne);
-		}
 
 		int nl = slotIndex - 1;
 		int nr = slotIndex + 1;
@@ -56,7 +52,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (ci == null)
 				continue;
 			if (ci.getCard().getName().equalsIgnoreCase("minotaurcommander")) {
-				this.card.incrementAttack(1, true);
+				this.card.incrementAttack(1, false);
 			}
 		}
 
@@ -69,11 +65,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 
 			if (leftNeighbor.equalsIgnoreCase("orcchieftain")) {
-				this.card.incrementAttack(2, true);
+				this.card.incrementAttack(2, false);
 			}
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nl].getCard().incrementAttack(2, true);
+				teamCards[nl].getCard().incrementAttack(2, false);
 			}
 
 		}
@@ -87,11 +83,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 
 			if (rightNeighbor.equalsIgnoreCase("orcchieftain")) {
-				this.card.incrementAttack(2, true);
+				this.card.incrementAttack(2, false);
 			}
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nr].getCard().incrementAttack(2, true);
+				teamCards[nr].getCard().incrementAttack(2, false);
 			}
 
 		}

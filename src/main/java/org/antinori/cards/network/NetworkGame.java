@@ -27,6 +27,8 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.PlayerListener;
 import org.antinori.cards.SlotImage;
 import org.antinori.cards.Specializations;
+import org.antinori.cards.Spell;
+import org.antinori.cards.SpellFactory;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -278,7 +280,7 @@ public class NetworkGame {
 				switch(evt) {
 				
 				case CARD_SET_ATTACK:
-					existingCardImage.getCard().setAttack(ne.getAttack(), false);
+					//existingCardImage.getCard().setAttack(ne.getAttack(), false);
 					break;
 
 				case CARD_SET_LIFE:
@@ -299,16 +301,18 @@ public class NetworkGame {
 					
 					Creature sp1 = CreatureFactory.getCreatureClass(ne.getCardName(), game, ci.getCard(), ci, index, pi, game.getOpposingPlayerImage(id));
 					ci.setCreature(sp1);
-					
+										
 					cards[index] = ci;
 					slot.setOccupied(true);
 					ci.setFont(Cards.greenfont);
 					ci.setFrame(Cards.ramka);
-					ci.addListener(game.tl);
+					ci.addListener(game.new TargetedCardListener(pi.getPlayerInfo().getId(), index));
 					ci.addListener(game.sdl);
 					ci.setBounds(0, Cards.SCREEN_HEIGHT, ci.getFrame().getWidth(), ci.getFrame().getHeight());
 					game.stage.addActor(ci);
 					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
+					
+					sp1.onSummoned();
 					
 					break;
 				case CARD_REMOVED:
@@ -322,7 +326,14 @@ public class NetworkGame {
 					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell(), false);
 					break;
 				case SPELL_CAST:
-					//TODO
+					CardImage spellCardImage = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getSpellName());
+					Spell spell = SpellFactory.getSpellClass(ne.getSpellName(), game, spellCardImage.getCard(), spellCardImage, pi, game.getOpposingPlayerImage(id));	
+					if (ne.getSpellTargetCardName() != null) {
+						PlayerImage targetedPlayerImage = game.getPlayerImage(ne.getTargetedCardOwnerId());
+						CardImage targetCardImage =  targetedPlayerImage.getSlotCards()[ne.getSlot()];
+						spell.setTargeted(targetCardImage);
+					}
+					spell.onCast();
 					break;
 				case PLAYER_INCR_STRENGTH_ALL:
 					pi.getPlayerInfo().incrementStrengthAll(ne.getStrengthAffected(), false);
@@ -332,25 +343,6 @@ public class NetworkGame {
 					break;
 				case PLAYER_INCR_STRENGTH:
 					pi.getPlayerInfo().incrementStrength(ne.getTypeStrengthAffected(), ne.getStrengthAffected(), false);
-					break;
-				case REMOTE_PLAYER_CARDS_INIT:
-										
-					Player pl = game.getPlayerImage(ne.getId()).getPlayerInfo();
-							
-					setPlayerCardsAfterSerialization(ne.getPlayer());
-
-					pl.setCards(CardType.FIRE, ne.getPlayer().getFireCards());
-					pl.setCards(CardType.AIR, ne.getPlayer().getAirCards());
-					pl.setCards(CardType.WATER, ne.getPlayer().getWaterCards());
-					pl.setCards(CardType.EARTH, ne.getPlayer().getEarthCards());
-					pl.setCards(CardType.OTHER, ne.getPlayer().getSpecialCards());
-					
-					for (CardType t : Player.TYPES) {
-						pi.getPlayerInfo().enableDisableCards(t);
-					}
-					
-					System.out.println("Set card images after serialization on player id: " + pl.getId());
-					
 					break;
 				default:
 					break;

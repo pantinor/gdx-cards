@@ -8,12 +8,12 @@ import org.antinori.cards.network.SelectHostsDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class SingleDuelChooser {
+public class SingleDuelChooser implements EventListener {
 	
 	Stage stage;
 	
@@ -107,6 +107,9 @@ public class SingleDuelChooser {
 						selectHostsShown = false;
 					}
 				});
+				
+				window.addCloseListener(SingleDuelChooser.this);
+				
 				window.getButtonTable().add(close).height(window.getPadTop());
 				window.setPosition(200, 100);
 				stage.addActor(window);
@@ -120,8 +123,12 @@ public class SingleDuelChooser {
 				if (Cards.NET_GAME != null) return;
 				Dialog dialog = new Dialog("Start Server", temp.skin, "dialog") {
 					protected void result (Object object) {
-						if (object.toString().equalsIgnoreCase("true"))
+						if (object.toString().equalsIgnoreCase("true")) {
 							Cards.NET_GAME = new NetworkGame(SingleDuelChooser.this.game, true);
+							Sprite sp = Cards.faceCardAtlas.createSprite("lanface");
+							sp.flip(false, true);
+							oi.setImg(sp);
+						}
 					}
 				}.text("Start a network server?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
 				
@@ -154,9 +161,7 @@ public class SingleDuelChooser {
 		startNetworkServer.setBounds(540, 133, 60, 25);
 
 				
-		
-		//stage.addActor(getRectangleImage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		
+			
 		stage.addActor(bgimg);
 
 		stage.addActor(cbgimg);
@@ -229,17 +234,26 @@ public class SingleDuelChooser {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 	}
-	
-	private Image getRectangleImage(int width, int height) {
 
-		Pixmap p = new Pixmap(width, height, Pixmap.Format.RGBA8888);
-		p.setColor(Color.BLACK);
-		p.fill();
-		
-		Image img = new Image(new TextureRegion(new Texture(p), width, height));
-		
-		return img; 
+	public boolean handle(Event event) {
+		Sprite sp = Cards.faceCardAtlas.createSprite("lanface");
+		sp.flip(false, true);
+		oi.setImg(sp);
+		return false;
 	}
+	
+//	private Image getRectangleImage(int width, int height) {
+//
+//		Pixmap p = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+//		p.setColor(Color.BLACK);
+//		p.fill();
+//		
+//		Image img = new Image(new TextureRegion(new Texture(p), width, height));
+//		
+//		return img; 
+//	}
+
+
 
 
 }
