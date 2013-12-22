@@ -24,7 +24,7 @@ public class Inferno extends BaseSpell {
 			if (i == slotIndex)
 				value = 18;
 
-			ci.decrementLife(value, game, true);
+			ci.decrementLife(value, game);
 
 			int remainingLife = ci.getCard().getLife();
 			boolean died = (remainingLife < 1);

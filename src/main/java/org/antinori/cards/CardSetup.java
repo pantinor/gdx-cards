@@ -146,7 +146,7 @@ public class CardSetup {
                     c.setCardname(getAttrText( n1, "cardname" ));
                     c.setDesc(getAttrText( n1, "desc" ));
                     
-                    c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )), false);
+                    c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )));
                     c.setLife(Integer.parseInt(getAttrText( n1, "life" )), false);
                     
                     Boolean spell = Boolean.parseBoolean(getAttrText( n1, "spell" ));

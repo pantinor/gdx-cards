@@ -6,7 +6,6 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.concurrent.Executors;
 import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
-import org.antinori.cards.CardListener;
 import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
@@ -279,25 +277,9 @@ public class NetworkGame {
 					
 				switch(evt) {
 				
-				case CARD_SET_ATTACK:
-					//existingCardImage.getCard().setAttack(ne.getAttack(), false);
-					break;
-
-				case CARD_SET_LIFE:
-					existingCardImage.getCard().setLife(ne.getLife(), false);
-					break;
-				case CARD_INCR_LIFE:
-					existingCardImage.incrementLife(ne.getLifeIncr(), game, false);
-					break;
-				case CARD_DECR_LIFE:
-					existingCardImage.decrementLife(ne.getLifeDecr(), game, false);
-					PlayerImage oi = game.getOpposingPlayerImage(id);
-					game.moveCardActorOnBattle(oi.getSlotCards()[index], oi);
-					break;
 				case CARD_ADDED:
 					CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());
-					CardListener cardListener = new CardListener(index, id);
-					CardImage ci = orig.clone(cardListener);
+					CardImage ci = orig.clone();
 					
 					Creature sp1 = CreatureFactory.getCreatureClass(ne.getCardName(), game, ci.getCard(), ci, index, pi, game.getOpposingPlayerImage(id));
 					ci.setCreature(sp1);
@@ -313,6 +295,11 @@ public class NetworkGame {
 					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
 					
 					sp1.onSummoned();
+					
+					break;
+				case CARD_ATTACKED:
+					CardImage attacker = pi.getSlotCards()[index];
+					attacker.getCreature().onAttack();
 					
 					break;
 				case CARD_REMOVED:

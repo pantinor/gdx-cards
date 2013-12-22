@@ -41,7 +41,7 @@ public class BaseFunctions {
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
 						
-			ci.decrementLife(value, game, true);
+			ci.decrementLife(value, game);
 			
 			int remainingLife = ci.getCard().getLife();
 			boolean died = (remainingLife < 1);
@@ -90,7 +90,7 @@ public class BaseFunctions {
 			if (index < 0 || index > 5 || index == slotIndex) continue;
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
-			ci.getCard().incrementAttack(value, true);
+			ci.getCard().incrementAttack(value);
 		}
 	}
 		

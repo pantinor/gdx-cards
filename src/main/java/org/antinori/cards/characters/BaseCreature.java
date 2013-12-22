@@ -29,7 +29,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	public void onSummoned() {
 
-		System.out.println("onSummoned: " + card);
+		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " summoned " + cardImage.getCard().getCardname() + ".");
 
 		ownerPlayer.decrementStrength(card.getType(), card.getCost(), false);
 
@@ -52,7 +52,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (ci == null)
 				continue;
 			if (ci.getCard().getName().equalsIgnoreCase("minotaurcommander")) {
-				this.card.incrementAttack(1, false);
+				this.card.incrementAttack(1);
 			}
 		}
 
@@ -65,11 +65,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 
 			if (leftNeighbor.equalsIgnoreCase("orcchieftain")) {
-				this.card.incrementAttack(2, false);
+				this.card.incrementAttack(2);
 			}
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nl].getCard().incrementAttack(2, false);
+				teamCards[nl].getCard().incrementAttack(2);
 			}
 
 		}
@@ -83,11 +83,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 
 			if (rightNeighbor.equalsIgnoreCase("orcchieftain")) {
-				this.card.incrementAttack(2, false);
+				this.card.incrementAttack(2);
 			}
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nr].getCard().incrementAttack(2, false);
+				teamCards[nr].getCard().incrementAttack(2);
 			}
 
 		}
@@ -95,8 +95,6 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 	public void onAttack() {
-
-		System.out.println("onAttack: " + card.getName());
 
 		int attack = this.card.getAttack();
 
@@ -106,20 +104,27 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (enemyCards[slotIndex] != null) {
 
 			// damage opposing creature
-			enemyCards[slotIndex].decrementLife(attack, game, true);
+			enemyCards[slotIndex].decrementLife(attack, game);
 
 			int remainingLife = enemyCards[slotIndex].getCard().getLife();
 			died = (remainingLife < 1);
+			
+			Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + "'s " 
+					+ cardImage.getCard().getCardname() + " attacked "
+					+ enemyCards[slotIndex].getCard().getCardname() 
+					+ " for " + attack + " damage.");
 
 			if (died) {
+				
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.CARD_REMOVED, slotIndex, enemyCards[slotIndex].getCard().getName(), opposingPlayer.getId());
 					Cards.NET_GAME.sendEvent(ne);
 				}
+				
 				disposeCardImage(opponent, slotIndex);
 			}
 
-			// TODO add battle description to log
+
 
 		} else {
 
@@ -132,7 +137,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 				game.handleGameOver();
 			}
 
-			// TODO add battle description to log
+			Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + "'s " 
+					+ cardImage.getCard().getCardname() + " attacked "
+					+ this.opponent.getPlayerInfo().getPlayerClass().getTitle() 
+					+ " for " + attack + " damage.");
 		}
 
 		game.moveCardActorOnBattle(cardImage, owner);
@@ -161,10 +169,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (nl >= 0 && teamCards[nl] != null) {
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nl].getCard().decrementAttack(2, true);
+				teamCards[nl].getCard().decrementAttack(2);
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
-				teamCards[nl].getCard().decrementAttack(1, true);
+				teamCards[nl].getCard().decrementAttack(1);
 			}
 
 		}
@@ -172,10 +180,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		if (nr <= 5 && teamCards[nr] != null) {
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
-				teamCards[nr].getCard().decrementAttack(2, true);
+				teamCards[nr].getCard().decrementAttack(2);
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
-				teamCards[nr].getCard().decrementAttack(1, true);
+				teamCards[nr].getCard().decrementAttack(1);
 			}
 
 		}

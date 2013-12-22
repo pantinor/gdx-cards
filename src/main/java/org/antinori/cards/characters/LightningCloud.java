@@ -28,7 +28,7 @@ public class LightningCloud extends BaseCreature {
 			if (ci == null)
 				continue;
 
-			ci.decrementLife(attack, game, true);
+			ci.decrementLife(attack, game);
 
 			int remainingLife = ci.getCard().getLife();
 			boolean died = (remainingLife < 1);

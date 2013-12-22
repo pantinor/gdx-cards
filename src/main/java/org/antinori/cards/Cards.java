@@ -82,7 +82,7 @@ public class Cards extends SimpleGame {
 	Button shuffleCardsButton;
 	ImageButton skipTurnButton;
 	Button showOpptCardsButton;
-
+	public static LogScrollPane logScrollPane;
 	
 	Label[] topStrengthLabels = new Label[5];
 	Label[] bottomStrengthLabels = new Label[5];
@@ -257,11 +257,16 @@ public class Cards extends SimpleGame {
 		cdi = new CardDescriptionImage(20, ydown(512));
 		cdi.setFont(greenfont);
 		
+		logScrollPane = new LogScrollPane(skin);
+		logScrollPane.setBounds(24, 36, 451, 173);
+		
 		stage.addActor(player);
 		stage.addActor(opponent);
 		stage.addActor(playerInfoLabel);
 		stage.addActor(opptInfoLabel);
 		stage.addActor(cdi);
+		stage.addActor(logScrollPane);
+
 		
 		sl = new SlotListener();
 		li = new MouseOverCardListener();
@@ -599,9 +604,7 @@ public class Cards extends SimpleGame {
 					
 					if (!selectedCard.getCard().isSpell()) {
 						
-						CardListener cardListener = new CardListener(si.getIndex(), player.getPlayerInfo().getId());
-						
-						final CardImage clone = selectedCard.clone(cardListener);
+						final CardImage clone = selectedCard.clone();
 						
 						stage.addActor(clone);
 						clone.addListener(new TargetedCardListener(player.getPlayerInfo().getId(), si.getIndex()));

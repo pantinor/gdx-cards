@@ -17,7 +17,6 @@ public class Card implements Serializable {
 	private boolean damagingSpell = false;
 	private boolean targetable = false;
 	private boolean wall = false;
-	private CardListener listener;
 
 	@Override
 	public String toString() {
@@ -32,7 +31,7 @@ public class Card implements Serializable {
 	public Card clone() {
 		Card c = new Card(this.type);
 		c.setName(this.name);
-		c.setAttack(this.attack, false);
+		c.setAttack(this.attack);
 		c.setLife(this.life, false);
 		c.setCardname(this.cardname);
 		c.setCost(this.cost);
@@ -68,36 +67,30 @@ public class Card implements Serializable {
 		this.name = name;
 	}
 	
-	public void setAttack(int attack, boolean notify) {
+	public void setAttack(int attack) {
 		this.attack = attack;
-		if (notify && listener != null) listener.setAttack(this, attack);
 	}
 	
-	public void incrementAttack(int inc, boolean notify) {
+	public void incrementAttack(int inc) {
 		if (wall) return;
 		this.attack += inc;
-		if (notify && listener != null) listener.setAttack(this, attack);
 
 	}
-	public void decrementAttack(int dec, boolean notify) {
+	public void decrementAttack(int dec) {
 		if (wall) return;
 		this.attack -= dec;
-		if (notify && listener != null) listener.setAttack(this, attack);
 	}
 
 	public void setLife(int life, boolean notify) {		
 		this.life = life;
-		if (notify && listener != null) listener.setLife(this, this.life);
 	}
 	
-	public void incrementLife(int inc, boolean notify) {
+	public void incrementLife(int inc) {
 		this.life += inc;
-		if (notify && listener != null) listener.incrementLife(this, inc);
 
 	}
-	public void decrementLife(int dec, boolean notify) {
+	public void decrementLife(int dec) {
 		this.life -= dec;
-		if (notify && listener != null) listener.decrementLife(this, dec);
 	}
 	
 	
@@ -155,14 +148,6 @@ public class Card implements Serializable {
 
 	public void setDamagingSpell(boolean damagingSpell) {
 		this.damagingSpell = damagingSpell;
-	}
-
-	public CardListener getListener() {
-		return listener;
-	}
-
-	public void setListener(CardListener listener) {
-		this.listener = listener;
 	}
 
 	

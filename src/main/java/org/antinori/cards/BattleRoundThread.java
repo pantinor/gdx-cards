@@ -102,20 +102,26 @@ public class BattleRoundThread extends Thread {
 				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
 				spell.setTargeted(targetedCardImage);
 				spell.onCast();
-				
+								
 			}
 			
 						
-			//TODO add summoning description to log
 			
 			int i = -1;
 			for (CardImage attacker : player.getSlotCards()) {
+				
 				i++;
 				if (summonedCardImage != null && i == summonedSlot) continue;
 				if (summonedCardImage != null && attacker != null &&
 						summonedCardImage.getCard().getName().equalsIgnoreCase("giantspider") && 
 						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
 				if (attacker == null) continue;
+				
+				if (Cards.NET_GAME != null) {
+					NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
+					ne.setSlot(i);
+					Cards.NET_GAME.sendEvent(ne);
+				}
 				
 				attacker.getCreature().onAttack(); 
 				
@@ -181,8 +187,6 @@ public class BattleRoundThread extends Thread {
 						}
 						
 						summonedCreature.onSummoned();
-						
-						//TODO add summoning description to log
 						
 					} else {
 						

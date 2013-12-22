@@ -16,7 +16,7 @@ public class CalltoThunder extends BaseSpell {
 		super.onCast();
 
 		if (this.targetedCardImage != null) {
-			this.targetedCardImage.decrementLife(6, game, true);
+			this.targetedCardImage.decrementLife(6, game);
 
 			int remainingLife = targetedCardImage.getCard().getLife();
 			boolean died = (remainingLife < 1);

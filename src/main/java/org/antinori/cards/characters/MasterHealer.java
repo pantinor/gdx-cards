@@ -28,7 +28,7 @@ public class MasterHealer extends BaseCreature {
 				CardImage ci2 = player.getSlotCards()[j];
 				if (ci2 == null)
 					continue;
-				ci2.incrementLife(3, game, true);
+				ci2.incrementLife(3, game);
 			}
 		}
 	}

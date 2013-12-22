@@ -1,5 +1,4 @@
 package org.antinori.cards.spells;import org.antinori.cards.BaseFunctions;
-
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
@@ -29,10 +28,10 @@ public class BaseSpell extends BaseFunctions implements Spell {
 	}
 
 	public void onCast() {
-		
-		System.out.println("onCast: " + card);
-		
+				
 		ownerPlayer.decrementStrength(card.getType(), card.getCost(), true);
+		
+		Cards.logScrollPane.add(this.card.getCardname() + " was cast.");
 
 		game.moveCardActorOnMagic(cardImage, owner);
 

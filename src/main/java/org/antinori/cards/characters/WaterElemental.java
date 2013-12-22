@@ -13,7 +13,7 @@ public class WaterElemental extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
-		this.card.setAttack(ownerPlayer.getStrengthWater(), true);
+		this.card.setAttack(ownerPlayer.getStrengthWater());
 		owner.incrementLife(10, game, true);
 		ownerPlayer.incrementStrength(CardType.WATER, 1, true);
 	}
@@ -23,6 +23,6 @@ public class WaterElemental extends BaseCreature {
 	}
 
 	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.WATER), true);
+		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.WATER));
 	}
 }

@@ -68,12 +68,6 @@ public class CardImage extends Actor implements Serializable {
 		ci.setBounds(getX(), getY(), this.getWidth(), this.getHeight());
 		return ci;
 	}
-	
-	public CardImage clone(CardListener listener) {
-		CardImage ci = clone();
-		ci.getCard().setListener(listener);
-		return ci;
-	}
 
 	public Sprite getImg() {
 		return img;
@@ -107,13 +101,13 @@ public class CardImage extends Actor implements Serializable {
 		this.font = font;
 	}
 	
-	public void decrementLife(int value, Cards game, boolean notify) {
-		card.decrementLife(value, notify);
+	public void decrementLife(int value, Cards game) {
+		card.decrementLife(value);
 		game.animateDamageText(value, getX() + 60, getY() + 10, getX() + 60, getY() + 69 );
 	}
 	
-	public void incrementLife(int value, Cards game, boolean notify) {
-		card.incrementLife(value, notify);
+	public void incrementLife(int value, Cards game) {
+		card.incrementLife(value);
 		game.animateHealingText(value, getX() + 60, getY() + 10, getX() + 60, getY() + 69 );
 	}
 		
