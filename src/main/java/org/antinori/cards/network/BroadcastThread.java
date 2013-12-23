@@ -34,7 +34,7 @@ public class BroadcastThread extends Thread {
 					DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
 					socket.send(packet);
 					
-					System.out.println("sent packet");
+					System.out.println("Sent multicast broadcast signal on the local subnet.");
 
 					int factor = new Random().nextInt(10);
 					

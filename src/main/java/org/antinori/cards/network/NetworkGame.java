@@ -99,22 +99,33 @@ public class NetworkGame {
 		return true;
 	}
 	
-	public boolean isConnected() {
+	public boolean isConnected() {	
 		return (socket==null?false:socket.isConnected());
 	}
 	
 	public String getConnectedHost() {
-		return (isConnected()? "not connected": "connected");
+		return (isConnected()? "Remote: "+ socket.getRemoteSocketAddress().toString() : "Not connected");
 	}
-	
-	
 	
 	
 	public void waitForPlayerInitHandshake() {
 		
 		try {
 			
-			if (socket == null) throw new Exception("socket is not connected (null).");
+			if (socket == null) {
+				
+				if (this.server) {
+					System.out.println("Waiting for client to accept socket connection.");
+
+					//wait in a loop
+					while (socket == null) {
+						Thread.sleep(1000);
+					}
+					
+				} else {
+					throw new Exception("socket is null.");
+				}
+			}
 			
 			game.player.getPlayerInfo().setListener(new PlayerListener(game.player.getPlayerInfo().getId()));
 			
@@ -222,7 +233,7 @@ public class NetworkGame {
 	public void read() {
 		try {
 			
-			if (socket == null) throw new Exception("socket is connected (null).");
+			if (socket == null) throw new Exception("socket is null.");
 			
 			boolean stillMoreToCome = true;
 			while(stillMoreToCome) {
@@ -248,8 +259,6 @@ public class NetworkGame {
 			
 			isMyTurn = true;
 			System.out.println("It is now my turn!");
-
-		
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -349,7 +358,7 @@ public class NetworkGame {
 	public void sendEvent(NetworkEvent event) {
 
 		try {
-			if (socket == null) throw new Exception("socket is connected (null).");
+			if (socket == null) throw new Exception("socket is null.");
 
 			synchronized(lock) {
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -368,7 +377,7 @@ public class NetworkGame {
 	public void sendYourTurnSignal() {
 
 		try {
-			if (socket == null) throw new Exception("socket is connected (null).");
+			if (socket == null) throw new Exception("socket is null.");
 
 			synchronized(lock) {
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());

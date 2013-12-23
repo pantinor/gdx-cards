@@ -59,9 +59,9 @@ public class Cards extends SimpleGame {
 	static Texture ramkabigspell;
 	static Texture slotTexture;
 
-	public static BitmapFont font;
+	public static BitmapFont defaultFont;
 	public static BitmapFont greenfont;
-	public static BitmapFont redfont;
+	public static BitmapFont customFont;
 	public static Label.LabelStyle whiteStyle;
 	public static Label.LabelStyle redStyle;
 	public static Label.LabelStyle greenStyle;
@@ -161,14 +161,15 @@ public class Cards extends SimpleGame {
 		player = new PlayerImage(null, portraitramka, greenfont, new Player(), 80, ydown(300));
 		opponent = new PlayerImage(null, portraitramka, greenfont, new Player(), 80, ydown(125));
 		
-		font = new BitmapFont(Gdx.files.classpath("default.fnt"), false);
+		defaultFont = new BitmapFont(Gdx.files.classpath("default.fnt"), false);
 		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), false);
 		greenfont.setColor(Color.valueOf("105410"));
-		redfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),false);
-		
-		whiteStyle = new Label.LabelStyle(font, Color.WHITE);
-		redStyle = new Label.LabelStyle(redfont, Color.RED);
-		greenStyle = new Label.LabelStyle(redfont, Color.GREEN);
+		customFont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),false);
+		customFont.setColor(Color.BLACK);
+
+		whiteStyle = new Label.LabelStyle(defaultFont, Color.WHITE);
+		redStyle = new Label.LabelStyle(customFont, Color.RED);
+		greenStyle = new Label.LabelStyle(customFont, Color.GREEN);
 		
 		playerInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
 		opptInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
@@ -305,7 +306,8 @@ public class Cards extends SimpleGame {
 			batch.begin();
 			sprBg.draw(batch);
 			if (NET_GAME != null) {
-				font.draw(batch, (NET_GAME.isMyTurn()?"Your Turn":"Their Turn") + " [" + NET_GAME.getConnectedHost() + "]", 65, ydown(310));
+				defaultFont.draw(batch, (NET_GAME.isMyTurn()?"Your Turn":"Their Turn"), 65, ydown(312));
+				customFont.draw(batch, NET_GAME.getConnectedHost(), 274, ydown(315));
 			}
 			batch.end();
 			
@@ -377,6 +379,11 @@ public class Cards extends SimpleGame {
 			}
 		}
 		
+		//do this again just to be sure
+		for (CardType type : Player.TYPES) {
+			player.getPlayerInfo().enableDisableCards(type);
+			opponent.getPlayerInfo().enableDisableCards(type);
+		}
 		
 	}
 	
