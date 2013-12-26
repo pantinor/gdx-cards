@@ -14,8 +14,8 @@ public class WaterElemental extends BaseCreature {
 	public void onSummoned() {
 		super.onSummoned();
 		this.card.setAttack(ownerPlayer.getStrengthWater());
-		owner.incrementLife(10, game, true);
-		ownerPlayer.incrementStrength(CardType.WATER, 1, true);
+		owner.incrementLife(10, game, !remoteEvent);
+		ownerPlayer.incrementStrength(CardType.WATER, 1, !remoteEvent);
 	}
 
 	public void onAttack() {

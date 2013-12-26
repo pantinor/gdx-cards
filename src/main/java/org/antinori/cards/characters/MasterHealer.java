@@ -18,18 +18,16 @@ public class MasterHealer extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void startOfTurnCheck(PlayerImage player) {
+	@Override
+	public void startOfTurnCheck() {
+
+		owner.incrementLife(3, game, !remoteEvent);
+
 		for (int index = 0; index < 6; index++) {
-			CardImage ci = player.getSlotCards()[index];
-			if (ci == null)
-				continue;
-			player.incrementLife(3, game, true);
-			for (int j = 0; j < 6; j++) {
-				CardImage ci2 = player.getSlotCards()[j];
-				if (ci2 == null)
-					continue;
-				ci2.incrementLife(3, game);
-			}
+			CardImage ci = owner.getSlotCards()[index];
+			if (ci == null)	continue;
+			ci.incrementLife(3, game);
 		}
+
 	}
 }

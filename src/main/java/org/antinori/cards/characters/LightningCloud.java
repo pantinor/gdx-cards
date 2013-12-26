@@ -20,22 +20,13 @@ public class LightningCloud extends BaseCreature {
 
 		int attack = this.card.getAttack();
 
-		for (int i = 0; i < 6; i++) {
-			if (i == slotIndex)
-				continue;
+		damageAllExceptCurrentIndex(attack);
+		
+		CardImage[] enemyCards = opponent.getSlotCards();
 
-			CardImage ci = opponent.getSlotCards()[i];
-			if (ci == null)
-				continue;
-
-			ci.decrementLife(attack, game);
-
-			int remainingLife = ci.getCard().getLife();
-			boolean died = (remainingLife < 1);
-
-			if (died) {
-				disposeCardImage(opponent, i);
-			}
+		if (enemyCards[slotIndex] != null) {
+			//damage the opponent even if there is a card opposite
+			damageOpponent(attack);
 		}
 
 	}

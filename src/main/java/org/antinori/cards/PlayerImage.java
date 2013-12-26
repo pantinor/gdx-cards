@@ -82,7 +82,6 @@ public class PlayerImage extends Actor {
 
 	public void setImg(Sprite img) {
 		this.img = img;
-		//this.img.flip(false, true);
 	}
 
 	public void setFrame(Texture frame) {
@@ -144,11 +143,6 @@ public class PlayerImage extends Actor {
 	public CardImage[] getSlotCards() {
 		return slotCards;
 	}
-
-	public void setSlotCards(CardImage[] slotCards) {
-		this.slotCards = slotCards;
-	}
-	
 	
 
 }

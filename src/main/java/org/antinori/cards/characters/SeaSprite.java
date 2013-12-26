@@ -19,7 +19,8 @@ public class SeaSprite extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
+	@Override
+	public void startOfTurnCheck() {
 		damagePlayer(owner, 2);
 	}
 }

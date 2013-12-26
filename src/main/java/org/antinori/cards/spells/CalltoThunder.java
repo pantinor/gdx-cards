@@ -27,6 +27,6 @@ public class CalltoThunder extends BaseSpell {
 			}
 		}
 
-		this.opponent.decrementLife(6, game, true, true);
+		damageOpponent(6);
 	}
 }

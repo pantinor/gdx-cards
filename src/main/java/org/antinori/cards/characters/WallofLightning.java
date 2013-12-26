@@ -10,7 +10,12 @@ public class WallofLightning extends BaseCreature {
 	}
 
 	public void onAttack() {
-		opponent.decrementLife(4, game, false, true);
-		super.onAttack();
+		//nothing
 	}
+	
+	@Override
+	public void startOfTurnCheck() {
+		damageOpponent(4);
+	}
+
 }

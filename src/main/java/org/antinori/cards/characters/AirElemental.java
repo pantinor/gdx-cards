@@ -13,8 +13,8 @@ public class AirElemental extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
-		this.opponent.decrementLife(8, game, true, true);
-		ownerPlayer.incrementStrength(CardType.AIR, 1, true);
+		damageOpponent(8);
+		ownerPlayer.incrementStrength(CardType.AIR, 1, !remoteEvent);
 
 	}
 
@@ -22,7 +22,7 @@ public class AirElemental extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.AIR));
+	public void startOfTurnCheck() {
+		this.card.setAttack(owner.getPlayerInfo().getStrength(CardType.AIR));
 	}
 }

@@ -14,12 +14,13 @@ public class FireElemental extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
-		ownerPlayer.incrementStrength(CardType.FIRE, 1, true);
+		ownerPlayer.incrementStrength(CardType.FIRE, 1, !remoteEvent);
 		damageAll(opponent, 3);
 		damagePlayer(opponent, 3);
 	}
 
-	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.FIRE));
+	@Override
+	public void startOfTurnCheck() {
+		this.card.setAttack(ownerPlayer.getStrength(CardType.FIRE));
 	}
 }

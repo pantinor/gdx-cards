@@ -282,16 +282,16 @@ public class NetworkGame {
 				PlayerImage pi = game.getPlayerImage(id);
 				SlotImage slot = pi.getSlots()[index];
 				CardImage[] cards = pi.getSlotCards();
-				CardImage existingCardImage = cards[index];
 					
 				switch(evt) {
 				
 				case CARD_ADDED:
+					
 					CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());
 					CardImage ci = orig.clone();
 					
-					Creature sp1 = CreatureFactory.getCreatureClass(ne.getCardName(), game, ci.getCard(), ci, index, pi, game.getOpposingPlayerImage(id));
-					ci.setCreature(sp1);
+					Creature creature = CreatureFactory.getCreatureClass(ne.getCardName(), game, ci.getCard(), ci, index, pi, game.getOpposingPlayerImage(id));
+					ci.setCreature(creature);
 										
 					cards[index] = ci;
 					slot.setOccupied(true);
@@ -303,25 +303,24 @@ public class NetworkGame {
 					game.stage.addActor(ci);
 					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
 					
-					sp1.onSummoned();
-					
+					creature.setNetworkEventFlag(true);
+					creature.onSummoned();
+					creature.setNetworkEventFlag(false);
+
 					break;
+					
 				case CARD_ATTACKED:
+					
 					CardImage attacker = pi.getSlotCards()[index];
+					
+					attacker.getCreature().setNetworkEventFlag(true);
 					attacker.getCreature().onAttack();
+					attacker.getCreature().setNetworkEventFlag(false);
 					
 					break;
-				case CARD_REMOVED:
-					BaseFunctions bf = (BaseFunctions)existingCardImage.getCreature();
-					bf.disposeCardImage(pi, index);
-					break;
-				case PLAYER_INCR_LIFE:
-					pi.incrementLife(ne.getLifeIncr(), game, false);
-					break;
-				case PLAYER_DECR_LIFE:
-					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell(), false);
-					break;
+
 				case SPELL_CAST:
+					
 					CardImage spellCardImage = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getSpellName());
 					Spell spell = SpellFactory.getSpellClass(ne.getSpellName(), game, spellCardImage.getCard(), spellCardImage, pi, game.getOpposingPlayerImage(id));	
 					if (ne.getSpellTargetCardName() != null) {
@@ -329,8 +328,21 @@ public class NetworkGame {
 						CardImage targetCardImage =  targetedPlayerImage.getSlotCards()[ne.getSlot()];
 						spell.setTargeted(targetCardImage);
 					}
+					
+					spell.setNetworkEventFlag(true);
 					spell.onCast();
+					spell.setNetworkEventFlag(false);
+
 					break;
+					
+				case PLAYER_INCR_LIFE:
+					pi.incrementLife(ne.getLifeIncr(), game, false);
+					break;
+				case PLAYER_DECR_LIFE:
+					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell(), false);
+					break;
+					
+					
 				case PLAYER_INCR_STRENGTH_ALL:
 					pi.getPlayerInfo().incrementStrengthAll(ne.getStrengthAffected(), false);
 					break;

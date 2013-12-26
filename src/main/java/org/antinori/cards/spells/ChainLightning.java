@@ -15,6 +15,6 @@ public class ChainLightning extends BaseSpell {
 		super.onCast();
 
 		damageAll(opponent, 9);
-		this.opponent.decrementLife(9, game, true, true);
+		damageOpponent(9);
 	}
 }

@@ -31,6 +31,7 @@ public class CardImage extends Actor implements Serializable {
 	public CardImage(Sprite img, Card info) {
 		this.img = img;
 		this.card = info;
+		setName(card.getName());
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public class CardImage extends Actor implements Serializable {
 	
 	public CardImage clone() {
 		CardImage ci = new CardImage();
+		ci.setName(card.getName());
 		ci.setCard(this.card.clone());
 		ci.setImg(this.img);
 		ci.setFont(this.font);

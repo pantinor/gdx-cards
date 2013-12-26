@@ -11,6 +11,8 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		
 	public BaseSpell(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
 		
+		this.isSpell = true;
+		
 		this.game = game;
 		this.card = card;
 		this.cardImage = cardImage;
@@ -31,10 +33,14 @@ public class BaseSpell extends BaseFunctions implements Spell {
 				
 		ownerPlayer.decrementStrength(card.getType(), card.getCost(), true);
 		
-		Cards.logScrollPane.add(this.card.getCardname() + " was cast.");
+		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " casts " + this.card.getCardname());
 
 		game.moveCardActorOnMagic(cardImage, owner);
 
+	}
+
+	public void setNetworkEventFlag(boolean flag) {
+		this.remoteEvent = flag;		
 	}
 	
 

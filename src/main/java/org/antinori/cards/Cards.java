@@ -645,6 +645,7 @@ public class Cards extends SimpleGame {
 	
 	
 	public void animateDamageText(int value, float sx, float sy, float dx, float dy) {
+		if (redStyle == null) return;
 		Label label = new Label("- "+value, redStyle);
 		label.setPosition(sx, sy); 
 		stage.addActor(label);
@@ -652,6 +653,7 @@ public class Cards extends SimpleGame {
 	}
 	
 	public void animateHealingText(int value, float sx, float sy, float dx, float dy) {
+		if (greenStyle == null) return;
 		Label label = new Label("+ "+value, greenStyle);
 		label.setPosition(sx, sy); 
 		stage.addActor(label);
@@ -665,7 +667,9 @@ public class Cards extends SimpleGame {
 			return;
 		}
 
-		attackSound.play();
+		if (attackSound != null) attackSound.play();
+		
+		if (pi.getSlots()[0] == null) return;
 		
 		final AtomicBoolean doneBattle = new AtomicBoolean(false);
 		
@@ -728,6 +732,8 @@ public class Cards extends SimpleGame {
 	
 	public void handleGameOver() {
 		gameOver = true;
+		
+		Cards.logScrollPane.add("Game Over");
 	}
 	
 	public PlayerImage getPlayerImage(String id) throws Exception {

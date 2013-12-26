@@ -11,11 +11,12 @@ public class ElvenHealer extends BaseCreature {
 	}
 	
 	public void onAttack() {
-		
-		owner.incrementLife(3, game, true);
-		
 		super.onAttack();
-		
+	}
+	
+	@Override
+	public void startOfTurnCheck() {
+		owner.incrementLife(3, game, !remoteEvent);
 	}
 
 

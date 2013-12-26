@@ -6,8 +6,6 @@ import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
 import org.antinori.cards.PlayerImage;
-import org.antinori.cards.network.Event;
-import org.antinori.cards.network.NetworkEvent;
 
 public class BaseCreature extends BaseFunctions implements Creature {
 
@@ -100,47 +98,13 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 		CardImage[] enemyCards = opponent.getSlotCards();
 
-		boolean died = false;
 		if (enemyCards[slotIndex] != null) {
 
-			// damage opposing creature
-			enemyCards[slotIndex].decrementLife(attack, game);
-
-			int remainingLife = enemyCards[slotIndex].getCard().getLife();
-			died = (remainingLife < 1);
-			
-			Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + "'s " 
-					+ cardImage.getCard().getCardname() + " attacked "
-					+ enemyCards[slotIndex].getCard().getCardname() 
-					+ " for " + attack + " damage.");
-
-			if (died) {
-				
-				if (Cards.NET_GAME != null) {
-					NetworkEvent ne = new NetworkEvent(Event.CARD_REMOVED, slotIndex, enemyCards[slotIndex].getCard().getName(), opposingPlayer.getId());
-					Cards.NET_GAME.sendEvent(ne);
-				}
-				
-				disposeCardImage(opponent, slotIndex);
-			}
-
-
+			damageSlot(enemyCards[slotIndex], slotIndex, attack);
 
 		} else {
 
-			opponent.decrementLife(attack, game, false, true);
-
-			int remainingLife = opposingPlayer.getLife();
-			died = (remainingLife < 1);
-
-			if (died) {
-				game.handleGameOver();
-			}
-
-			Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + "'s " 
-					+ cardImage.getCard().getCardname() + " attacked "
-					+ this.opponent.getPlayerInfo().getPlayerClass().getTitle() 
-					+ " for " + attack + " damage.");
+			damageOpponent(attack);
 		}
 
 		game.moveCardActorOnBattle(cardImage, owner);
@@ -190,23 +154,17 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	}
 
-	protected void damagePlayer(PlayerImage pi, int value) {
 
-		pi.decrementLife(value, game, false, true);
 
-		if (Cards.NET_GAME != null) {
-			NetworkEvent ne = new NetworkEvent(Event.PLAYER_DECR_LIFE, 0, "", pi.getPlayerInfo().getId());
-			ne.setLifeDecr(value);
-			Cards.NET_GAME.sendEvent(ne);
-		}
-
-		if (pi.getPlayerInfo().getLife() < 1) {
-			game.handleGameOver();
-		}
-	}
-
-	public void startOfTurnCheck(PlayerImage player) {
+	public void startOfTurnCheck() {
+		
+		//System.out.println("startOfTurnCheck");
 
 	}
+
+	public void setNetworkEventFlag(boolean flag) {
+		this.remoteEvent = flag;
+	}
+
 
 }

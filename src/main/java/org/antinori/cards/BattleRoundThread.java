@@ -70,6 +70,8 @@ public class BattleRoundThread extends Thread {
 				throw new Exception("Null parameter, cannot take a round.");
 			}
 			
+			Cards.logScrollPane.add("________________________");
+			
 			//start of turn for player
 			startOfTurnCheck(player);
 
@@ -245,10 +247,10 @@ public class BattleRoundThread extends Thread {
 	
 	private void startOfTurnCheck(PlayerImage player) {
 		CardImage[] cards = player.getSlotCards();
-		for (int index = 0;index<6;index++) {
+		for (int index = 0; index<6; index++) {
 			CardImage ci = cards[index];
 			if (ci == null) continue;
-			ci.getCreature().startOfTurnCheck(player);
+			ci.getCreature().startOfTurnCheck();
 		}
 	}
 		
