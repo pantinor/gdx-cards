@@ -15,9 +15,9 @@ public class Armageddon extends BaseSpell {
 	public void onCast() {
 		super.onCast();
 		int value = 8 + ownerPlayer.getStrengthFire();
-		damageAll(opponent, value);
-		damageAll(owner, value);
-		damageOpponent(value);
+		damageAll(opponent, adjustDamage(value));
+		damageAll(owner, adjustDamage(value));
+		damageOpponent(adjustDamage(value));
 	}
 
 }

@@ -25,7 +25,7 @@ public class PowerChains extends BaseSpell {
 				return;
 			}
 			
-			this.targetedCardImage.decrementLife(12, game);
+			this.targetedCardImage.decrementLife(adjustDamage(12), game);
 
 			int remainingLife = targetedCardImage.getCard().getLife();
 			boolean died = (remainingLife < 1);

@@ -21,7 +21,7 @@ public class Explosion extends BaseSpell {
 			
 			CardImage ci = opponent.getSlotCards()[bc.slotIndex];
 			if (ci != null) {
-				ci.decrementLife(28, game);
+				ci.decrementLife(adjustDamage(28), game);
 			}
 			
 		}

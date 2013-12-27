@@ -20,9 +20,8 @@ public class Inferno extends BaseSpell {
 			if (ci == null)
 				continue;
 
-			int value = 10;
-			if (i == slotIndex)
-				value = 18;
+			int value = adjustDamage(10);
+			if (i == slotIndex) value = adjustDamage(18);
 
 			ci.decrementLife(value, game);
 

@@ -14,7 +14,7 @@ public class StoneRain extends BaseSpell {
 	public void onCast() {
 		super.onCast();
 		
-		damageAll(opponent, 25);
-		damageAll(owner, 25);
+		damageAll(opponent, adjustDamage(25));
+		damageAll(owner, adjustDamage(25));
 	}
 }

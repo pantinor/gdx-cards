@@ -9,6 +9,7 @@ public class Card implements Serializable {
 	private String name;
 	private int attack;
 	private int life = 0;
+	private int originalLife = 0;
 	private int cost;
 	private String cardname;
 	private String desc;
@@ -32,7 +33,8 @@ public class Card implements Serializable {
 		Card c = new Card(this.type);
 		c.setName(this.name);
 		c.setAttack(this.attack);
-		c.setLife(this.life, false);
+		c.setLife(this.life);
+		c.setOriginalLife(this.originalLife);
 		c.setCardname(this.cardname);
 		c.setCost(this.cost);
 		c.setDesc(this.desc);
@@ -81,7 +83,7 @@ public class Card implements Serializable {
 		this.attack -= dec;
 	}
 
-	public void setLife(int life, boolean notify) {		
+	public void setLife(int life) {		
 		this.life = life;
 	}
 	
@@ -148,6 +150,14 @@ public class Card implements Serializable {
 
 	public void setDamagingSpell(boolean damagingSpell) {
 		this.damagingSpell = damagingSpell;
+	}
+
+	public int getOriginalLife() {
+		return originalLife;
+	}
+
+	public void setOriginalLife(int originalLife) {
+		this.originalLife = originalLife;
 	}
 
 	

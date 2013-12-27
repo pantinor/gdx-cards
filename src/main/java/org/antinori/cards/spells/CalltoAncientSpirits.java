@@ -13,7 +13,7 @@ public class CalltoAncientSpirits extends BaseSpell {
 
 	public void onCast() {
 		super.onCast();
-		damageAll(opponent, 10);
-		damageAll(owner, 5);
+		damageAll(opponent, adjustDamage(10));
+		damageAll(owner, adjustDamage(5));
 	}
 }

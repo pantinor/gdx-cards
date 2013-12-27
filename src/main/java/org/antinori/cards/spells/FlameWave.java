@@ -13,7 +13,7 @@ public class FlameWave extends BaseSpell {
 	}
 
 	public void onCast() {
-		damageAll(opponent, 9);
+		damageAll(opponent, adjustDamage(9));
 	}
 
 }

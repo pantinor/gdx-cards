@@ -14,7 +14,17 @@ public class Bargul extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
+		
 		damageAll(opponent, 4);
-		damageAll(owner, 4);
+		
+		for (int index = 0; index < 6; index ++) {
+
+			CardImage ci = owner.getSlotCards()[index];
+			if (ci == null || index == slotIndex) continue;
+
+			damageSlot(ci, index, owner, 4);
+		}
+		
+		
 	}
 }

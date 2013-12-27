@@ -100,7 +100,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 		if (enemyCards[slotIndex] != null) {
 
-			damageSlot(enemyCards[slotIndex], slotIndex, attack);
+			damageSlot(enemyCards[slotIndex], slotIndex, opponent, attack);
 
 		} else {
 
@@ -111,9 +111,36 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	}
 
-	public void onAttacked() {
+	public void onAttacked(int damage) {
+		
+		int nl = slotIndex - 1;
+		int nr = slotIndex + 1;
+		
+		CardImage[] teamCards = owner.getSlotCards();
 
-		System.out.println("onAttacked: " + card);
+		if (nl >= 0 && teamCards[nl] != null) {
+
+			String leftNeighbor = teamCards[nl].getCard().getName();
+
+			if (leftNeighbor.equalsIgnoreCase("holyguard")) {
+				damage = damage - 2;
+			}
+
+		}
+
+		if (nr <= 5 && teamCards[nr] != null) {
+
+			String rightNeighbor = teamCards[nr].getCard().getName();
+
+			if (rightNeighbor.equalsIgnoreCase("holyguard")) {
+				damage = damage - 2;
+			}
+
+		}
+		
+		if (damage < 0) damage = 0;
+
+		card.decrementLife(damage);
 
 	}
 
@@ -155,11 +182,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 
-
 	public void startOfTurnCheck() {
 		
-		//System.out.println("startOfTurnCheck");
-
 	}
 
 	public void setNetworkEventFlag(boolean flag) {

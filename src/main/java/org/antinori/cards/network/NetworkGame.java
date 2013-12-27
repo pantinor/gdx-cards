@@ -284,7 +284,14 @@ public class NetworkGame {
 				CardImage[] cards = pi.getSlotCards();
 					
 				switch(evt) {
-				
+				case CARD_START_TURN_CHECK:
+					CardImage starterCardImage = pi.getSlotCards()[index];
+					
+					starterCardImage.getCreature().setNetworkEventFlag(true);
+					starterCardImage.getCreature().startOfTurnCheck();
+					starterCardImage.getCreature().setNetworkEventFlag(false);
+					
+					break;
 				case CARD_ADDED:
 					
 					CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());

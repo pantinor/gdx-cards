@@ -19,7 +19,7 @@ public class BattleRoundThread extends Thread {
 	PlayerImage opponent;
 	
 	CardImage summonedCardImage;
-	int summonedSlot;
+	int summonedSlot = -1;
 	
 	AtomicBoolean opptSummoningFinished = new AtomicBoolean(false);
 
@@ -80,14 +80,19 @@ public class BattleRoundThread extends Thread {
 			
 			if (summonedCardImage != null) {
 				
+				summonedCardImage.getCreature().onSummoned();
+				
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, summonedSlot, summonedCardImage.getCard().getName(), player.getPlayerInfo().getId());
 					Cards.NET_GAME.sendEvent(ne);
 				}
 				
-				summonedCardImage.getCreature().onSummoned();
 				
 			} else if (spellCardImage != null) {
+				
+				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
+				spell.setTargeted(targetedCardImage);
+				spell.onCast();
 				
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.SPELL_CAST, player.getPlayerInfo().getId());
@@ -100,10 +105,6 @@ public class BattleRoundThread extends Thread {
 					ne.setCaster(player.getPlayerInfo().getId());
 					Cards.NET_GAME.sendEvent(ne);
 				}
-				
-				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
-				spell.setTargeted(targetedCardImage);
-				spell.onCast();
 								
 			}
 			
@@ -119,13 +120,13 @@ public class BattleRoundThread extends Thread {
 						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
 				if (attacker == null) continue;
 				
+				attacker.getCreature().onAttack(); 
+				
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
 					ne.setSlot(i);
 					Cards.NET_GAME.sendEvent(ne);
 				}
-				
-				attacker.getCreature().onAttack(); 
 				
 			}
 			
@@ -250,6 +251,15 @@ public class BattleRoundThread extends Thread {
 		for (int index = 0; index<6; index++) {
 			CardImage ci = cards[index];
 			if (ci == null) continue;
+			
+			//don't invoke on the current summoned slot
+			if (index == this.summonedSlot) continue;
+			
+			if (Cards.NET_GAME != null) {
+				NetworkEvent ne = new NetworkEvent(Event.CARD_START_TURN_CHECK, index, ci.getCard().getName(), player.getPlayerInfo().getId());
+				Cards.NET_GAME.sendEvent(ne);
+			}
+			
 			ci.getCreature().startOfTurnCheck();
 		}
 	}

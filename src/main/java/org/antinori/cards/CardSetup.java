@@ -147,8 +147,9 @@ public class CardSetup {
                     c.setDesc(getAttrText( n1, "desc" ));
                     
                     c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )));
-                    c.setLife(Integer.parseInt(getAttrText( n1, "life" )), false);
-                    
+                    c.setLife(Integer.parseInt(getAttrText( n1, "life" )));
+            		c.setOriginalLife(c.getLife());
+
                     Boolean spell = Boolean.parseBoolean(getAttrText( n1, "spell" ));
                     c.setSpell(spell);
                     

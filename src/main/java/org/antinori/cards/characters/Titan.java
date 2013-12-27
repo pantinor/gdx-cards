@@ -11,7 +11,11 @@ public class Titan extends BaseCreature {
 
 	public void onSummoned() {
 		super.onSummoned();
-		damageOpposingSlot(15);
+		
+		CardImage ci = opponent.getSlotCards()[slotIndex];
+		if (ci != null) {
+			damageSlot(ci, slotIndex, opponent, 15);
+		}
 	}
 
 	public void onAttack() {

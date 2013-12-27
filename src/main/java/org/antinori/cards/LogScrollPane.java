@@ -18,7 +18,7 @@ public class LogScrollPane extends ScrollPane {
 		labelStyle.fontColor = Color.BLACK;
 		
 		clear();
-		this.setScrollingDisabled(true, false);
+		setScrollingDisabled(true, false);
 
 	}
 	
@@ -35,13 +35,30 @@ public class LogScrollPane extends ScrollPane {
 		Label label = new Label(text, labelStyle);
 		log.add(label);
 		log.row();
-		this.scrollTo(0, 0, 0, 0);
-		this.invalidate();
-
+		scrollTo(0, 0, 0, 0);
+		pack();
 	}
 
 	public void clear() {
 		log.clear();
-		this.invalidate();
+		pack();
+	}
+	
+	
+	@Override
+	public float getPrefWidth () {
+		return this.getWidth();
+	}
+	@Override
+	public float getPrefHeight () {
+		return this.getHeight();
+	}
+	@Override
+	public float getMaxWidth () {
+		return this.getWidth();
+	}
+	@Override
+	public float getMaxHeight () {
+		return this.getHeight();
 	}
 }

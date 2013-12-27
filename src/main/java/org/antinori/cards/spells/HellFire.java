@@ -19,8 +19,16 @@ public class HellFire extends BaseSpell {
 		for (int index = 0; index < 6; index++) {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;
-			ci.incrementLife(13, game);
-			inc ++;
+			ci.decrementLife(adjustDamage(13), game);
+			
+			int remainingLife = ci.getCard().getLife();
+			boolean died = (remainingLife < 1);
+
+			if (died) {
+				disposeCardImage(opponent, index);
+				inc ++;
+			}
+			
 		}
 		
 		owner.getPlayerInfo().incrementStrength(CardType.FIRE, inc, !remoteEvent);

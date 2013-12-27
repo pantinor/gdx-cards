@@ -25,9 +25,9 @@ public class NaturesFury extends BaseSpell {
 		
 		Arrays.sort(attacks); //sort ascending
 		
-		int attack = attacks[4] + attacks[5];
+		int damage = attacks[4] + attacks[5];
 		
-		damageOpponent(attack);
+		damageOpponent(adjustDamage(damage));
 
 	}
 }

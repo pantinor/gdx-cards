@@ -5,7 +5,7 @@ public interface Creature {
 	
 	public void onSummoned() ;
 	public void onAttack() ;
-	public void onAttacked() ;
+	public void onAttacked(int damage) ;
 	public void onDying();
 	public void setNetworkEventFlag(boolean flag) ;
 	

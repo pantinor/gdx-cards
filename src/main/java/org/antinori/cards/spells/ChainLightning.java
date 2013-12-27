@@ -14,7 +14,7 @@ public class ChainLightning extends BaseSpell {
 	public void onCast() {
 		super.onCast();
 
-		damageAll(opponent, 9);
-		damageOpponent(9);
+		damageAll(opponent, adjustDamage(9));
+		damageOpponent(adjustDamage(9));
 	}
 }

@@ -43,5 +43,17 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		this.remoteEvent = flag;		
 	}
 	
+	protected int adjustDamage(int currentDamageValue) {
+		int qualifiedDamageValue = currentDamageValue;
+		CardImage[] teamCards = owner.getSlotCards();
+		for (CardImage ci : teamCards) {
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("FaerieApprentice")) {
+				qualifiedDamageValue = qualifiedDamageValue + 1;
+			}
+		}
+		return qualifiedDamageValue;
+	}
+	
 
 }

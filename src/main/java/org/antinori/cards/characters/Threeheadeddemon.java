@@ -20,7 +20,7 @@ public class Threeheadeddemon extends BaseCreature {
 		
 		int attack = this.card.getAttack();
 
-		damageAllExceptCurrentIndex(attack);
+		damageAllExceptCurrentIndex(attack, opponent);
 		
 		CardImage[] enemyCards = opponent.getSlotCards();
 

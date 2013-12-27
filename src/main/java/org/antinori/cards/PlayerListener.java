@@ -15,14 +15,14 @@ public class PlayerListener {
 		if (Cards.NET_GAME != null) {
 			NetworkEvent ne = new NetworkEvent(Event.PLAYER_INCR_LIFE, id);
 			ne.setLifeIncr(value);
-			Cards.NET_GAME.sendEvent(ne);
+			//Cards.NET_GAME.sendEvent(ne);
 		}
 	}
 	public void decrementLife(int value) {
 		if (Cards.NET_GAME != null) {
 			NetworkEvent ne = new NetworkEvent(Event.PLAYER_DECR_LIFE, id);
 			ne.setLifeDecr(value);
-			Cards.NET_GAME.sendEvent(ne);
+			//Cards.NET_GAME.sendEvent(ne);
 		}
 	}
 	

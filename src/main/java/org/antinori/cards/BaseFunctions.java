@@ -43,32 +43,31 @@ public class BaseFunctions {
 	public final void disposeCardImage(PlayerImage player, int slotIndex) {
 		CardImage ci = player.getSlotCards()[slotIndex];
 		
-		ci.getCreature().onDying();
-		
 		//remove actor from stage
 		ci.addAction(sequence(fadeOut(2),removeActor(ci)));
+		
+		ci.getCreature().onDying();
 		
 		player.getSlots()[slotIndex].setOccupied(false);
 		player.getSlotCards()[slotIndex] = null;
 
-		
 	}
 	
 
 	
-	protected void damageAllExceptCurrentIndex(int attack) {
+	protected void damageAllExceptCurrentIndex(int attack, PlayerImage pi) {
 		for (int index = 0; index < 6; index ++) {
 			
 			if (index == slotIndex) continue;
 
-			CardImage ci = opponent.getSlotCards()[index];
+			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
 
-			damageSlot(ci, index, attack);
+			damageSlot(ci, index, pi, attack);
 		}
 	}
 	
-	protected void damageSlot(CardImage ci, int index, int attack) {
+	protected void damageSlot(CardImage ci, int index, PlayerImage pi, int attack) {
 		
 		ci.decrementLife(attack, game);
 
@@ -81,7 +80,7 @@ public class BaseFunctions {
 				+ " for " + attack + " damage.");
 
 		if (died) {
-			disposeCardImage(opponent, index);
+			disposeCardImage(pi, index);
 		}
 	}
 	
@@ -94,16 +93,10 @@ public class BaseFunctions {
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
 						
-			damageSlot(ci, index, value);
+			damageSlot(ci, index, pi, value);
 		}
 	}
-
 	
-	protected void damageOpposingSlot(int value) {
-		int[] slots = new int[1];
-		slots[0] = slotIndex;
-		damageSlots(slots, opponent, value);
-	}
 	
 	protected void damageNeighbors(int value) {
 		int[] neighborSlots = new int[2];
