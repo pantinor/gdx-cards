@@ -787,17 +787,15 @@ public class Cards extends SimpleGame {
 		opponent.getPlayerInfo().setId(id);
 	}
 	
-	public PlayerImage getOpposingPlayerImage(String id) throws Exception {
+	public PlayerImage getOpposingPlayerImage(String id) {
 		
 		PlayerImage ret = null;
+		
 		if (player.getPlayerInfo().getId().equalsIgnoreCase(id)) 
 			ret = opponent;
 		
 		if (opponent.getPlayerInfo().getId().equalsIgnoreCase(id)) 
 			ret = player;
-		
-		if (ret == null)
-			throw new Exception("Could not find player with id: " + id);
 		
 		return ret;
 	}

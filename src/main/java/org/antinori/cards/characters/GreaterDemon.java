@@ -18,7 +18,7 @@ public class GreaterDemon extends BaseCreature {
 		int power = owner.getPlayerInfo().getStrengthFire();
 		if (power > 10) power = 10;
 		
-		damageAll(opponent,power);
+		damageAll(opponent, power);
 		damageOpponent(power);
 	}
 

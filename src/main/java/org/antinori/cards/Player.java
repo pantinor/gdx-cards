@@ -137,7 +137,7 @@ public class Player implements Serializable {
 		}
 	}
 
-	public void incrementStrengthAll(int incr, boolean notify) {
+	public void incrementStrengthAll(int incr) {
 		strengthFire += incr;
 		strengthAir += incr;
 		strengthEarth += incr;

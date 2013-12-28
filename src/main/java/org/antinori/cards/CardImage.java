@@ -106,9 +106,7 @@ public class CardImage extends Actor implements Serializable {
 	public boolean decrementLife(int value, Cards game) {
 		
 		creature.onAttacked(value);
-		
-		game.animateDamageText(value, getX() + 60, getY() + 10, getX() + 60, getY() + 69 );
-		
+				
 		int remainingLife = card.getLife();
 		boolean died = (remainingLife < 1);
 		

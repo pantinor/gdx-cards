@@ -7,10 +7,17 @@ public class Card implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
+	
+	private int originalAttack = 0;
 	private int attack;
+	
 	private int life = 0;
 	private int originalLife = 0;
+	
 	private int cost;
+	private int selfInflictingDamage = 0;
+
+	
 	private String cardname;
 	private String desc;
 	private CardType type;
@@ -35,6 +42,8 @@ public class Card implements Serializable {
 		c.setAttack(this.attack);
 		c.setLife(this.life);
 		c.setOriginalLife(this.originalLife);
+		c.setOriginalAttack(this.originalAttack);
+		c.setSelfInflictingDamage(this.selfInflictingDamage);
 		c.setCardname(this.cardname);
 		c.setCost(this.cost);
 		c.setDesc(this.desc);
@@ -158,6 +167,22 @@ public class Card implements Serializable {
 
 	public void setOriginalLife(int originalLife) {
 		this.originalLife = originalLife;
+	}
+
+	public int getOriginalAttack() {
+		return originalAttack;
+	}
+
+	public void setOriginalAttack(int originalAttack) {
+		this.originalAttack = originalAttack;
+	}
+
+	public int getSelfInflictingDamage() {
+		return selfInflictingDamage;
+	}
+
+	public void setSelfInflictingDamage(int selfInflictingDamage) {
+		this.selfInflictingDamage = selfInflictingDamage;
 	}
 
 	

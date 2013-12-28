@@ -5,6 +5,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.antinori.cards.characters.BaseCreature;
 import org.antinori.cards.network.Event;
 import org.antinori.cards.network.NetworkEvent;
 import org.antinori.cards.network.NetworkGame;
@@ -147,7 +148,7 @@ public class BattleRoundThread extends Thread {
 			
 			if (ng != null) {
 				
-				pi.incrementStrengthAll(1, true);
+				pi.incrementStrengthAll(1);
 				
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.PLAYER_INCR_STRENGTH_ALL, pi.getId());
@@ -223,10 +224,6 @@ public class BattleRoundThread extends Thread {
 				} else {
 					
 					System.out.println("No open top slots available for opponent to summon creature, casting a spell instead.");
-					//TODO
-					//cast a spell towards the player			
-					//Spell opptSpell = SpellFactory.getSpellClass(opptPick.getCard().getName(), game, opptPick.getCard(), opptPick, true);					
-					//opptSpell.onCast();
 					
 				}
 							
@@ -243,8 +240,8 @@ public class BattleRoundThread extends Thread {
 					attacker.getCreature().onAttack();
 				}
 				
-				oi.incrementStrengthAll(1, false);
-				pi.incrementStrengthAll(1, false);
+				oi.incrementStrengthAll(1);
+				pi.incrementStrengthAll(1);
 							
 			}
 						
@@ -268,6 +265,10 @@ public class BattleRoundThread extends Thread {
 	}
 	
 	private void startOfTurnCheck(PlayerImage player) throws GameOverException {
+		
+
+		
+		
 		CardImage[] cards = player.getSlotCards();
 		for (int index = 0; index<6; index++) {
 			CardImage ci = cards[index];
@@ -275,6 +276,15 @@ public class BattleRoundThread extends Thread {
 			
 			//don't invoke on the current summoned slot
 			if (index == this.summonedSlot) continue;
+			
+			if (player.getPlayerInfo().getPlayerClass() == Specializations.VampireLord) {
+				boolean died = ci.decrementLife(1, game);
+				Cards.logScrollPane.add("Vampire Lord drains 1 life from " + ci.getCard().getName());
+				if (died) {
+					BaseCreature bc = (BaseCreature)ci.getCreature();
+					bc.disposeCardImage(player, index);
+				}
+			}
 			
 			try {
 				ci.getCreature().startOfTurnCheck();

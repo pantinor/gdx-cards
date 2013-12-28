@@ -324,17 +324,9 @@ public class NetworkGame {
 					spell.onCast();
 
 					break;
-					
-				case PLAYER_INCR_LIFE:
-					pi.incrementLife(ne.getLifeIncr(), game);
-					break;
-				case PLAYER_DECR_LIFE:
-					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell());
-					break;
-					
-					
+										
 				case PLAYER_INCR_STRENGTH_ALL:
-					pi.getPlayerInfo().incrementStrengthAll(ne.getStrengthAffected(), false);
+					pi.getPlayerInfo().incrementStrengthAll(ne.getStrengthAffected());
 					break;				
 
 				default:

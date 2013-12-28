@@ -24,11 +24,34 @@ public class BaseFunctions {
 	}
 		
 	protected void damagePlayer(PlayerImage pi, int value) throws GameOverException {
+		
+		CardImage[] ownedCards = pi.getSlotCards();
+		CardImage[] opposingCards = game.getOpposingPlayerImage(pi.getPlayerInfo().getId()).getSlotCards();
+		
+		for (int index=0;index<6;index++) {
+			
+			if (opposingCards[index] != null) {
+				//if justicar is unblocked do extra damage to player
+				if (opposingCards[index].getCard().getName().equalsIgnoreCase("justicar") && ownedCards[index] == null ) {
+					value = value + 2;
+				}
+				if (opposingCards[index].getCard().getName().equalsIgnoreCase("vampiremystic")) {
+					opposingCards[index].getCard().incrementAttack(2);
+				}
+			}
+			
+			if (ownedCards[index] != null) {
+				if (ownedCards[index].getCard().getName().equalsIgnoreCase("chastiser")) {
+					ownedCards[index].getCard().incrementAttack(2);
+				}
+			}
 
+		}
+		
 		pi.decrementLife(value, game, isSpell);
 		
-		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + value + " damage.");
-
+		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + value + " damage to player.");
+		
 		if (pi.getPlayerInfo().getLife() < 1) {
 			throw new GameOverException(pi.getPlayerInfo().getId());
 		}
@@ -48,50 +71,31 @@ public class BaseFunctions {
 
 	}
 	
-
-	
 	protected void damageAllExceptCurrentIndex(int attack, PlayerImage pi) {
 		for (int index = 0; index < 6; index ++) {
-			
 			if (index == slotIndex) continue;
-
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
-
 			damageSlot(ci, index, pi, attack);
 		}
 	}
 	
 	protected void damageSlot(CardImage ci, int index, PlayerImage pi, int attack) {
-		
-		ci.decrementLife(attack, game);
-
-		int remainingLife = ci.getCard().getLife();
-		boolean died = (remainingLife < 1);
-		
-		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + "'s " 
-				+ cardImage.getCard().getCardname() + " attacked "
-				+ ci.getCard().getCardname() 
-				+ " for " + attack + " damage.");
-
+		boolean died = ci.decrementLife(attack, game);
+		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + attack + " damage to " + ci.getCard().getName());
 		if (died) {
 			disposeCardImage(pi, index);
 		}
 	}
 	
 	protected void damageSlots(int[] indexes, PlayerImage pi, int value) {
-		
 		for (int index : indexes) {
-			
 			if (index < 0 || index > 5) continue;
-					
 			CardImage ci = pi.getSlotCards()[index];
 			if (ci == null) continue;
-						
 			damageSlot(ci, index, pi, value);
 		}
 	}
-	
 	
 	protected void damageNeighbors(int value) {
 		int[] neighborSlots = new int[2];

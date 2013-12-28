@@ -147,6 +147,8 @@ public class CardSetup {
                     c.setDesc(getAttrText( n1, "desc" ));
                     
                     c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )));
+            		c.setOriginalAttack(c.getAttack());
+
                     c.setLife(Integer.parseInt(getAttrText( n1, "life" )));
             		c.setOriginalLife(c.getLife());
 
@@ -159,11 +161,14 @@ public class CardSetup {
                     Boolean damagingSpell = Boolean.parseBoolean(getAttrText( n1, "damagingSpell" ));
                     c.setDamagingSpell(damagingSpell);
                     
-                    int cost = Integer.parseInt(getAttrText( n1, "cost2" ));
+                    int cost = Integer.parseInt(getAttrText( n1, "summoningCost" ));
                     if (spell) {
-                    	cost = Integer.parseInt(getAttrText( n1, "cost1" ));
+                    	cost = Integer.parseInt(getAttrText( n1, "castingCost" ));
                     }
                     c.setCost(cost);
+                    
+                    int selfInflicting = Integer.parseInt(getAttrText( n1, "selfInflictingDamage" ));
+                    c.setSelfInflictingDamage(selfInflicting);
                     
                     Boolean wall = Boolean.parseBoolean(getAttrText( n1, "wall" ));
                     c.setWall(wall);
@@ -305,10 +310,10 @@ public class CardSetup {
 	
     private String getAttrText( Node n, String attr ) {
         NamedNodeMap attrs = n.getAttributes();
-        if ( attrs == null ) return null;
+        if ( attrs == null ) return "0";
 
         Node valueNode = attrs.getNamedItem(attr);
-        if ( valueNode == null ) return null;
+        if ( valueNode == null ) return "0";
 
         return valueNode.getNodeValue();
     }

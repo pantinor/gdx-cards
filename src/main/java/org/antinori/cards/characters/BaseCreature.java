@@ -31,6 +31,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " summoned " + cardImage.getCard().getCardname() + ".");
 
 		ownerPlayer.decrementStrength(card.getType(), card.getCost());
+		
+		if (card.getSelfInflictingDamage() > 0) {
+			Cards.logScrollPane.add(cardImage.getCard().getCardname() + " inflicts " + card.getSelfInflictingDamage() + " damage to owner.");
+			owner.decrementLife(card.getSelfInflictingDamage(), game, false);
+		}
 
 
 		int nl = slotIndex - 1;
@@ -118,30 +123,34 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		int nr = slotIndex + 1;
 		
 		CardImage[] teamCards = owner.getSlotCards();
+		CardImage[] opposingCards = opponent.getSlotCards();
+		
+		if (opposingCards[slotIndex] != null) {
+			String opposingCardName = opposingCards[slotIndex].getCard().getName();
+			if (opposingCardName.equalsIgnoreCase("justicar")) {
+				damage = damage * 2;
+			}
+		}
 
 		if (nl >= 0 && teamCards[nl] != null) {
-
 			String leftNeighbor = teamCards[nl].getCard().getName();
-
 			if (leftNeighbor.equalsIgnoreCase("holyguard")) {
 				damage = damage - 2;
 			}
-
 		}
 
 		if (nr <= 5 && teamCards[nr] != null) {
-
 			String rightNeighbor = teamCards[nr].getCard().getName();
-
 			if (rightNeighbor.equalsIgnoreCase("holyguard")) {
 				damage = damage - 2;
 			}
-
 		}
 		
 		if (damage < 0) damage = 0;
 
 		card.decrementLife(damage);
+		
+		game.animateDamageText(damage, cardImage.getX() + 60, cardImage.getY() + 10, cardImage.getX() + 60, cardImage.getY() + 69 );
 
 	}
 
@@ -153,31 +162,36 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		String name = this.card.getName();
 
 		CardImage[] teamCards = owner.getSlotCards();
+		CardImage[] opposingCards = opponent.getSlotCards();
 
 		if (name.equalsIgnoreCase("minotaurcommander")) {
 			enhanceAttackAll(owner, -1);
 		}
 
 		if (nl >= 0 && teamCards[nl] != null) {
-
 			if (name.equalsIgnoreCase("orcchieftain")) {
 				teamCards[nl].getCard().decrementAttack(2);
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
 				teamCards[nl].getCard().decrementAttack(1);
 			}
-
 		}
 
 		if (nr <= 5 && teamCards[nr] != null) {
-
 			if (name.equalsIgnoreCase("orcchieftain")) {
 				teamCards[nr].getCard().decrementAttack(2);
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
 				teamCards[nr].getCard().decrementAttack(1);
 			}
-
+		}
+		
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = opposingCards[index];
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("ghoul")) {
+				ci.getCard().incrementAttack(1);
+			}
 		}
 
 	}
