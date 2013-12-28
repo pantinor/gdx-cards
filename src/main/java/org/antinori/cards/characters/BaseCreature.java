@@ -5,6 +5,7 @@ import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
+import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
 
 public class BaseCreature extends BaseFunctions implements Creature {
@@ -25,11 +26,11 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	}
 
-	public void onSummoned() {
+	public void onSummoned() throws GameOverException {
 
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " summoned " + cardImage.getCard().getCardname() + ".");
 
-		ownerPlayer.decrementStrength(card.getType(), card.getCost(), false);
+		ownerPlayer.decrementStrength(card.getType(), card.getCost());
 
 
 		int nl = slotIndex - 1;
@@ -92,7 +93,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	}
 
-	public void onAttack() {
+	public void onAttack() throws GameOverException {
 
 		int attack = this.card.getAttack();
 
@@ -182,13 +183,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 
-	public void startOfTurnCheck() {
+	public void startOfTurnCheck() throws GameOverException {
 		
 	}
-
-	public void setNetworkEventFlag(boolean flag) {
-		this.remoteEvent = flag;
-	}
-
 
 }

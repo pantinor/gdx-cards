@@ -19,23 +19,18 @@ public class BaseFunctions {
 	
 	protected boolean isSpell = false;
 	
-	
-	//flag to avoid endless looping of network events
-	protected boolean remoteEvent = false;
-	
-	protected void damageOpponent(int value) {
+	protected void damageOpponent(int value) throws GameOverException {
 		damagePlayer(opponent, value);
 	}
 		
-	protected void damagePlayer(PlayerImage pi, int value) {
+	protected void damagePlayer(PlayerImage pi, int value) throws GameOverException {
 
-		pi.decrementLife(value, game, isSpell, !remoteEvent);
+		pi.decrementLife(value, game, isSpell);
 		
-		Cards.logScrollPane.add(pi.getPlayerInfo().getPlayerClass().getTitle() + "'s " 
-				+ cardImage.getCard().getCardname() + " attacked opponent for " + value + " damage.");
+		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + value + " damage.");
 
 		if (pi.getPlayerInfo().getLife() < 1) {
-			game.handleGameOver();
+			throw new GameOverException(pi.getPlayerInfo().getId());
 		}
 	}
 	
@@ -46,10 +41,10 @@ public class BaseFunctions {
 		//remove actor from stage
 		ci.addAction(sequence(fadeOut(2),removeActor(ci)));
 		
-		ci.getCreature().onDying();
-		
 		player.getSlots()[slotIndex].setOccupied(false);
 		player.getSlotCards()[slotIndex] = null;
+		
+		ci.getCreature().onDying();
 
 	}
 	

@@ -5,6 +5,7 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class WallofFire extends BaseCreature {
 
@@ -12,12 +13,12 @@ public class WallofFire extends BaseCreature {
 		super(game, card, cardImage, slotIndex, owner, opponent);
 	}
 
-	public void onSummoned() {
+	public void onSummoned() throws GameOverException {
 		super.onSummoned();
 		damageAll(opponent, 5);
 	}
 
-	public void onAttack() {
+	public void onAttack() throws GameOverException {
 		// nothing
 	}
 }

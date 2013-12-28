@@ -4,15 +4,15 @@ public class GameOverException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
 
-	private boolean computerPlayerDied;
+	private String diedPlayerId;
 	
-	public GameOverException(boolean isComputer) {
+	public GameOverException(String id) {
 		super();
-		this.computerPlayerDied = isComputer;
+		this.diedPlayerId = id;
 	}
 
-	public boolean isComputerPlayerDied() {
-		return computerPlayerDied;
+	public String getDiedPlayerId() {
+		return diedPlayerId;
 	}
 
 

@@ -5,6 +5,7 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class FlameWave extends BaseSpell {
 
@@ -12,7 +13,7 @@ public class FlameWave extends BaseSpell {
 		super(game, card, cardImage, owner, opponent);
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 		damageAll(opponent, adjustDamage(9));
 	}
 

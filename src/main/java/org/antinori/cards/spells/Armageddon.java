@@ -5,6 +5,7 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class Armageddon extends BaseSpell {
 
@@ -12,7 +13,7 @@ public class Armageddon extends BaseSpell {
 		super(game, card, cardImage, owner, opponent);
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 		super.onCast();
 		int value = 8 + ownerPlayer.getStrengthFire();
 		damageAll(opponent, adjustDamage(value));

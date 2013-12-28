@@ -23,9 +23,7 @@ public class Player implements Serializable {
 	private int strengthEarth = 0;
 	private int strengthWater = 0;
 	private int strengthSpecial = 0;
-	
-	private transient PlayerListener listener;
-	
+		
 	private List<CardImage> fireCards = new ArrayList<CardImage>();
 	private List<CardImage> airCards = new ArrayList<CardImage>();
 	private List<CardImage> waterCards = new ArrayList<CardImage>();
@@ -34,13 +32,18 @@ public class Player implements Serializable {
 
 	
 	public Player() {
-				
+		init();
+	}
+	
+	public void init() {
 		Dice dice = new Dice(1,6);
 		strengthFire = dice.roll();
 		strengthAir = dice.roll();
 		strengthEarth = dice.roll();
 		strengthWater = dice.roll();
 		strengthSpecial = dice.roll();
+		
+		life = 60;
 	}
 	
 	public String getImgName() {
@@ -63,14 +66,12 @@ public class Player implements Serializable {
 		this.life = life;
 	}
 	
-	public void incrementLife(int inc, boolean notify) {
+	public void incrementLife(int inc) {
 		this.life += inc;
-		if (notify && listener != null) listener.incrementLife(inc);
 
 	}
-	public void decrementLife(int dec, boolean notify) {
+	public void decrementLife(int dec) {
 		this.life -= dec;
-		if (notify && listener != null) listener.decrementLife(dec);
 	}
 	
 	public int getStrengthFire() {
@@ -142,11 +143,9 @@ public class Player implements Serializable {
 		strengthEarth += incr;
 		strengthWater += incr;
 		strengthSpecial += incr;
-		
-		if (notify && listener != null) listener.incrementStrengthAll(incr);
 	}
 	
-	public void decrementStrength(CardType type, int cost, boolean notify) {
+	public void decrementStrength(CardType type, int cost) {
 		switch (type) {
 		case FIRE:this.strengthFire -= cost;break;
 		case AIR:this.strengthAir -= cost;break;
@@ -154,12 +153,9 @@ public class Player implements Serializable {
 		case EARTH:this.strengthEarth -= cost;break;
 		default:this.strengthSpecial -= cost;break;
 		}
-		
-		if (notify && listener != null) listener.decrementStrength(cost, type);
-
 	}
 	
-	public void incrementStrength(CardType type, int cost, boolean notify) {
+	public void incrementStrength(CardType type, int cost) {
 		switch (type) {
 		case FIRE:this.strengthFire += cost;break;
 		case AIR:this.strengthAir += cost;break;
@@ -167,8 +163,6 @@ public class Player implements Serializable {
 		case EARTH:this.strengthEarth += cost;break;
 		default:this.strengthSpecial += cost;break;
 		}
-		if (notify && listener != null) listener.incrementStrength(cost, type);
-
 	}
 	
 	public void enableDisableCards(CardType type) {
@@ -281,9 +275,5 @@ public class Player implements Serializable {
 	}
 
 
-	public void setListener(PlayerListener listener) {
-		this.listener = listener;
-	}	
-	
 
 }

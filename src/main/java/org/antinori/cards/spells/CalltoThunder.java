@@ -5,6 +5,7 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 import org.antinori.cards.characters.BaseCreature;
 
 public class CalltoThunder extends BaseSpell {
@@ -12,19 +13,12 @@ public class CalltoThunder extends BaseSpell {
 		super(game, card, cardImage, owner, opponent);
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 		super.onCast();
 
 		if (this.targetedCardImage != null) {
-			this.targetedCardImage.decrementLife(adjustDamage(6), game);
-
-			int remainingLife = targetedCardImage.getCard().getLife();
-			boolean died = (remainingLife < 1);
-
-			if (died) {
-				BaseCreature bc = (BaseCreature) targetedCardImage.getCreature();
-				disposeCardImage(opponent, bc.slotIndex);
-			}
+			BaseCreature bc = (BaseCreature) targetedCardImage.getCreature();
+			damageSlot(targetedCardImage, bc.slotIndex, opponent, adjustDamage(6));
 		}
 
 		damageOpponent(adjustDamage(6));

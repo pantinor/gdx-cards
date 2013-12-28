@@ -6,23 +6,22 @@ import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class WrathofGod extends BaseSpell {
 	public WrathofGod(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
 		super(game, card, cardImage, owner, opponent);
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 		super.onCast();
 		
 		int inc = 0;
 		for (int index = 0; index < 6; index++) {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;
-			ci.decrementLife(adjustDamage(12), game);
 			
-			int remainingLife = ci.getCard().getLife();
-			boolean died = (remainingLife < 1);
+			boolean died = ci.decrementLife(adjustDamage(12), game);
 
 			if (died) {
 				disposeCardImage(opponent, index);
@@ -32,6 +31,6 @@ public class WrathofGod extends BaseSpell {
 			
 		}
 		
-		owner.getPlayerInfo().incrementStrength(CardType.HOLY, inc, !remoteEvent);
+		owner.getPlayerInfo().incrementStrength(CardType.HOLY, inc);
 	}
 }

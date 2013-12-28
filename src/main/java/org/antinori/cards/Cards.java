@@ -15,6 +15,7 @@ import org.antinori.cards.network.NetworkGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -34,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -101,7 +103,7 @@ public class Cards extends SimpleGame {
 	public ShowDescriptionListener sdl;
 	public SlotListener sl;
 	
-	SingleDuelChooser chooser;
+	public SingleDuelChooser chooser;
 	
 	private CardImage selectedCard;
 	private boolean activeTurn = false;
@@ -227,7 +229,7 @@ public class Cards extends SimpleGame {
 		shuffleCardsButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				try {
-					initializePlayerCards(player.getPlayerInfo(), true);
+					initializePlayerCards(player.getPlayerInfo(), true);					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -355,14 +357,29 @@ public class Cards extends SimpleGame {
 		synchronized(this) {
 		
 			if (chooser == null) return; 
+			
+			for (int index=0;index<6;index++) {
+				if (player.getSlotCards()[index] != null) player.getSlotCards()[index].remove();
+				player.getSlotCards()[index] = null;
+				player.getSlots()[index].setOccupied(false);
+				
+				if (opponent.getSlotCards()[index] != null) opponent.getSlotCards()[index].remove();
+				opponent.getSlotCards()[index] = null;
+				opponent.getSlots()[index].setOccupied(false);
+			}
 
 			player.setImg(chooser.pi.getImg());
 			player.setPlayerInfo(chooser.pi.getPlayerInfo());
+			player.getPlayerInfo().init();
 
 			opponent.setImg(chooser.oi.getImg());
 			opponent.setPlayerInfo(chooser.oi.getPlayerInfo());
-			
+			opponent.getPlayerInfo().init();
+
 			chooser = null;
+			gameOver = false;
+			Cards.logScrollPane.clear();
+
 		}
 		
 		initializePlayerCards(player.getPlayerInfo(), true);
@@ -390,7 +407,7 @@ public class Cards extends SimpleGame {
 	public void initializePlayerCards(Player player, boolean visible) throws Exception {
 		
 		selectedCard = null;
-		
+				
 		int x = 405;
 		int y = ydown(328);
 		
@@ -734,6 +751,21 @@ public class Cards extends SimpleGame {
 		gameOver = true;
 		
 		Cards.logScrollPane.add("Game Over");
+		
+		Dialog dialog = new Dialog("Game Over", skin, "dialog") {
+			protected void result (Object object) {
+				if (object.toString().equalsIgnoreCase("true")) {
+					//new Thread() {
+					//	public void run() {
+							chooser = new SingleDuelChooser();
+							chooser.init(Cards.this); 
+					//	}
+					//}.start();
+				}
+			}
+		}.text("Play Again?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
+		
+		dialog.show(this.stage);
 	}
 	
 	public PlayerImage getPlayerImage(String id) throws Exception {

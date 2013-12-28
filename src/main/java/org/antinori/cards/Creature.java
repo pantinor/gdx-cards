@@ -3,12 +3,11 @@ package org.antinori.cards;
 
 public interface Creature {
 	
-	public void onSummoned() ;
-	public void onAttack() ;
+	public void onSummoned() throws GameOverException ;
+	public void onAttack() throws GameOverException ;
 	public void onAttacked(int damage) ;
 	public void onDying();
-	public void setNetworkEventFlag(boolean flag) ;
 	
-	public void startOfTurnCheck();
+	public void startOfTurnCheck() throws GameOverException;
 
 }

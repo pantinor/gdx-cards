@@ -15,6 +15,8 @@ public enum Event {
 	CARD_START_TURN_CHECK,
 	CARD_ATTACKED,
 		
-	SPELL_CAST;
+	SPELL_CAST,
+	
+	GAME_OVER;
 
 }

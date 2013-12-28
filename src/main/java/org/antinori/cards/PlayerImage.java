@@ -52,19 +52,19 @@ public class PlayerImage extends Actor {
 		
 	}
 	
-	public void decrementLife(int value, Cards game, boolean viaSpell, boolean notify) {
+	public void decrementLife(int value, Cards game, boolean viaSpell) {
 		
 		float modifier = viaSpell?(receivedSpellDamageModifier*value):(receivedDamageModifier*value);
 		float temp = value + modifier;
 		value = (int)temp;
 				
-		playerInfo.decrementLife(value, notify);
+		playerInfo.decrementLife(value);
 		game.animateDamageText(value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
 	
 	}
 	
-	public void incrementLife(int value, Cards game, boolean notify) {
-		playerInfo.incrementLife(value, notify);
+	public void incrementLife(int value, Cards game) {
+		playerInfo.incrementLife(value);
 		game.animateHealingText(value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
 	}
 

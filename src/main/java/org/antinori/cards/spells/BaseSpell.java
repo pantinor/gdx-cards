@@ -2,6 +2,7 @@ package org.antinori.cards.spells;import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Spell;
 
@@ -29,9 +30,9 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		targetedCardImage = target;
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 				
-		ownerPlayer.decrementStrength(card.getType(), card.getCost(), true);
+		ownerPlayer.decrementStrength(card.getType(), card.getCost());
 		
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " casts " + this.card.getCardname());
 
@@ -39,9 +40,6 @@ public class BaseSpell extends BaseFunctions implements Spell {
 
 	}
 
-	public void setNetworkEventFlag(boolean flag) {
-		this.remoteEvent = flag;		
-	}
 	
 	protected int adjustDamage(int currentDamageValue) {
 		int qualifiedDamageValue = currentDamageValue;

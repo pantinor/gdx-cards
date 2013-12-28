@@ -5,6 +5,7 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 import org.antinori.cards.characters.BaseCreature;
 
 public class Explosion extends BaseSpell {
@@ -12,7 +13,7 @@ public class Explosion extends BaseSpell {
 		super(game, card, cardImage, owner, opponent);
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 		super.onCast();
 		
 		if (this.targetedCardImage != null) {
@@ -21,7 +22,7 @@ public class Explosion extends BaseSpell {
 			
 			CardImage ci = opponent.getSlotCards()[bc.slotIndex];
 			if (ci != null) {
-				ci.decrementLife(adjustDamage(28), game);
+				damageSlot(ci, bc.slotIndex, opponent, adjustDamage(28));
 			}
 			
 		}

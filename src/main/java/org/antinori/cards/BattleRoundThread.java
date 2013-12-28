@@ -80,30 +80,37 @@ public class BattleRoundThread extends Thread {
 			
 			if (summonedCardImage != null) {
 				
-				summonedCardImage.getCreature().onSummoned();
-				
-				if (Cards.NET_GAME != null) {
-					NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, summonedSlot, summonedCardImage.getCard().getName(), player.getPlayerInfo().getId());
-					Cards.NET_GAME.sendEvent(ne);
+				try {
+					summonedCardImage.getCreature().onSummoned();
+				} catch (GameOverException ge) {
+					throw ge;
+				} finally {
+					if (Cards.NET_GAME != null) {
+						NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, summonedSlot, summonedCardImage.getCard().getName(), player.getPlayerInfo().getId());
+						Cards.NET_GAME.sendEvent(ne);
+					}
 				}
-				
 				
 			} else if (spellCardImage != null) {
 				
-				Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
-				spell.setTargeted(targetedCardImage);
-				spell.onCast();
-				
-				if (Cards.NET_GAME != null) {
-					NetworkEvent ne = new NetworkEvent(Event.SPELL_CAST, player.getPlayerInfo().getId());
-					ne.setSpellName(spellCardImage.getCard().getName());
-					if (targetedCardImage != null) {
-						ne.setSpellTargetCardName(targetedCardImage.getCard().getName());
-						ne.setSlot(this.targetedSlot);
-						ne.setTargetedCardOwnerId(this.targetedCardOwnerId);
+				try {
+					Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
+					spell.setTargeted(targetedCardImage);
+					spell.onCast();
+				} catch (GameOverException ge) {
+					throw ge;
+				} finally {
+					if (Cards.NET_GAME != null) {
+						NetworkEvent ne = new NetworkEvent(Event.SPELL_CAST, player.getPlayerInfo().getId());
+						ne.setSpellName(spellCardImage.getCard().getName());
+						if (targetedCardImage != null) {
+							ne.setSpellTargetCardName(targetedCardImage.getCard().getName());
+							ne.setSlot(this.targetedSlot);
+							ne.setTargetedCardOwnerId(this.targetedCardOwnerId);
+						}
+						ne.setCaster(player.getPlayerInfo().getId());
+						Cards.NET_GAME.sendEvent(ne);
 					}
-					ne.setCaster(player.getPlayerInfo().getId());
-					Cards.NET_GAME.sendEvent(ne);
 				}
 								
 			}
@@ -114,18 +121,26 @@ public class BattleRoundThread extends Thread {
 			for (CardImage attacker : player.getSlotCards()) {
 				
 				i++;
+				
 				if (summonedCardImage != null && i == summonedSlot) continue;
+				
+				if (attacker == null) continue;
+				
+				//do not let the forest spiders attack the same time that the giant spider is summoned
 				if (summonedCardImage != null && attacker != null &&
 						summonedCardImage.getCard().getName().equalsIgnoreCase("giantspider") && 
 						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
-				if (attacker == null) continue;
 				
-				attacker.getCreature().onAttack(); 
-				
-				if (Cards.NET_GAME != null) {
-					NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
-					ne.setSlot(i);
-					Cards.NET_GAME.sendEvent(ne);
+				try {
+					attacker.getCreature().onAttack(); 
+				} catch (GameOverException ge) {
+					throw ge;
+				} finally {
+					if (Cards.NET_GAME != null) {
+						NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
+						ne.setSlot(i);
+						Cards.NET_GAME.sendEvent(ne);
+					}
 				}
 				
 			}
@@ -133,6 +148,12 @@ public class BattleRoundThread extends Thread {
 			if (ng != null) {
 				
 				pi.incrementStrengthAll(1, true);
+				
+				if (Cards.NET_GAME != null) {
+					NetworkEvent ne = new NetworkEvent(Event.PLAYER_INCR_STRENGTH_ALL, pi.getId());
+					ne.setStrengthAffected(1);
+					Cards.NET_GAME.sendEvent(ne);
+				}
 				
 				ng.sendYourTurnSignal();
 				
@@ -246,7 +267,7 @@ public class BattleRoundThread extends Thread {
 		
 	}
 	
-	private void startOfTurnCheck(PlayerImage player) {
+	private void startOfTurnCheck(PlayerImage player) throws GameOverException {
 		CardImage[] cards = player.getSlotCards();
 		for (int index = 0; index<6; index++) {
 			CardImage ci = cards[index];
@@ -255,12 +276,16 @@ public class BattleRoundThread extends Thread {
 			//don't invoke on the current summoned slot
 			if (index == this.summonedSlot) continue;
 			
-			if (Cards.NET_GAME != null) {
-				NetworkEvent ne = new NetworkEvent(Event.CARD_START_TURN_CHECK, index, ci.getCard().getName(), player.getPlayerInfo().getId());
-				Cards.NET_GAME.sendEvent(ne);
+			try {
+				ci.getCreature().startOfTurnCheck();
+			} catch (GameOverException ge) {
+				throw ge;
+			} finally {
+				if (Cards.NET_GAME != null) {
+					NetworkEvent ne = new NetworkEvent(Event.CARD_START_TURN_CHECK, index, ci.getCard().getName(), player.getPlayerInfo().getId());
+					Cards.NET_GAME.sendEvent(ne);
+				}
 			}
-			
-			ci.getCreature().startOfTurnCheck();
 		}
 	}
 		

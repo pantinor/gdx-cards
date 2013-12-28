@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.CardType;
@@ -22,7 +21,6 @@ import org.antinori.cards.Creature;
 import org.antinori.cards.CreatureFactory;
 import org.antinori.cards.Player;
 import org.antinori.cards.PlayerImage;
-import org.antinori.cards.PlayerListener;
 import org.antinori.cards.SlotImage;
 import org.antinori.cards.Specializations;
 import org.antinori.cards.Spell;
@@ -126,9 +124,7 @@ public class NetworkGame {
 					throw new Exception("socket is null.");
 				}
 			}
-			
-			game.player.getPlayerInfo().setListener(new PlayerListener(game.player.getPlayerInfo().getId()));
-			
+						
 			NetworkEvent info = new NetworkEvent(Event.REMOTE_PLAYER_INFO_INIT, game.player.getPlayerInfo());
 			
 			SendInitPlayerInfoThread thread = new SendInitPlayerInfoThread(info);
@@ -158,8 +154,6 @@ public class NetworkGame {
 						
 						pi.getPlayerInfo().setPlayerClass(Specializations.fromTitleString(pclass));
 						pi.getPlayerInfo().setImgName(pimg);
-						pi.getPlayerInfo().setListener(new PlayerListener(id));
-
 						
 						System.out.println("######");
 						System.out.println("Got remote id: " + id);
@@ -286,12 +280,9 @@ public class NetworkGame {
 				switch(evt) {
 				case CARD_START_TURN_CHECK:
 					CardImage starterCardImage = pi.getSlotCards()[index];
-					
-					starterCardImage.getCreature().setNetworkEventFlag(true);
 					starterCardImage.getCreature().startOfTurnCheck();
-					starterCardImage.getCreature().setNetworkEventFlag(false);
-					
 					break;
+					
 				case CARD_ADDED:
 					
 					CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());
@@ -309,21 +300,15 @@ public class NetworkGame {
 					ci.setBounds(0, Cards.SCREEN_HEIGHT, ci.getFrame().getWidth(), ci.getFrame().getHeight());
 					game.stage.addActor(ci);
 					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
-					
-					creature.setNetworkEventFlag(true);
+										
 					creature.onSummoned();
-					creature.setNetworkEventFlag(false);
 
 					break;
 					
 				case CARD_ATTACKED:
 					
 					CardImage attacker = pi.getSlotCards()[index];
-					
-					attacker.getCreature().setNetworkEventFlag(true);
 					attacker.getCreature().onAttack();
-					attacker.getCreature().setNetworkEventFlag(false);
-					
 					break;
 
 				case SPELL_CAST:
@@ -336,29 +321,22 @@ public class NetworkGame {
 						spell.setTargeted(targetCardImage);
 					}
 					
-					spell.setNetworkEventFlag(true);
 					spell.onCast();
-					spell.setNetworkEventFlag(false);
 
 					break;
 					
 				case PLAYER_INCR_LIFE:
-					pi.incrementLife(ne.getLifeIncr(), game, false);
+					pi.incrementLife(ne.getLifeIncr(), game);
 					break;
 				case PLAYER_DECR_LIFE:
-					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell(), false);
+					pi.decrementLife(ne.getLifeDecr(), game, ne.isDamageViaSpell());
 					break;
 					
 					
 				case PLAYER_INCR_STRENGTH_ALL:
 					pi.getPlayerInfo().incrementStrengthAll(ne.getStrengthAffected(), false);
-					break;
-				case PLAYER_DECR_STRENGTH:
-					pi.getPlayerInfo().decrementStrength(ne.getTypeStrengthAffected(), ne.getStrengthAffected(), false);
-					break;
-				case PLAYER_INCR_STRENGTH:
-					pi.getPlayerInfo().incrementStrength(ne.getTypeStrengthAffected(), ne.getStrengthAffected(), false);
-					break;
+					break;				
+
 				default:
 					break;
 				

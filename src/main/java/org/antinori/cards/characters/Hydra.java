@@ -5,17 +5,18 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class Hydra extends BaseCreature {
 	public Hydra(Cards game, Card card, CardImage cardImage, int slotIndex, PlayerImage owner, PlayerImage opponent) {
 		super(game, card, cardImage, slotIndex, owner, opponent);
 	}
 
-	public void onSummoned() {
+	public void onSummoned() throws GameOverException {
 		super.onSummoned();
 	}
 
-	public void onAttack() {
+	public void onAttack() throws GameOverException {
 		super.onAttack();
 		
 		int attack = this.card.getAttack();
@@ -31,7 +32,7 @@ public class Hydra extends BaseCreature {
 	}
 	
 	@Override
-	public void startOfTurnCheck() {
+	public void startOfTurnCheck() throws GameOverException {
 		this.cardImage.incrementLife(4, game);
 	}
 }

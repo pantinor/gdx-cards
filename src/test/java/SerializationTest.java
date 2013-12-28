@@ -8,6 +8,7 @@ import java.util.List;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.CardType;
+import org.antinori.cards.GameOverException;
 import org.antinori.cards.Player;
 import org.antinori.cards.Specializations;
 
@@ -15,6 +16,29 @@ import org.antinori.cards.Specializations;
 public class SerializationTest {
 	
 	public static void main(String[] args) {
+		
+		try {
+			whatever();
+		} catch (GameOverException ge) {
+			//ge.printStackTrace();
+		} finally {
+			System.out.println("in finally2");
+		}
+
+		
+	}
+	
+	public static void whatever() throws GameOverException {
+		try {
+			throw new GameOverException("123123");
+		} catch (GameOverException ge) {
+			throw ge;
+		} finally {
+			System.out.println("in finally1");
+		}
+	}
+	
+	public static void main2(String[] args) {
 		
 //		for (String s : Specializations.titles()) {
 //			Specializations sp = Specializations.fromTitleString(s);

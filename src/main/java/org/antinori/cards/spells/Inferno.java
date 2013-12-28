@@ -5,6 +5,7 @@ import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class Inferno extends BaseSpell {
 
@@ -12,25 +13,18 @@ public class Inferno extends BaseSpell {
 		super(game, card, cardImage, owner, opponent);
 	}
 
-	public void onCast() {
+	public void onCast() throws GameOverException {
 
 		for (int i = 0; i < 6; i++) {
 
 			CardImage ci = opponent.getSlotCards()[i];
-			if (ci == null)
-				continue;
+			if (ci == null)	continue;
 
 			int value = adjustDamage(10);
 			if (i == slotIndex) value = adjustDamage(18);
 
-			ci.decrementLife(value, game);
+			damageSlot(ci, i, opponent, value);
 
-			int remainingLife = ci.getCard().getLife();
-			boolean died = (remainingLife < 1);
-
-			if (died) {
-				disposeCardImage(opponent, i);
-			}
 		}
 
 	}

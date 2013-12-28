@@ -4,6 +4,7 @@ import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
+import org.antinori.cards.GameOverException;
 
 public class PriestofFire extends BaseCreature {
 
@@ -11,9 +12,9 @@ public class PriestofFire extends BaseCreature {
 		super(game, card, cardImage, slotIndex, owner, opponent);
 	}
 	
-	public void onSummoned() {
+	public void onSummoned() throws GameOverException {
 		super.onSummoned();
-		ownerPlayer.incrementStrength(CardType.FIRE, 1, true);
+		ownerPlayer.incrementStrength(CardType.FIRE, 1);
 	}
 
 
