@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Set;
 
 import org.antinori.cards.Card;
@@ -11,9 +12,14 @@ import org.antinori.cards.CreatureFactory;
 import org.antinori.cards.LogScrollPane;
 import org.antinori.cards.Player;
 import org.antinori.cards.PlayerImage;
+import org.antinori.cards.Sound;
+import org.antinori.cards.Sounds;
+import org.antinori.cards.Spell;
+import org.antinori.cards.SpellFactory;
 import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
@@ -38,7 +44,7 @@ public class CreatureTest implements ApplicationListener {
 		try {
 			
 			String playerCard = "Titan";
-			String opponentCard = "Lemure";
+			String opponentCard = "SeaSprite";
 
 			String dir = System.getProperty("user.dir");
 
@@ -71,8 +77,20 @@ public class CreatureTest implements ApplicationListener {
 			Creature creature2 = CreatureFactory.getCreatureClass(opponentCard, game, ci2.getCard(), ci2, 1, opponent, player);
 			ci2.setCreature(creature2);
 
-			creature.onSummoned();
-			creature.onAttack();
+			//creature.onSummoned();
+			//creature.onAttack();
+			
+			Sounds.play(Sound.MAGIC);
+					
+			for (Card card : cs.getSpellCards()) {
+				String name = card.getName();
+				Spell spell = SpellFactory.getSpellClass(name, null, null, null, new PlayerImage(null, null, new Player()), new PlayerImage(null, null, new Player()));	
+				Music m = Sounds.play(spell);
+				
+				//while (m.isPlaying()) {
+					Thread.sleep(3000);
+				//}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

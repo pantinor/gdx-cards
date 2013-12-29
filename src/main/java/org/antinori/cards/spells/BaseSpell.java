@@ -4,6 +4,7 @@ import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
+import org.antinori.cards.Sounds;
 import org.antinori.cards.Spell;
 
 public class BaseSpell extends BaseFunctions implements Spell {
@@ -36,6 +37,8 @@ public class BaseSpell extends BaseFunctions implements Spell {
 		
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " casts " + this.card.getCardname());
 
+		Sounds.play(this);
+		
 		game.moveCardActorOnMagic(cardImage, owner);
 
 	}

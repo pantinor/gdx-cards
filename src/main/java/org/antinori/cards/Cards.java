@@ -14,9 +14,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.antinori.cards.network.NetworkGame;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -33,9 +32,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -127,7 +126,7 @@ public class Cards extends SimpleGame {
 		
 		batch = new SpriteBatch();
 		
-		Sounds.play(Sound.BACKGROUND1);
+		Sounds.startBackGroundMusic();
 		
 		
 		ramka = new Texture(Gdx.files.classpath("images/ramka.png"));
@@ -706,8 +705,6 @@ public class Cards extends SimpleGame {
 			System.err.println("moveCardActorOnMagic: null ci or pi");
 			return;
 		}
-
-		Sounds.play(Sound.MAGIC);
 		
 		final AtomicBoolean done = new AtomicBoolean(false);
 		
