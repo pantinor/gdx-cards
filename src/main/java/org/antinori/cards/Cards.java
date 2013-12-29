@@ -92,10 +92,6 @@ public class Cards extends SimpleGame {
 
 	public CardSetup cs;
 	CardDescriptionImage cdi;
-	
-	public Music bgm;
-	public Music attackSound;
-	public Music magicSound;
 
 	SpriteBatch batch;
 	
@@ -131,15 +127,8 @@ public class Cards extends SimpleGame {
 		
 		batch = new SpriteBatch();
 		
-//		bgm = Gdx.audio.newMusic(Gdx.files.classpath("audio/combat3.ogg"));
-//		bgm.setLooping(true);
-//		bgm.setVolume(0.2f);
-//		bgm.play();
+		Sounds.play(Sound.BACKGROUND1);
 		
-		attackSound = Gdx.audio.newMusic(Gdx.files.classpath("audio/attack.ogg"));
-		attackSound.setVolume(0.3f);
-		magicSound = Gdx.audio.newMusic(Gdx.files.classpath("audio/magic.ogg"));
-		magicSound.setVolume(0.3f);
 		
 		ramka = new Texture(Gdx.files.classpath("images/ramka.png"));
 		spellramka = new Texture(Gdx.files.classpath("images/ramkaspell.png"));
@@ -643,6 +632,8 @@ public class Cards extends SimpleGame {
 						Creature summonedCreature = CreatureFactory.getCreatureClass(clone.getCard().getName(), Cards.this, clone.getCard(), clone, si.getIndex(), player, opponent);
 						clone.setCreature(summonedCreature);
 						
+						Sounds.play(Sound.SUMMONED);
+						
 						clone.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
 							public boolean act(float delta) {
 								BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, clone, si.getIndex());
@@ -684,7 +675,7 @@ public class Cards extends SimpleGame {
 			return;
 		}
 
-		if (attackSound != null) attackSound.play();
+		Sounds.play(Sound.ATTACK);
 		
 		if (pi.getSlots()[0] == null) return;
 		
@@ -716,7 +707,7 @@ public class Cards extends SimpleGame {
 			return;
 		}
 
-		magicSound.play();
+		Sounds.play(Sound.MAGIC);
 		
 		final AtomicBoolean done = new AtomicBoolean(false);
 		

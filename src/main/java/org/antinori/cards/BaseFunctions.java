@@ -149,6 +149,8 @@ public class BaseFunctions {
 		owner.getSlotCards()[index] = ci1;
 		ci1.setBounds(slot.getX() + 5, slot.getY() + 26, ci1.getFrame().getWidth(), ci1.getFrame().getHeight());
 		
+		Sounds.play(Sound.SUMMON_DROP);
+		
 		game.stage.addActor(ci1);
 	}
 	

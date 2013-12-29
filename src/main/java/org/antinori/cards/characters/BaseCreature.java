@@ -27,7 +27,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 	public void onSummoned() throws GameOverException {
-
+		
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " summoned " + cardImage.getCard().getCardname() + ".");
 
 		ownerPlayer.decrementStrength(card.getType(), card.getCost());

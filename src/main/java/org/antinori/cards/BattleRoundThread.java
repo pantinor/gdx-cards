@@ -199,6 +199,8 @@ public class BattleRoundThread extends Thread {
 						Creature summonedCreature = CreatureFactory.getCreatureClass(opptSummons.getCard().getName(), game, opptSummons.getCard(), opptSummons, si.getIndex(), opponent, player);
 						opptSummons.setCreature(summonedCreature);
 						
+						Sounds.play(Sound.SUMMONED);
+						
 						opptSummons.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
 							public boolean act(float delta) {
 								opptSummoningFinished.set(true);
@@ -278,6 +280,7 @@ public class BattleRoundThread extends Thread {
 			if (index == this.summonedSlot) continue;
 			
 			if (player.getPlayerInfo().getPlayerClass() == Specializations.VampireLord) {
+				player.incrementLife(1, game);
 				boolean died = ci.decrementLife(1, game);
 				Cards.logScrollPane.add("Vampire Lord drains 1 life from " + ci.getCard().getName());
 				if (died) {
