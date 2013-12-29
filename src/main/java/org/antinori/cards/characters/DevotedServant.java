@@ -25,7 +25,7 @@ public class DevotedServant extends BaseCreature {
 		this.card.incrementAttack(1);
 	}
 	
-	public void onDying() {
+	public void onDying() throws GameOverException {
 		super.onDying();
 		owner.getPlayerInfo().incrementStrength(CardType.VAMPIRIC, this.card.getAttack());
 

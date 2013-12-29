@@ -25,6 +25,8 @@ public class Card implements Serializable {
 	private boolean damagingSpell = false;
 	private boolean targetable = false;
 	private boolean wall = false;
+	
+	private String mustBeSummoneOnCard;
 
 	@Override
 	public String toString() {
@@ -51,6 +53,7 @@ public class Card implements Serializable {
 		c.setWall(this.wall);
 		c.setTargetable(this.targetable);
 		c.setDamagingSpell(this.damagingSpell);
+		c.setMustBeSummoneOnCard(this.mustBeSummoneOnCard);
 		return c;
 	}
 
@@ -183,6 +186,14 @@ public class Card implements Serializable {
 
 	public void setSelfInflictingDamage(int selfInflictingDamage) {
 		this.selfInflictingDamage = selfInflictingDamage;
+	}
+
+	public String getMustBeSummoneOnCard() {
+		return mustBeSummoneOnCard;
+	}
+
+	public void setMustBeSummoneOnCard(String mustBeSummoneOnCard) {
+		this.mustBeSummoneOnCard = mustBeSummoneOnCard;
 	}
 
 	

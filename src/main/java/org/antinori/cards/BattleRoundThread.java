@@ -268,9 +268,6 @@ public class BattleRoundThread extends Thread {
 	
 	private void startOfTurnCheck(PlayerImage player) throws GameOverException {
 		
-
-		
-		
 		CardImage[] cards = player.getSlotCards();
 		for (int index = 0; index<6; index++) {
 			CardImage ci = cards[index];

@@ -32,7 +32,7 @@ public class Threeheadeddemon extends BaseCreature {
 
 	}
 	
-	public void onDying() {
+	public void onDying() throws GameOverException {
 		super.onDying();
 
 		try {

@@ -103,7 +103,7 @@ public class CardImage extends Actor implements Serializable {
 		this.font = font;
 	}
 	
-	public boolean decrementLife(int value, Cards game) {
+	public boolean decrementLife(int value, Cards game) throws GameOverException {
 		
 		creature.onAttacked(value);
 				

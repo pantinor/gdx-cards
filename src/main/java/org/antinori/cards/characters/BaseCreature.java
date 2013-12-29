@@ -3,10 +3,13 @@ package org.antinori.cards.characters;
 import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
+import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
 import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
+import org.antinori.cards.Sound;
+import org.antinori.cards.Sounds;
 
 public class BaseCreature extends BaseFunctions implements Creature {
 
@@ -99,25 +102,17 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 	public void onAttack() throws GameOverException {
-
 		int attack = this.card.getAttack();
-
 		CardImage[] enemyCards = opponent.getSlotCards();
-
 		if (enemyCards[slotIndex] != null) {
-
 			damageSlot(enemyCards[slotIndex], slotIndex, opponent, attack);
-
 		} else {
-
 			damageOpponent(attack);
 		}
-
 		game.moveCardActorOnBattle(cardImage, owner);
-
 	}
 
-	public void onAttacked(int damage) {
+	public int onAttacked(int damage) throws GameOverException {
 		
 		int nl = slotIndex - 1;
 		int nr = slotIndex + 1;
@@ -151,10 +146,12 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		card.decrementLife(damage);
 		
 		game.animateDamageText(damage, cardImage.getX() + 60, cardImage.getY() + 10, cardImage.getX() + 60, cardImage.getY() + 69 );
+		
+		return damage;
 
 	}
 
-	public void onDying() {
+	public void onDying() throws GameOverException {
 
 		int nl = slotIndex - 1;
 		int nr = slotIndex + 1;
@@ -191,6 +188,22 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (ci == null) continue;
 			if (ci.getCard().getName().equalsIgnoreCase("ghoul")) {
 				ci.getCard().incrementAttack(1);
+				Sounds.play(Sound.POSITIVE_EFFECT);
+			}
+			if (ci.getCard().getName().equalsIgnoreCase("KeeperofDeath")) {
+				BaseCreature bc = (BaseCreature)ci.getCreature();
+				bc.ownerPlayer.incrementStrength(CardType.DEATH, 1);
+				Sounds.play(Sound.POSITIVE_EFFECT);
+			}
+		}
+		
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = teamCards[index];
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("KeeperofDeath")) {
+				BaseCreature bc = (BaseCreature)ci.getCreature();
+				bc.ownerPlayer.incrementStrength(CardType.DEATH, 1);
+				Sounds.play(Sound.POSITIVE_EFFECT);
 			}
 		}
 

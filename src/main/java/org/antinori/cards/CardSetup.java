@@ -44,70 +44,6 @@ public class CardSetup {
         System.out.println(picks.size());
        
 	}
-	
-	
-	
-	/*
-	 * To explain what this means: There are certain pairs of cards which it is
-	 * not possible to get at once. This is usually because they have an
-	 * interaction which makes them overpowered when used together, but can
-	 * sometimes be because they are too weak together. These have been kept to
-	 * a minimum as they are obviously undesirable, but have proved necessary to
-	 * avoid unbalanced deals. For those of you who are not familiar with this
-	 * list, it is well worth getting to know what these combos are. It gives
-	 * you vital extra information during a duel. As soon as you the opponent
-	 * use one of the cards in a banned combo, you can instantly be sure that
-	 * they do not have the other card. Also consider that the opponent knows
-	 * this information about you when you play one of those cards.
-	 * 
-	 * Basic power bans:
-	 * 
-	 * Orc Chieftain + Forest Sprite 
-	 * Meditation + Stone Rain 
-	 * Inferno + Armageddon 
-	 * Elf Hermit + Nature's Fury
-	 * 
-	 * If you have Phoenix, you cannot have more than 1 of the following:
-	 * Armageddon, Acidic Rain, Stone Rain, Drain Souls (Death 7)
-	 * 
-	 * Demonologist: 
-	 * Greater Demon + Armageddon
-	 * 
-	 * Illusionist: 
-	 * Armageddon + Wall of Reflection 
-	 * Nature's Ritual + Wall of Reflection
-	 * 
-	 * Necromancer: 
-	 * Meditation + Cursed Fog 
-	 * Ice Golem + Cursed Fog
-	 * 
-	 * Chronomancer: 
-	 * Nature's Ritual + Chrono Engine
-	 * 
-	 * Goblin Chieftain: 
-	 * Ice Golem + Army of Rats 
-	 * Elf Hermit + Rescue Operation
-	 * 
-	 * Mad Hermit: 
-	 * Orc Chieftain + Forest Wolf
-	 * 
-	 * Vampire Lord: 
-	 * Orc Chieftain + Devoted Servant 
-	 * Sea Sprite + Chastiser
-	 * Giant Spider + Vampire Mystic
-	 * 
-	 * Cultist: 
-	 * Ice Golem + Greater Bargul 
-	 * Nature's Fury + Greater Bargul 
-	 * Astral Guard + Reaver
-	 * 
-	 * Golem Master: 
-	 * Ice Golem + Stone Rain 
-	 * Ice Golem + Armageddon 
-	 * 
-	 * [Note that these don't involve the Craft cards at all, but apply just because you are using this class]
-	 */
-
 
 	public Set<Card> getCardSet() {
 		return cardSet;
@@ -146,10 +82,10 @@ public class CardSetup {
                     c.setCardname(getAttrText( n1, "cardname" ));
                     c.setDesc(getAttrText( n1, "desc" ));
                     
-                    c.setAttack(Integer.parseInt(getAttrText( n1, "attack" )));
+                    c.setAttack(getAttrNumber( n1, "attack" ));
             		c.setOriginalAttack(c.getAttack());
 
-                    c.setLife(Integer.parseInt(getAttrText( n1, "life" )));
+                    c.setLife(getAttrNumber( n1, "life" ));
             		c.setOriginalLife(c.getLife());
 
                     Boolean spell = Boolean.parseBoolean(getAttrText( n1, "spell" ));
@@ -161,17 +97,19 @@ public class CardSetup {
                     Boolean damagingSpell = Boolean.parseBoolean(getAttrText( n1, "damagingSpell" ));
                     c.setDamagingSpell(damagingSpell);
                     
-                    int cost = Integer.parseInt(getAttrText( n1, "summoningCost" ));
+                    int cost = getAttrNumber( n1, "summoningCost" );
                     if (spell) {
-                    	cost = Integer.parseInt(getAttrText( n1, "castingCost" ));
+                    	cost = getAttrNumber( n1, "castingCost" );
                     }
                     c.setCost(cost);
                     
-                    int selfInflicting = Integer.parseInt(getAttrText( n1, "selfInflictingDamage" ));
+                    int selfInflicting = getAttrNumber( n1, "selfInflictingDamage" );
                     c.setSelfInflictingDamage(selfInflicting);
                     
                     Boolean wall = Boolean.parseBoolean(getAttrText( n1, "wall" ));
                     c.setWall(wall);
+                    
+                    c.setMustBeSummoneOnCard(getAttrText(n1, "mustBeSummoneOnCard"));
 
                     cardSet.add(c);
                     
@@ -310,12 +248,22 @@ public class CardSetup {
 	
     private String getAttrText( Node n, String attr ) {
         NamedNodeMap attrs = n.getAttributes();
-        if ( attrs == null ) return "0";
+        if ( attrs == null ) return null;
 
         Node valueNode = attrs.getNamedItem(attr);
-        if ( valueNode == null ) return "0";
+        if ( valueNode == null ) return null;
 
         return valueNode.getNodeValue();
+    }
+    
+    private int getAttrNumber( Node n, String attr ) throws Exception {
+        NamedNodeMap attrs = n.getAttributes();
+        if ( attrs == null ) return 0;
+
+        Node valueNode = attrs.getNamedItem(attr);
+        if ( valueNode == null ) return 0;
+
+        return Integer.parseInt(valueNode.getNodeValue());
     }
 
 }

@@ -21,7 +21,7 @@ public class Ergodemon extends BaseCreature {
 		super.onAttack();
 	}
 	
-	public void onDying() {
+	public void onDying() throws GameOverException {
 		super.onDying();
 		
 		for (CardType type : Player.TYPES) {

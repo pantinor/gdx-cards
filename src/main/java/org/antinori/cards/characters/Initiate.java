@@ -20,7 +20,7 @@ public class Initiate extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void onAttacked(int damage) {
+	public int onAttacked(int damage) throws GameOverException {
 
 		int nl = slotIndex - 1;
 		int nr = slotIndex + 1;
@@ -41,9 +41,9 @@ public class Initiate extends BaseCreature {
 		}
 
 		if (isVampireElderStillAlve) {
-			// nothing
+			return 0;
 		} else {
-			super.onAttacked(damage);
+			return super.onAttacked(damage);
 		}
 	}
 }

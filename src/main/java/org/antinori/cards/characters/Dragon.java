@@ -20,7 +20,7 @@ public class Dragon extends BaseCreature {
 		super.onAttack();
 	}
 	
-	public void onDying() {
+	public void onDying() throws GameOverException {
 		owner.setDealingSpellDamageModifier(0);
 	}
 

@@ -20,7 +20,7 @@ public class GoblinBerserker extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
+	public void startOfTurnCheck() throws GameOverException {
 		damageNeighbors(2);
 	}
 }

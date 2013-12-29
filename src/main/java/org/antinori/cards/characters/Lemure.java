@@ -20,7 +20,7 @@ public class Lemure extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void onDying() {
+	public void onDying() throws GameOverException {
 		super.onDying();
 
 		try {

@@ -11,6 +11,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.antinori.cards.characters.BaseCreature;
 import org.antinori.cards.network.NetworkGame;
 
 import com.badlogic.gdx.Gdx;
@@ -493,24 +494,41 @@ public class Cards extends SimpleGame {
 				
 				clearHighlights();
 				
-				if (canStartMyTurn() && selectedCard.getCard().isSpell() && selectedCard.isEnabled()) {
+				if (canStartMyTurn() && selectedCard.isEnabled()) {
 					
-					if (selectedCard.getCard().isTargetable()) {
+					if (selectedCard.getCard().isSpell()) {
+					
+						if (selectedCard.getCard().isTargetable()) {
+							
+							CardImage[] cards = selectedCard.getCard().isDamagingSpell()?opponent.getSlotCards():player.getSlotCards();
+							
+							//highlight targets
+							for (CardImage ci : cards) {
+								if (ci != null) {
+									ci.setHighlighted(true);
+									ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+								}
+							}
+						} else {
+							//cast the spell
+							BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard);
+							t.start();
+						}
 						
-						CardImage[] cards = selectedCard.getCard().isDamagingSpell()?opponent.getSlotCards():player.getSlotCards();
-						
+					} else if (selectedCard.getCard().getMustBeSummoneOnCard() != null) {
+						//emmissary of dorlak and forest wolf
+						String requiredTarget = selectedCard.getCard().getMustBeSummoneOnCard();
+
 						//highlight targets
-						for (CardImage ci : cards) {
-							if (ci != null) {
+						for (CardImage ci : player.getSlotCards()) {
+							if (ci != null && (ci.getCard().getName().equalsIgnoreCase(requiredTarget) || requiredTarget.equals("any"))) {
 								ci.setHighlighted(true);
 								ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
 							}
 						}
-					} else {
-						//cast the spell
-						BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard);
-						t.start();
+						
 					}
+					
 				}
 			}
 			return true;
@@ -541,9 +559,52 @@ public class Cards extends SimpleGame {
 				
 				clearHighlights();
 				
-				//cast the spell to target
-				BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard, targetedCardOwnerId, index);
-				t.start();
+				if (!selectedCard.getCard().isSpell()) {
+					
+					//destroy target creature
+					BaseCreature bc = (BaseCreature)targetedCard.getCreature();
+					try {
+						bc.disposeCardImage(player, this.index);
+					} catch (GameOverException e) {
+						handleGameOver();
+					}
+					
+					final CardImage clone = selectedCard.clone();
+					
+					if (clone.getCard().getName().equalsIgnoreCase("ForestWolf")) {
+						clone.getCard().setAttack(targetedCard.getCard().getAttack());
+					}
+					
+					stage.addActor(clone);
+					clone.addListener(new TargetedCardListener(player.getPlayerInfo().getId(), this.index));
+					clone.addListener(sdl);
+
+					CardImage[] imgs = player.getSlotCards();
+					imgs[this.index] = clone;
+					
+					SlotImage[] slots = player.getSlots();
+					slots[this.index].setOccupied(true);
+					
+					Creature summonedCreature = CreatureFactory.getCreatureClass(clone.getCard().getName(), Cards.this, clone.getCard(), clone, this.index, player, opponent);
+					clone.setCreature(summonedCreature);
+					
+					Sounds.play(Sound.SUMMONED);
+					
+					clone.addAction(sequence(moveTo(targetedCard.getX(), targetedCard.getY(), 1.0f), new Action() {
+						public boolean act(float delta) {
+							BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, clone, TargetedCardListener.this.index);
+							t.start();
+							return true;
+						}
+					}));						
+
+				} else {
+					
+					//cast the spell to target
+					BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, targetedCard, targetedCardOwnerId, index);
+					t.start();
+				}
+				
 			}
 			return true;
 		}
@@ -614,7 +675,7 @@ public class Cards extends SimpleGame {
 
 				if (canStartMyTurn() && selectedCard != null && selectedCard.isEnabled() && si.isBottomSlots()) {
 					
-					if (!selectedCard.getCard().isSpell()) {
+					if (!selectedCard.getCard().isSpell() && selectedCard.getCard().getMustBeSummoneOnCard() == null) {
 						
 						final CardImage clone = selectedCard.clone();
 						

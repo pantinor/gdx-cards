@@ -5,6 +5,9 @@ public enum Sound {
 	BACKGROUND1 ("audio/combat1.ogg", false, 0.1f), 
 	BACKGROUND2 ("audio/combat2.ogg", false, 0.1f), 
 	BACKGROUND3 ("audio/combat3.ogg", false, 0.1f), 
+	
+	POSITIVE_EFFECT ("audio/PositiveEffect.ogg", false, 0.3f),
+	NEGATIVE_EFFECT ("audio/NegativeEffect.ogg", false, 0.3f),
 
 	MAGIC ("audio/magic.ogg", false, 0.3f), 
 	ATTACK ("audio/attack.ogg", false, 0.3f), 

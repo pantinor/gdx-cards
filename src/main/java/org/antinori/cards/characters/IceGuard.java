@@ -20,7 +20,7 @@ public class IceGuard extends BaseCreature {
 		super.onAttack();
 	}
 
-	public void onDying() {
+	public void onDying() throws GameOverException {
 		owner.setReceivedDamageModifier(0);
 		owner.setReceivedSpellDamageModifier(0);
 	}

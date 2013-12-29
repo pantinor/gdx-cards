@@ -4,6 +4,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.util.List;
+
 public class BaseFunctions {
 	
 	protected Card card;
@@ -57,8 +59,16 @@ public class BaseFunctions {
 		}
 	}
 	
+	public void healAll(int value) {
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = owner.getSlotCards()[index];
+			if (ci == null)	continue;
+			ci.incrementLife(value, game);
+		}
+	}
 	
-	public final void disposeCardImage(PlayerImage player, int slotIndex) {
+	
+	public final void disposeCardImage(PlayerImage player, int slotIndex) throws GameOverException {
 		CardImage ci = player.getSlotCards()[slotIndex];
 		
 		//remove actor from stage
@@ -71,7 +81,7 @@ public class BaseFunctions {
 
 	}
 	
-	protected void damageAllExceptCurrentIndex(int attack, PlayerImage pi) {
+	protected void damageAllExceptCurrentIndex(int attack, PlayerImage pi) throws GameOverException {
 		for (int index = 0; index < 6; index ++) {
 			if (index == slotIndex) continue;
 			CardImage ci = pi.getSlotCards()[index];
@@ -80,7 +90,7 @@ public class BaseFunctions {
 		}
 	}
 	
-	protected void damageSlot(CardImage ci, int index, PlayerImage pi, int attack) {
+	protected void damageSlot(CardImage ci, int index, PlayerImage pi, int attack) throws GameOverException {
 		boolean died = ci.decrementLife(attack, game);
 		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + attack + " damage to " + ci.getCard().getName());
 		if (died) {
@@ -88,7 +98,7 @@ public class BaseFunctions {
 		}
 	}
 	
-	protected void damageSlots(int[] indexes, PlayerImage pi, int value) {
+	protected void damageSlots(int[] indexes, PlayerImage pi, int value) throws GameOverException {
 		for (int index : indexes) {
 			if (index < 0 || index > 5) continue;
 			CardImage ci = pi.getSlotCards()[index];
@@ -97,14 +107,14 @@ public class BaseFunctions {
 		}
 	}
 	
-	protected void damageNeighbors(int value) {
+	protected void damageNeighbors(int value) throws GameOverException {
 		int[] neighborSlots = new int[2];
 		neighborSlots[0] = slotIndex - 1;
 		neighborSlots[1] = slotIndex + 1;
 		damageSlots(neighborSlots, owner, value);
 	}
 	
-	protected void damageAll(PlayerImage pi, int value) {
+	protected void damageAll(PlayerImage pi, int value) throws GameOverException {
 		int[] slots = {0,1,2,3,4,5};
 		damageSlots(slots, pi, value);
 	}
@@ -152,6 +162,34 @@ public class BaseFunctions {
 		Sounds.play(Sound.SUMMON_DROP);
 		
 		game.stage.addActor(ci1);
+	}
+	
+	protected void changeSpellCard(String name) {
+		
+		List<CardImage> cards = ownerPlayer.getCards(CardType.DEATH);
+		
+		cardImage.remove();
+
+		CardImage newCard = null;
+		try {
+			newCard = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		newCard.setFont(Cards.greenfont);
+		newCard.setFrame(Cards.spellramka);
+		newCard.addListener(game.sdl);
+		newCard.setBounds(cardImage.getX(), cardImage.getY(), cardImage.getWidth(), cardImage.getHeight());
+		newCard.addListener(game.li);
+
+		cards.remove(cardImage);
+		cards.add(newCard);
+
+		game.stage.addActor(newCard);
+
+		CardImage.sort(cards);
+		
 	}
 	
 
