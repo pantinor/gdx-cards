@@ -12,16 +12,11 @@ public class IceGuard extends BaseCreature {
 
 	public void onSummoned() throws GameOverException {
 		super.onSummoned();
-		owner.setReceivedDamageModifier(0.50f);
-		owner.setReceivedSpellDamageModifier(0.50f);
 	}
 
 	public void onAttack() throws GameOverException {
 		super.onAttack();
 	}
 
-	public void onDying() throws GameOverException {
-		owner.setReceivedDamageModifier(0);
-		owner.setReceivedSpellDamageModifier(0);
-	}
+
 }

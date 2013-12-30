@@ -4,6 +4,7 @@ import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
+import org.antinori.cards.Sound;
 import org.antinori.cards.Sounds;
 import org.antinori.cards.Spell;
 
@@ -35,6 +36,16 @@ public class BaseSpell extends BaseFunctions implements Spell {
 				
 		ownerPlayer.decrementStrength(card.getType(), card.getCost());
 		
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = owner.getSlotCards()[index];
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("reaver")) {
+				Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " casting failed. ");
+				Sounds.play(Sound.NEGATIVE_EFFECT);
+				return;
+			}
+		}
+		
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " casts " + this.card.getCardname());
 
 		Sounds.play(this);
@@ -45,14 +56,25 @@ public class BaseSpell extends BaseFunctions implements Spell {
 
 	
 	protected int adjustDamage(int currentDamageValue) {
+		
 		int qualifiedDamageValue = currentDamageValue;
+		
 		CardImage[] teamCards = owner.getSlotCards();
+		
 		for (CardImage ci : teamCards) {
 			if (ci == null) continue;
 			if (ci.getCard().getName().equalsIgnoreCase("FaerieApprentice")) {
 				qualifiedDamageValue = qualifiedDamageValue + 1;
 			}
 		}
+		
+		for (CardImage ci : teamCards) {
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("Dragon")) {
+				qualifiedDamageValue = qualifiedDamageValue + (qualifiedDamageValue/2);
+			}
+		}
+		
 		return qualifiedDamageValue;
 	}
 	

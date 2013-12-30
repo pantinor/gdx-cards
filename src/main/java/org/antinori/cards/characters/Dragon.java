@@ -13,15 +13,11 @@ public class Dragon extends BaseCreature {
 	
 	public void onSummoned() throws GameOverException {
 		super.onSummoned();
-		owner.setDealingSpellDamageModifier(0.50f);
 	}
 	
 	public void onAttack() throws GameOverException {
 		super.onAttack();
 	}
 	
-	public void onDying() throws GameOverException {
-		owner.setDealingSpellDamageModifier(0);
-	}
 
 }

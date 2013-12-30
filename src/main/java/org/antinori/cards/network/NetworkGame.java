@@ -25,6 +25,7 @@ import org.antinori.cards.SlotImage;
 import org.antinori.cards.Specializations;
 import org.antinori.cards.Spell;
 import org.antinori.cards.SpellFactory;
+import org.antinori.cards.characters.BaseCreature;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -279,8 +280,20 @@ public class NetworkGame {
 					
 				switch(evt) {
 				case CARD_START_TURN_CHECK:
+					
 					CardImage starterCardImage = pi.getSlotCards()[index];
+					BaseCreature bc = (BaseCreature)starterCardImage.getCreature();
+					if (pi.getPlayerInfo().getPlayerClass() == Specializations.VampireLord) {
+						pi.incrementLife(1, game);
+						boolean died = starterCardImage.decrementLife(bc, 1, game);
+						Cards.logScrollPane.add("Vampire Lord drains 1 life from " + starterCardImage.getCard().getName());
+						if (died) {
+							bc.disposeCardImage(pi, index);
+						}
+					}
+					
 					starterCardImage.getCreature().startOfTurnCheck();
+					
 					break;
 					
 				case CARD_ADDED:

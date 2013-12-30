@@ -16,13 +16,7 @@ public class PlayerImage extends Actor {
 	
 	private SlotImage[] slots = new SlotImage[6];
 	private CardImage[] slotCards = new CardImage[6];
-	
-	float receivedDamageModifier = 0.0f;
-	float receivedSpellDamageModifier = 0.0f;
-
-	float dealingDamageModifier = 0.0f;
-	float dealingSpellDamageModifier = 0.0f;
-	
+		
 	public PlayerImage(Sprite img, Texture frame, Player info) {
 		this.img = img;
 		this.frame = frame;
@@ -52,20 +46,14 @@ public class PlayerImage extends Actor {
 		
 	}
 	
-	public void decrementLife(int value, Cards game, boolean viaSpell) {
-		
-		float modifier = viaSpell?(receivedSpellDamageModifier*value):(receivedDamageModifier*value);
-		float temp = value + modifier;
-		value = (int)temp;
-				
+	public void decrementLife(int value, Cards game) {
 		playerInfo.decrementLife(value);
-		game.animateDamageText(value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
-	
+		game.animateDamageText(value, this);
 	}
 	
 	public void incrementLife(int value, Cards game) {
 		playerInfo.incrementLife(value);
-		game.animateHealingText(value, getX() + 90, getY() + 5, getX() + 90, getY() + 55);
+		game.animateHealingText(value, this);
 	}
 
 	public Sprite getImg() {
@@ -100,37 +88,6 @@ public class PlayerImage extends Actor {
 		this.playerInfo = playerInfo;
 	}
 
-	public float getReceivedDamageModifier() {
-		return receivedDamageModifier;
-	}
-
-	public float getReceivedSpellDamageModifier() {
-		return receivedSpellDamageModifier;
-	}
-
-	public float getDealingDamageModifier() {
-		return dealingDamageModifier;
-	}
-
-	public float getDealingSpellDamageModifier() {
-		return dealingSpellDamageModifier;
-	}
-
-	public void setReceivedDamageModifier(float receivedDamageModifier) {
-		this.receivedDamageModifier = receivedDamageModifier;
-	}
-
-	public void setReceivedSpellDamageModifier(float receivedSpellDamageModifier) {
-		this.receivedSpellDamageModifier = receivedSpellDamageModifier;
-	}
-
-	public void setDealingDamageModifier(float dealingDamageModifier) {
-		this.dealingDamageModifier = dealingDamageModifier;
-	}
-
-	public void setDealingSpellDamageModifier(float dealingSpellDamageModifier) {
-		this.dealingSpellDamageModifier = dealingSpellDamageModifier;
-	}
 
 	public SlotImage[] getSlots() {
 		return slots;

@@ -2,6 +2,7 @@ package org.antinori.cards.characters;
 
 import org.antinori.cards.PlayerImage;
 
+import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
@@ -20,8 +21,8 @@ public class WallofReflection extends BaseCreature {
 		//nothing
 	}
 	
-	public int onAttacked(int damage) throws GameOverException {
-		int d = super.onAttacked(damage);
+	public int onAttacked(BaseFunctions attacker, int damage) throws GameOverException {
+		int d = super.onAttacked(attacker, damage);
 		damageOpponent(d);
 		return d;
 	}

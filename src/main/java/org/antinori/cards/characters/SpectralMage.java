@@ -19,7 +19,7 @@ public class SpectralMage extends BaseCreature {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;
 			
-			boolean died = ci.decrementLife(ci.getCard().getCost(), game);
+			boolean died = ci.decrementLife(this, ci.getCard().getCost(), game);
 
 			if (died) {
 				disposeCardImage(opponent, index);

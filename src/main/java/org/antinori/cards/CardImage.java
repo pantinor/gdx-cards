@@ -103,9 +103,9 @@ public class CardImage extends Actor implements Serializable {
 		this.font = font;
 	}
 	
-	public boolean decrementLife(int value, Cards game) throws GameOverException {
+	public boolean decrementLife(BaseFunctions attacker, int value, Cards game) throws GameOverException {
 		
-		creature.onAttacked(value);
+		creature.onAttacked(attacker, value);
 				
 		int remainingLife = card.getLife();
 		boolean died = (remainingLife < 1);
@@ -114,10 +114,8 @@ public class CardImage extends Actor implements Serializable {
 	}
 	
 	public void incrementLife(int value, Cards game) {
-		
 		card.incrementLife(value);
-		
-		game.animateHealingText(value, getX() + 60, getY() + 10, getX() + 60, getY() + 69 );
+		game.animateHealingText(value, this);
 	}
 		
 	public boolean isEnabled() {

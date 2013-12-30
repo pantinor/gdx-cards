@@ -2,9 +2,13 @@ package org.antinori.cards;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.List;
+
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class BaseFunctions {
 	
@@ -19,7 +23,7 @@ public class BaseFunctions {
 	protected PlayerImage owner ;
 	protected PlayerImage opponent ;
 	
-	protected boolean isSpell = false;
+	public boolean isSpell = false;
 	
 	protected void damageOpponent(int value) throws GameOverException {
 		damagePlayer(opponent, value);
@@ -40,6 +44,9 @@ public class BaseFunctions {
 				if (opposingCards[index].getCard().getName().equalsIgnoreCase("vampiremystic")) {
 					opposingCards[index].getCard().incrementAttack(2);
 				}
+				if (opposingCards[index].getCard().getName().equalsIgnoreCase("iceguard")) {
+					value = value/2;
+				}
 			}
 			
 			if (ownedCards[index] != null) {
@@ -50,7 +57,7 @@ public class BaseFunctions {
 
 		}
 		
-		pi.decrementLife(value, game, isSpell);
+		pi.decrementLife(value, game);
 		
 		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + value + " damage to player.");
 		
@@ -69,16 +76,15 @@ public class BaseFunctions {
 	
 	
 	public final void disposeCardImage(PlayerImage player, int slotIndex) throws GameOverException {
+		
 		CardImage ci = player.getSlotCards()[slotIndex];
 		
-		//remove actor from stage
 		ci.addAction(sequence(fadeOut(2),removeActor(ci)));
 		
 		player.getSlots()[slotIndex].setOccupied(false);
 		player.getSlotCards()[slotIndex] = null;
 		
 		ci.getCreature().onDying();
-
 	}
 	
 	protected void damageAllExceptCurrentIndex(int attack, PlayerImage pi) throws GameOverException {
@@ -91,7 +97,7 @@ public class BaseFunctions {
 	}
 	
 	protected void damageSlot(CardImage ci, int index, PlayerImage pi, int attack) throws GameOverException {
-		boolean died = ci.decrementLife(attack, game);
+		boolean died = ci.decrementLife(this, attack, game);
 		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + attack + " damage to " + ci.getCard().getName());
 		if (died) {
 			disposeCardImage(pi, index);
@@ -192,7 +198,12 @@ public class BaseFunctions {
 		
 	}
 	
-
+	protected void scaleImage(CardImage ci) {
+		Image img = new Image(new TextureRegion(ci.getImg()));
+		img.setBounds(ci.getX(), ci.getY(), ci.getWidth(), ci.getHeight());
+		game.stage.addActor(img);
+		img.addAction(sequence(scaleTo(1.05f, 1.05f, 0.30f), scaleTo(1.0f, 1.0f, 0.30f), removeActor(img)));
+	}
 		
 
 }

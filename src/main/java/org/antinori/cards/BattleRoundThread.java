@@ -269,6 +269,7 @@ public class BattleRoundThread extends Thread {
 	private void startOfTurnCheck(PlayerImage player) throws GameOverException {
 		
 		CardImage[] cards = player.getSlotCards();
+		
 		for (int index = 0; index<6; index++) {
 			CardImage ci = cards[index];
 			if (ci == null) continue;
@@ -276,15 +277,36 @@ public class BattleRoundThread extends Thread {
 			//don't invoke on the current summoned slot
 			if (index == this.summonedSlot) continue;
 			
+			BaseCreature bc = (BaseCreature)ci.getCreature();
+			
 			if (player.getPlayerInfo().getPlayerClass() == Specializations.VampireLord) {
 				player.incrementLife(1, game);
-				boolean died = ci.decrementLife(1, game);
+				boolean died = ci.decrementLife(bc, 1, game);
 				Cards.logScrollPane.add("Vampire Lord drains 1 life from " + ci.getCard().getName());
 				if (died) {
-					BaseCreature bc = (BaseCreature)ci.getCreature();
 					bc.disposeCardImage(player, index);
 				}
 			}
+			
+			for (int index2 = 0; index2 < 6; index2++) {
+				CardImage ci2 = player.getSlotCards()[index2];
+				if (ci2 == null) continue;
+				if (ci2.getCard().getName().equalsIgnoreCase("monumenttorage")) {
+					try {
+						//card gets an extra attack this round
+						ci.getCreature().onAttack(); 
+					} catch (GameOverException ge) {
+						throw ge;
+					} finally {
+						if (Cards.NET_GAME != null) {
+							NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
+							ne.setSlot(index);
+							Cards.NET_GAME.sendEvent(ne);
+						}
+					}
+				}
+			}
+
 			
 			try {
 				ci.getCreature().startOfTurnCheck();

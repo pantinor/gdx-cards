@@ -107,6 +107,7 @@ public class Cards extends SimpleGame {
 	private boolean gameOver = false;
 	private boolean opptCardsShown = false;
 	
+	private static int damageOffsetter = 0;
 
 	
 	public static void main(String[] args) {
@@ -712,20 +713,45 @@ public class Cards extends SimpleGame {
 	}
 	
 	
-	public void animateDamageText(int value, float sx, float sy, float dx, float dy) {
-		if (redStyle == null) return;
-		Label label = new Label("- "+value, redStyle);
-		label.setPosition(sx, sy); 
-		stage.addActor(label);
-		label.addAction(sequence(moveTo(dx, dy, 3),fadeOut(1),removeActor(label)));
+	public void animateDamageText(int value, CardImage ci) {
+		animateDamageText(value, ci.getX() + 70, ci.getY() + 10, ci.getX() + 70, ci.getY() + 69);
 	}
 	
-	public void animateHealingText(int value, float sx, float sy, float dx, float dy) {
-		if (greenStyle == null) return;
-		Label label = new Label("+ "+value, greenStyle);
-		label.setPosition(sx, sy); 
+	public void animateHealingText(int value, CardImage ci) {
+		animateHealingText(value, ci.getX() + 70, ci.getY() + 10, ci.getX() + 70, ci.getY() + 69);
+	}
+	
+	public void animateDamageText(int value, PlayerImage pi) {
+		animateDamageText(value, pi.getX() + 90, pi.getY() + 5, pi.getX() + 90, pi.getY() + 55);
+	}
+	
+	public void animateHealingText(int value, PlayerImage pi) {
+		animateHealingText(value, pi.getX() + 90, pi.getY() + 5, pi.getX() + 90, pi.getY() + 55);
+	}
+	
+	private void animateDamageText(int value, float sx, float sy, float dx, float dy) {
+		
+		if (redStyle == null) return;
+		Label label = new Label("- "+value, redStyle);
+		
+		damageOffsetter = damageOffsetter + 5;
+		if (damageOffsetter > 60) damageOffsetter = 0;
+		
+		label.setPosition(sx - damageOffsetter, sy); 
 		stage.addActor(label);
-		label.addAction(sequence(moveTo(dx, dy, 3),fadeOut(1),removeActor(label)));
+		label.addAction(sequence(moveTo(dx - damageOffsetter, dy, 3),fadeOut(1),removeActor(label)));
+	}
+	
+	private void animateHealingText(int value, float sx, float sy, float dx, float dy) {
+		if (greenStyle == null) return;
+		
+		damageOffsetter = damageOffsetter + 5;
+		if (damageOffsetter > 60) damageOffsetter = 0;
+		
+		Label label = new Label("+ "+value, greenStyle);
+		label.setPosition(sx - damageOffsetter, sy); 
+		stage.addActor(label);
+		label.addAction(sequence(moveTo(dx - damageOffsetter, dy, 3),fadeOut(1),removeActor(label)));
 	}
 	
 	public void moveCardActorOnBattle(CardImage ci, PlayerImage pi) {

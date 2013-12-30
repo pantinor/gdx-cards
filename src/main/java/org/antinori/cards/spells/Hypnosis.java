@@ -1,8 +1,5 @@
 package org.antinori.cards.spells;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import java.util.Arrays;
 
 import org.antinori.cards.Card;
@@ -37,16 +34,19 @@ public class Hypnosis extends BaseSpell {
 			if (ci == null)	continue;
 			if (attacks[5] == ci.getCard().getAttack()) {
 				hypnotizedCards[0] = ci;
+				continue;
 			}
 			if (attacks[4] == ci.getCard().getAttack()) {
 				hypnotizedCards[1] = ci;
+				continue;
 			}
 		}
 		
 		for (CardImage ci : hypnotizedCards) {
 			if (ci == null)	continue;
-			//TODO get this to work
-			ci.addAction(sequence(scaleTo(1.2f, 1.2f, 0.65f), scaleTo(1.0f, 1.0f, 0.65f)));
+			
+			scaleImage(ci);
+			
 			damagePlayer(opponent, ci.getCard().getAttack());
 		}
 		

@@ -2,6 +2,7 @@ package org.antinori.cards.characters;
 
 import org.antinori.cards.PlayerImage;
 
+import org.antinori.cards.BaseFunctions;
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
@@ -20,8 +21,8 @@ public class PhantomWarrior extends BaseCreature {
 		super.onAttack();
 	}
 
-	public int onAttacked(int damage) throws GameOverException {
-		return super.onAttacked(1);
+	public int onAttacked(BaseFunctions attacker, int damage) throws GameOverException {
+		return super.onAttacked(attacker, 1);
 	}
 
 }

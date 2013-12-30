@@ -21,7 +21,7 @@ public class HellFire extends BaseSpell {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;
 			
-			boolean died = ci.decrementLife(adjustDamage(13), game);
+			boolean died = ci.decrementLife(this, adjustDamage(13), game);
 
 			if (died) {
 				disposeCardImage(opponent, index);

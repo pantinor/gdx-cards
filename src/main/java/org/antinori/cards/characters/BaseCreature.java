@@ -37,7 +37,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		
 		if (card.getSelfInflictingDamage() > 0) {
 			Cards.logScrollPane.add(cardImage.getCard().getCardname() + " inflicts " + card.getSelfInflictingDamage() + " damage to owner.");
-			owner.decrementLife(card.getSelfInflictingDamage(), game, false);
+			owner.decrementLife(card.getSelfInflictingDamage(), game);
 		}
 
 
@@ -102,17 +102,31 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 	public void onAttack() throws GameOverException {
+		
 		int attack = this.card.getAttack();
+		
 		CardImage[] enemyCards = opponent.getSlotCards();
 		if (enemyCards[slotIndex] != null) {
 			damageSlot(enemyCards[slotIndex], slotIndex, opponent, attack);
 		} else {
 			damageOpponent(attack);
 		}
+		
 		game.moveCardActorOnBattle(cardImage, owner);
+
+		//check for monument to rage damage
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = owner.getSlotCards()[index];
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("monumenttorage")) {
+				ci.getCard().decrementLife(attack);
+			}
+		}
+		
+		
 	}
 
-	public int onAttacked(int damage) throws GameOverException {
+	public int onAttacked(BaseFunctions attacker, int damage) throws GameOverException {
 		
 		int nl = slotIndex - 1;
 		int nr = slotIndex + 1;
@@ -142,10 +156,19 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		}
 		
 		if (damage < 0) damage = 0;
+		
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = teamCards[index];
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("reaver")) {
+				ci.getCard().decrementLife(damage);
+				game.animateDamageText(damage, cardImage);
+				return damage;
+			}
+		}
 
 		card.decrementLife(damage);
-		
-		game.animateDamageText(damage, cardImage.getX() + 60, cardImage.getY() + 10, cardImage.getX() + 60, cardImage.getY() + 69 );
+		game.animateDamageText(damage, cardImage);
 		
 		return damage;
 

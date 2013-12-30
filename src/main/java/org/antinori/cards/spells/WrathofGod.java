@@ -21,7 +21,7 @@ public class WrathofGod extends BaseSpell {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;
 			
-			boolean died = ci.decrementLife(adjustDamage(12), game);
+			boolean died = ci.decrementLife(this, adjustDamage(12), game);
 
 			if (died) {
 				disposeCardImage(opponent, index);

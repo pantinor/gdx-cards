@@ -19,7 +19,7 @@ public class Madness extends BaseSpell {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;
 			
-			boolean died = ci.decrementLife(adjustDamage(ci.getCard().getAttack()), game);
+			boolean died = ci.decrementLife(this, adjustDamage(ci.getCard().getAttack()), game);
 
 			if (died) {
 				disposeCardImage(opponent, index);
