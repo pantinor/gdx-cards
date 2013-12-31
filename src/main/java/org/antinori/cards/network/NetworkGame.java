@@ -19,6 +19,7 @@ import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
 import org.antinori.cards.CreatureFactory;
+import org.antinori.cards.GameOverException;
 import org.antinori.cards.Player;
 import org.antinori.cards.PlayerImage;
 import org.antinori.cards.SlotImage;
@@ -272,31 +273,33 @@ public class NetworkGame {
 				Event evt = ne.getEvent();
 				int index = ne.getSlot();
 				String id = ne.getId();
-				
 
 				PlayerImage pi = game.getPlayerImage(id);
 				SlotImage slot = pi.getSlots()[index];
 				CardImage[] cards = pi.getSlotCards();
-					
+				CardImage cardImage = pi.getSlotCards()[index];
+				BaseCreature bc = cardImage!=null?(BaseCreature)cardImage.getCreature():null;
+
 				switch(evt) {
 				case CARD_START_TURN_CHECK:
 					
-					CardImage starterCardImage = pi.getSlotCards()[index];
-					BaseCreature bc = (BaseCreature)starterCardImage.getCreature();
 					if (pi.getPlayerInfo().getPlayerClass() == Specializations.VampireLord) {
 						pi.incrementLife(1, game);
-						boolean died = starterCardImage.decrementLife(bc, 1, game);
-						Cards.logScrollPane.add("Vampire Lord drains 1 life from " + starterCardImage.getCard().getName());
+						boolean died = cardImage.decrementLife(bc, 1, game);
+						Cards.logScrollPane.add("Vampire Lord drains 1 life from " + cardImage.getCard().getName());
 						if (died) {
 							bc.disposeCardImage(pi, index);
 						}
 					}
 					
-					starterCardImage.getCreature().startOfTurnCheck();
+					cardImage.getCreature().startOfTurnCheck();
 					
 					break;
 					
-				case CARD_ADDED:
+				case CARD_SUMMONED:
+					
+					//possibly summoned on top of another card, destroy that one
+					if (bc != null) bc.disposeCardImage(pi, index);
 					
 					CardImage orig = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getCardName());
 					CardImage ci = orig.clone();
@@ -318,7 +321,7 @@ public class NetworkGame {
 
 					break;
 					
-				case CARD_ATTACKED:
+				case CARD_ATTACK:
 					
 					CardImage attacker = pi.getSlotCards()[index];
 					attacker.getCreature().onAttack();
@@ -328,6 +331,7 @@ public class NetworkGame {
 					
 					CardImage spellCardImage = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, ne.getSpellName());
 					Spell spell = SpellFactory.getSpellClass(ne.getSpellName(), game, spellCardImage.getCard(), spellCardImage, pi, game.getOpposingPlayerImage(id));	
+					spell.setTargetSlot(ne.getSlot());
 					if (ne.getSpellTargetCardName() != null) {
 						PlayerImage targetedPlayerImage = game.getPlayerImage(ne.getTargetedCardOwnerId());
 						CardImage targetCardImage =  targetedPlayerImage.getSlotCards()[ne.getSlot()];

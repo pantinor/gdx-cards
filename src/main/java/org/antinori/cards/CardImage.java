@@ -17,13 +17,13 @@ public class CardImage extends Actor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	Sprite img;
-	Texture frame;
-	Card card;
-	BitmapFont font;
-	boolean enabled;
-	boolean isHighlighted;
-	Creature creature;
+	private Sprite img;
+	private Texture frame;
+	private Card card;
+	private BitmapFont font;
+	private boolean enabled;
+	private boolean isHighlighted;
+	private Creature creature;
 	
 	public CardImage() {
 	}
@@ -172,7 +172,7 @@ public class CardImage extends Actor implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("CardImage [card=%s, enabled=%s, isHighlighted=%s]", card, enabled, isHighlighted);
+		return String.format("%s enabled=%s, isHighlighted=%s", card, enabled, isHighlighted);
 	}
 
 	

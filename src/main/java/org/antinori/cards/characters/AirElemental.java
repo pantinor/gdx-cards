@@ -19,10 +19,6 @@ public class AirElemental extends BaseCreature {
 
 	}
 
-	public void onAttack() throws GameOverException {
-		super.onAttack();
-	}
-
 	public void startOfTurnCheck() throws GameOverException {
 		this.card.setAttack(owner.getPlayerInfo().getStrength(CardType.AIR));
 	}

@@ -15,7 +15,5 @@ public class AncientGiant extends BaseCreature {
 		super.onSummoned();
 	}
 
-	public void onAttack() throws GameOverException {
-		super.onAttack();
-	}
+
 }

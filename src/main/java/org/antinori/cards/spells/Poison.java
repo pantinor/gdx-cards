@@ -1,4 +1,6 @@
-package org.antinori.cards.spells;import org.antinori.cards.PlayerImage;
+package org.antinori.cards.spells;
+
+import org.antinori.cards.PlayerImage;
 
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
@@ -6,10 +8,15 @@ import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
 
 public class Poison extends BaseSpell {
-public Poison(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
-super(game, card, cardImage, owner, opponent);
-}
-public void onCast() throws GameOverException {
-super.onCast();
-}
+	public Poison(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
+		super(game, card, cardImage, owner, opponent);
+	}
+
+	public void onCast() throws GameOverException {
+		super.onCast();
+		
+		if (this.targetedCardImage != null) {
+			damageSlot(targetedCardImage, targetedCardImage.getCreature().getIndex(), opponent, adjustDamage(14));
+		}
+	}
 }

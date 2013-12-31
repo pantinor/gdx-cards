@@ -7,4 +7,9 @@ public interface Creature {
 	public int onAttacked(BaseFunctions attacker, int damage) throws GameOverException ;
 	public void onDying() throws GameOverException;
 	public void startOfTurnCheck() throws GameOverException;
+	public int getIndex();
+	
+	public boolean mustSkipNextAttack();
+	public void setSkipNextAttack(boolean flag);
+
 }

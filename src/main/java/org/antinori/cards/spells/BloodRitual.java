@@ -1,12 +1,10 @@
 package org.antinori.cards.spells;
 
-import org.antinori.cards.PlayerImage;
-
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
-import org.antinori.cards.characters.BaseCreature;
+import org.antinori.cards.PlayerImage;
 
 public class BloodRitual extends BaseSpell {
 	public BloodRitual(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
@@ -19,9 +17,8 @@ public class BloodRitual extends BaseSpell {
 		int damage = 0;
 		
 		if (targetedCardImage != null) {
-			BaseCreature bc = (BaseCreature) targetedCardImage.getCreature();
 			damage = targetedCardImage.getCard().getLife();
-			disposeCardImage(opponent, bc.slotIndex);
+			disposeCardImage(opponent, targetedCardImage.getCreature().getIndex());
 		}
 		
 		damage = adjustDamage(damage);

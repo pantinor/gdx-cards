@@ -16,22 +16,23 @@ public class Card implements Serializable {
 	
 	private int cost;
 	private int selfInflictingDamage = 0;
-
 	
 	private String cardname;
 	private String desc;
 	private CardType type;
 	private boolean spell = false;
 	private boolean damagingSpell = false;
-	private boolean targetable = false;
+	
+	private boolean targetableOnCardOnly = false;
+	private boolean targetableOnEmptySlotOnly = false;
+
 	private boolean wall = false;
 	
 	private String mustBeSummoneOnCard;
 
 	@Override
 	public String toString() {
-		return String.format("%s type=%s attack=%s life=%s cost=%s spell=%s wall=%s desc%s", cardname, type, attack, life, cost, spell, wall, desc);
-		//return String.format("<card cardname=\"%s\" type=\"%s\" name=\"%s\" attack=\"%s\" life=\"%s\" cost=\"%s\" spell=\"%s\" desc=\"%s\" />", cardname, type, name, attack, life, cost, spell, desc);
+		return String.format("%s type=%s attack=%s life=%s cost=%s spell=%s", cardname, type, attack, life, cost, spell);
 	}
 
 	public Card(CardType type) {
@@ -51,7 +52,8 @@ public class Card implements Serializable {
 		c.setDesc(this.desc);
 		c.setSpell(this.spell);
 		c.setWall(this.wall);
-		c.setTargetable(this.targetable);
+		c.setTargetable(this.targetableOnCardOnly);
+		c.setTargetableOnEmptySlotOnly(this.targetableOnEmptySlotOnly);
 		c.setDamagingSpell(this.damagingSpell);
 		c.setMustBeSummoneOnCard(this.mustBeSummoneOnCard);
 		return c;
@@ -141,11 +143,11 @@ public class Card implements Serializable {
 	}
 
 	public boolean isTargetable() {
-		return targetable;
+		return this.targetableOnCardOnly;
 	}
 
 	public void setTargetable(boolean targetable) {
-		this.targetable = targetable;
+		this.targetableOnCardOnly = targetable;
 	}
 
 	public boolean isWall() {
@@ -194,6 +196,14 @@ public class Card implements Serializable {
 
 	public void setMustBeSummoneOnCard(String mustBeSummoneOnCard) {
 		this.mustBeSummoneOnCard = mustBeSummoneOnCard;
+	}
+
+	public boolean isTargetableOnEmptySlotOnly() {
+		return targetableOnEmptySlotOnly;
+	}
+
+	public void setTargetableOnEmptySlotOnly(boolean targetableOnEmptySlotOnly) {
+		this.targetableOnEmptySlotOnly = targetableOnEmptySlotOnly;
 	}
 
 	

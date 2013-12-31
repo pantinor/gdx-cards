@@ -2,6 +2,7 @@ package org.antinori.cards.characters;import org.antinori.cards.PlayerImage;
 
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
+import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
 
@@ -12,9 +13,11 @@ public class EnergyBeast extends BaseCreature {
 
 	public void onSummoned() throws GameOverException {
 		super.onSummoned();
+		swapCard("PumpEnergy", CardType.BEAST, "EnergyBeast", owner);
 	}
 
-	public void onAttack() throws GameOverException {
-		super.onAttack();
+	public void onDying() throws GameOverException {
+		super.onDying();
+		swapCard("EnergyBeast", CardType.BEAST, "PumpEnergy", owner);
 	}
 }

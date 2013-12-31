@@ -4,6 +4,7 @@ import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
 import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
+import org.antinori.cards.Utils;
 
 public class FireDrake extends BaseCreature {
 
@@ -13,6 +14,6 @@ public class FireDrake extends BaseCreature {
 
 	public void onSummoned() throws GameOverException {
 		super.onSummoned();
-		super.onAttack();
+		Utils.attackWithNetworkEvent(this, owner.getPlayerInfo(), slotIndex);
 	}
 }

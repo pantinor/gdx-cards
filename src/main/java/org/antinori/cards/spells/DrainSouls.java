@@ -2,10 +2,10 @@ package org.antinori.cards.spells;
 
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
+import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
-import org.antinori.cards.characters.BaseCreature;
 
 public class DrainSouls extends BaseSpell {
 	public DrainSouls(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
@@ -20,23 +20,19 @@ public class DrainSouls extends BaseSpell {
 		for (int index = 0; index < 6; index ++) {
 			CardImage ci = owner.getSlotCards()[index];
 			if (ci == null) continue;
-			BaseCreature bc = (BaseCreature) ci.getCreature();
-			disposeCardImage(owner, bc.slotIndex);
+			disposeCardImage(owner, ci.getCreature().getIndex());
 			count ++;
 		}
 		for (int index = 0; index < 6; index ++) {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null) continue;
-			BaseCreature bc = (BaseCreature) ci.getCreature();
-			disposeCardImage(opponent, bc.slotIndex);
+			disposeCardImage(opponent, ci.getCreature().getIndex());
 			count ++;
 		}
 		int heal = count * 2;
 		this.owner.incrementLife(heal, game);
 		
-		
-		
-		changeSpellCard("RageofSouls");
+		swapCard("RageofSouls", CardType.DEATH, "DrainSouls", owner);
 
 	}
 }

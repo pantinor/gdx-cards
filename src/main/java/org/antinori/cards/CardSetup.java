@@ -94,6 +94,9 @@ public class CardSetup {
                     Boolean targetable = Boolean.parseBoolean(getAttrText( n1, "targetable" ));
                     c.setTargetable(targetable);
                     
+                    Boolean targetableOnEmptySlot = Boolean.parseBoolean(getAttrText( n1, "targetableOnEmptySlot" ));
+                    c.setTargetableOnEmptySlotOnly(targetableOnEmptySlot);
+                    
                     Boolean damagingSpell = Boolean.parseBoolean(getAttrText( n1, "damagingSpell" ));
                     c.setDamagingSpell(damagingSpell);
                     

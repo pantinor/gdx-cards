@@ -128,9 +128,6 @@ public class Cards extends SimpleGame {
 		
 		batch = new SpriteBatch();
 		
-		Sounds.startBackGroundMusic();
-		
-		
 		ramka = new Texture(Gdx.files.classpath("images/ramka.png"));
 		spellramka = new Texture(Gdx.files.classpath("images/ramkaspell.png"));
 		portraitramka = new Texture(Gdx.files.classpath("images/portraitramka.png"));
@@ -270,6 +267,8 @@ public class Cards extends SimpleGame {
 		
 		chooser = new SingleDuelChooser();
 		chooser.init(this);  
+		
+		Sounds.startBackGroundMusic();
 						
 	}
 	
@@ -503,13 +502,24 @@ public class Cards extends SimpleGame {
 							
 							CardImage[] cards = selectedCard.getCard().isDamagingSpell()?opponent.getSlotCards():player.getSlotCards();
 							
-							//highlight targets
+							//highlight target cards
 							for (CardImage ci : cards) {
 								if (ci != null) {
 									ci.setHighlighted(true);
 									ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
 								}
 							}
+							
+						} else if (selectedCard.getCard().isTargetableOnEmptySlotOnly()) {
+							
+							//highlight players empty slots
+							for (SlotImage si : player.getSlots()) {
+								if (!si.isOccupied()) {
+									si.setHighlighted(true);
+									si.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+								}
+							}
+								
 						} else {
 							//cast the spell
 							BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard);
@@ -517,6 +527,7 @@ public class Cards extends SimpleGame {
 						}
 						
 					} else if (selectedCard.getCard().getMustBeSummoneOnCard() != null) {
+						
 						//emmissary of dorlak and forest wolf
 						String requiredTarget = selectedCard.getCard().getMustBeSummoneOnCard();
 
@@ -556,7 +567,7 @@ public class Cards extends SimpleGame {
 			if (actor instanceof CardImage) {
 				CardImage targetedCard = (CardImage)actor;
 				
-				if (!targetedCard.isHighlighted) return true;
+				if (!targetedCard.isHighlighted()) return true;
 				
 				clearHighlights();
 				
@@ -611,6 +622,61 @@ public class Cards extends SimpleGame {
 		}
 	}
 	
+	
+	class SlotListener extends InputListener {
+		
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			
+			if (gameOver) return true;
+			
+			Actor actor = event.getListenerActor();
+
+			if (actor instanceof SlotImage) {
+				final SlotImage si = (SlotImage) actor;
+
+				if (canStartMyTurn() && selectedCard != null && selectedCard.isEnabled() && si.isBottomSlots()) {
+					
+					if (!selectedCard.getCard().isSpell() && selectedCard.getCard().getMustBeSummoneOnCard() == null) {
+						
+						final CardImage clone = selectedCard.clone();
+						
+						stage.addActor(clone);
+						clone.addListener(new TargetedCardListener(player.getPlayerInfo().getId(), si.getIndex()));
+						clone.addListener(sdl);
+
+						CardImage[] imgs = player.getSlotCards();
+						imgs[si.getIndex()] = clone;
+						
+						SlotImage[] slots = player.getSlots();
+						slots[si.getIndex()].setOccupied(true);
+						
+						Creature summonedCreature = CreatureFactory.getCreatureClass(clone.getCard().getName(), Cards.this, clone.getCard(), clone, si.getIndex(), player, opponent);
+						clone.setCreature(summonedCreature);
+						
+						Sounds.play(Sound.SUMMONED);
+						
+						clone.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
+							public boolean act(float delta) {
+								BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, clone, si.getIndex());
+								t.start();
+								return true;
+							}
+						}));						
+
+					} else if (selectedCard.getCard().isSpell() && si.isHighlighted()) {
+						clearHighlights();
+
+						//cast the spell for empty slot target, indicate the slot for the card movement, ex. MoveFalcon spell
+						BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, selectedCard, null, player.getPlayerInfo().getId(), si.getIndex());
+						t.start();
+					}
+				}
+			}
+			return true;
+		}
+	}
+	
+	
 	class ShowDescriptionListener extends InputListener {
         		
 		public void enter (InputEvent event, float x, float y, int pointer, Actor a) {
@@ -661,54 +727,15 @@ public class Cards extends SimpleGame {
 				ci.setColor(Color.WHITE);
 			}
 		}
-	}
-	
-	class SlotListener extends InputListener {
-		
-		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			
-			if (gameOver) return true;
-			
-			Actor actor = event.getListenerActor();
-
-			if (actor instanceof SlotImage) {
-				final SlotImage si = (SlotImage) actor;
-
-				if (canStartMyTurn() && selectedCard != null && selectedCard.isEnabled() && si.isBottomSlots()) {
-					
-					if (!selectedCard.getCard().isSpell() && selectedCard.getCard().getMustBeSummoneOnCard() == null) {
-						
-						final CardImage clone = selectedCard.clone();
-						
-						stage.addActor(clone);
-						clone.addListener(new TargetedCardListener(player.getPlayerInfo().getId(), si.getIndex()));
-						clone.addListener(sdl);
-
-						CardImage[] imgs = player.getSlotCards();
-						imgs[si.getIndex()] = clone;
-						
-						SlotImage[] slots = player.getSlots();
-						slots[si.getIndex()].setOccupied(true);
-						
-						Creature summonedCreature = CreatureFactory.getCreatureClass(clone.getCard().getName(), Cards.this, clone.getCard(), clone, si.getIndex(), player, opponent);
-						clone.setCreature(summonedCreature);
-						
-						Sounds.play(Sound.SUMMONED);
-						
-						clone.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
-							public boolean act(float delta) {
-								BattleRoundThread t = new BattleRoundThread(Cards.this, player, opponent, clone, si.getIndex());
-								t.start();
-								return true;
-							}
-						}));						
-
-					} else {
-						//nothing
-					}
-				}
-			}
-			return true;
+		for (SlotImage si : player.getSlots()) {
+			si.setHighlighted(false);
+			si.clearActions();
+			si.setColor(Color.WHITE);
+		}
+		for (SlotImage si : opponent.getSlots()) {
+			si.setHighlighted(false);
+			si.clearActions();
+			si.setColor(Color.WHITE);
 		}
 	}
 	

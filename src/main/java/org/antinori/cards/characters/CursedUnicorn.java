@@ -12,14 +12,6 @@ public class CursedUnicorn extends BaseCreature {
 	public CursedUnicorn(Cards game, Card card, CardImage cardImage, int slotIndex, PlayerImage owner, PlayerImage opponent) {
 		super(game, card, cardImage, slotIndex, owner, opponent);
 	}
-
-	public void onSummoned() throws GameOverException {
-		super.onSummoned();
-	}
-
-	public void onAttack() throws GameOverException {
-		super.onAttack();
-	}
 	
 	public int onAttacked(BaseFunctions attacker, int damage) throws GameOverException {
 		
@@ -32,10 +24,8 @@ public class CursedUnicorn extends BaseCreature {
 	}
 	
 	public void startOfTurnCheck() throws GameOverException {
-		
 		if (opponent.getSlotCards()[slotIndex] != null) {
 			cardImage.decrementLife(this, 5, game);
 		}
-		
 	}
 }

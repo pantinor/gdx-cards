@@ -87,7 +87,7 @@ public class BattleRoundThread extends Thread {
 					throw ge;
 				} finally {
 					if (Cards.NET_GAME != null) {
-						NetworkEvent ne = new NetworkEvent(Event.CARD_ADDED, summonedSlot, summonedCardImage.getCard().getName(), player.getPlayerInfo().getId());
+						NetworkEvent ne = new NetworkEvent(Event.CARD_SUMMONED, summonedSlot, summonedCardImage.getCard().getName(), player.getPlayerInfo().getId());
 						Cards.NET_GAME.sendEvent(ne);
 					}
 				}
@@ -97,6 +97,7 @@ public class BattleRoundThread extends Thread {
 				try {
 					Spell spell = SpellFactory.getSpellClass(spellCardImage.getCard().getName(), game, spellCardImage.getCard(), spellCardImage, player, opponent);	
 					spell.setTargeted(targetedCardImage);
+					spell.setTargetSlot(targetedSlot);
 					spell.onCast();
 				} catch (GameOverException ge) {
 					throw ge;
@@ -106,9 +107,9 @@ public class BattleRoundThread extends Thread {
 						ne.setSpellName(spellCardImage.getCard().getName());
 						if (targetedCardImage != null) {
 							ne.setSpellTargetCardName(targetedCardImage.getCard().getName());
-							ne.setSlot(this.targetedSlot);
-							ne.setTargetedCardOwnerId(this.targetedCardOwnerId);
 						}
+						ne.setSlot(this.targetedSlot);
+						ne.setTargetedCardOwnerId(this.targetedCardOwnerId);
 						ne.setCaster(player.getPlayerInfo().getId());
 						Cards.NET_GAME.sendEvent(ne);
 					}
@@ -128,9 +129,7 @@ public class BattleRoundThread extends Thread {
 				if (attacker == null) continue;
 				
 				//do not let the forest spiders attack the same time that the giant spider is summoned
-				if (summonedCardImage != null && attacker != null &&
-						summonedCardImage.getCard().getName().equalsIgnoreCase("giantspider") && 
-						attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
+				if (isTriplicateSummon(summonedCardImage, attacker)) continue;
 				
 				try {
 					attacker.getCreature().onAttack(); 
@@ -138,7 +137,7 @@ public class BattleRoundThread extends Thread {
 					throw ge;
 				} finally {
 					if (Cards.NET_GAME != null) {
-						NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
+						NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACK, player.getPlayerInfo().getId());
 						ne.setSlot(i);
 						Cards.NET_GAME.sendEvent(ne);
 					}
@@ -217,6 +216,8 @@ public class BattleRoundThread extends Thread {
 						
 					} else {
 						
+						//TODO for targetable spells, add handling here
+						
 						//cast a spell towards the player			
 						Spell opptSpell = SpellFactory.getSpellClass(opptPick.getCard().getName(), game, opptPick.getCard(), opptPick, opponent, player);					
 						opptSpell.onCast();
@@ -225,7 +226,7 @@ public class BattleRoundThread extends Thread {
 						
 				} else {
 					
-					System.out.println("No open top slots available for opponent to summon creature, casting a spell instead.");
+					System.err.println("No open top slots available for opponent to summon creature.");
 					
 				}
 							
@@ -233,11 +234,10 @@ public class BattleRoundThread extends Thread {
 				int j = -1;
 				for (CardImage attacker : opponent.getSlotCards()) {
 					j++;
+					
 					if (opptSummons != null  && j == si.getIndex()) continue;
-					if (opptSummons != null  && attacker != null &&
-							opptSummons.getCard().getName().equalsIgnoreCase("giantspider") && 
-							attacker.getCard().getName().equalsIgnoreCase("forestspider")) continue;
 					if (attacker == null) continue;
+					if (isTriplicateSummon(opptSummons, attacker)) continue;
 					
 					attacker.getCreature().onAttack();
 				}
@@ -263,6 +263,20 @@ public class BattleRoundThread extends Thread {
 			game.finishTurn();
 		}
 		
+		
+	}
+	
+	private boolean isTriplicateSummon(CardImage summoned, CardImage attacker) {
+		
+		if (summoned == null || attacker == null) return false;
+		
+		if (summoned.getCard().getName().equalsIgnoreCase("giantspider") && 
+				attacker.getCard().getName().equalsIgnoreCase("forestspider")) return true;
+		
+		if (summoned.getCard().getName().equalsIgnoreCase("vampireelder") && 
+				attacker.getCard().getName().equalsIgnoreCase("initiate")) return true;
+		
+		return false;
 		
 	}
 	
@@ -292,18 +306,8 @@ public class BattleRoundThread extends Thread {
 				CardImage ci2 = player.getSlotCards()[index2];
 				if (ci2 == null) continue;
 				if (ci2.getCard().getName().equalsIgnoreCase("monumenttorage")) {
-					try {
-						//card gets an extra attack this round
-						ci.getCreature().onAttack(); 
-					} catch (GameOverException ge) {
-						throw ge;
-					} finally {
-						if (Cards.NET_GAME != null) {
-							NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACKED, player.getPlayerInfo().getId());
-							ne.setSlot(index);
-							Cards.NET_GAME.sendEvent(ne);
-						}
-					}
+					//card gets an extra attack this round
+					Utils.attackWithNetworkEvent(ci.getCreature(), player.getPlayerInfo(), index);
 				}
 			}
 

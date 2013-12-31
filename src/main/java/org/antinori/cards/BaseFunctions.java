@@ -1,6 +1,7 @@
 package org.antinori.cards;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
@@ -15,7 +16,7 @@ public class BaseFunctions {
 	protected Card card;
 	protected CardImage cardImage;
 	protected Cards game;
-	public int slotIndex = -1;
+	protected int slotIndex = -1;
 	
 	protected Player opposingPlayer ;
 	protected Player ownerPlayer ;
@@ -24,6 +25,8 @@ public class BaseFunctions {
 	protected PlayerImage opponent ;
 	
 	public boolean isSpell = false;
+	public boolean mustSkipNexAttack = false;
+
 	
 	protected void damageOpponent(int value) throws GameOverException {
 		damagePlayer(opponent, value);
@@ -52,6 +55,10 @@ public class BaseFunctions {
 			if (ownedCards[index] != null) {
 				if (ownedCards[index].getCard().getName().equalsIgnoreCase("chastiser")) {
 					ownedCards[index].getCard().incrementAttack(2);
+				}
+				if (ownedCards[index].getCard().getName().equalsIgnoreCase("whiteelephant")) {
+					damageSlot(ownedCards[index], index, pi, value);
+					return;
 				}
 			}
 
@@ -169,32 +176,40 @@ public class BaseFunctions {
 		
 		game.stage.addActor(ci1);
 	}
-	
-	protected void changeSpellCard(String name) {
 		
-		List<CardImage> cards = ownerPlayer.getCards(CardType.DEATH);
-		
-		cardImage.remove();
+	protected void swapCard(String newCardName, CardType type, String oldCardName, PlayerImage pi) {
 
 		CardImage newCard = null;
 		try {
-			newCard = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, name);
+			newCard = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, newCardName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		newCard.setFont(Cards.greenfont);
-		newCard.setFrame(Cards.spellramka);
+		newCard.setFrame(newCard.getCard().isSpell()?Cards.spellramka:Cards.ramka);
 		newCard.addListener(game.sdl);
-		newCard.setBounds(cardImage.getX(), cardImage.getY(), cardImage.getWidth(), cardImage.getHeight());
 		newCard.addListener(game.li);
 
-		cards.remove(cardImage);
+		List<CardImage> cards = ownerPlayer.getCards(type);
+		CardImage oldCard = null;
+		for (CardImage ci : cards) {
+			if (ci.getCard().getName().equalsIgnoreCase(oldCardName)) {
+				oldCard = ci;
+			}
+		}
+		
+		newCard.setBounds(oldCard.getX(), oldCard.getY(), oldCard.getWidth(), oldCard.getHeight());
+		
+		cards.remove(oldCard);
+		oldCard.remove();
+		
 		cards.add(newCard);
+		if (pi.getSlots()[0].isBottomSlots()) {
+			game.stage.addActor(newCard);
+		}
 
-		game.stage.addActor(newCard);
-
-		CardImage.sort(cards);
+		//CardImage.sort(cards);
 		
 	}
 	
@@ -203,6 +218,22 @@ public class BaseFunctions {
 		img.setBounds(ci.getX(), ci.getY(), ci.getWidth(), ci.getHeight());
 		game.stage.addActor(img);
 		img.addAction(sequence(scaleTo(1.05f, 1.05f, 0.30f), scaleTo(1.0f, 1.0f, 0.30f), removeActor(img)));
+	}
+	
+	
+	protected void moveCardToAnotherSlot(PlayerImage player, CardImage ci, int srcIndex, int destIndex) {
+		
+		CardImage[] cards = player.getSlotCards();
+		cards[srcIndex] = null;
+		cards[destIndex] = ci;
+		
+		SlotImage[] slots = player.getSlots();
+		slots[srcIndex].setOccupied(false);
+		slots[destIndex].setOccupied(true);
+		
+		Sounds.play(Sound.SUMMONED);
+		
+		ci.addAction(sequence(moveTo(slots[destIndex].getX() + 5, slots[destIndex].getY() + 26, 1.0f)));
 	}
 		
 

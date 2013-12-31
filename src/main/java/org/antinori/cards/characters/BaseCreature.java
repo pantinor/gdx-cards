@@ -10,6 +10,7 @@ import org.antinori.cards.GameOverException;
 import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Sound;
 import org.antinori.cards.Sounds;
+import org.antinori.cards.Utils;
 
 public class BaseCreature extends BaseFunctions implements Creature {
 
@@ -68,7 +69,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			String leftNeighbor = teamCards[nl].getCard().getName();
 
 			if (leftNeighbor.equalsIgnoreCase("merfolkoverlord")) {
-				onAttack();
+				Utils.attackWithNetworkEvent(this, owner.getPlayerInfo(), slotIndex);
 			}
 
 			if (leftNeighbor.equalsIgnoreCase("orcchieftain")) {
@@ -86,7 +87,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			String rightNeighbor = teamCards[nr].getCard().getName();
 
 			if (rightNeighbor.equalsIgnoreCase("merfolkoverlord")) {
-				onAttack();
+				Utils.attackWithNetworkEvent(this, owner.getPlayerInfo(), slotIndex);
 			}
 
 			if (rightNeighbor.equalsIgnoreCase("orcchieftain")) {
@@ -102,6 +103,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	}
 
 	public void onAttack() throws GameOverException {
+		
+		if (this.mustSkipNexAttack) return;
 		
 		int attack = this.card.getAttack();
 		
@@ -235,6 +238,18 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	public void startOfTurnCheck() throws GameOverException {
 		
+	}
+
+	public int getIndex() {
+		return this.slotIndex;
+	}
+
+	public boolean mustSkipNextAttack() {
+		return this.mustSkipNexAttack;
+	}
+
+	public void setSkipNextAttack(boolean flag) {
+		this.mustSkipNexAttack = flag;
 	}
 
 }

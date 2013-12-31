@@ -212,6 +212,7 @@ public class Player implements Serializable {
 				pick = c;
 			}
 		}
+		System.out.println("Computer opponent picked: " + pick);
 		return pick;
 	}
 	

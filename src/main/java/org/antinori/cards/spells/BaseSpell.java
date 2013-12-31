@@ -11,6 +11,7 @@ import org.antinori.cards.Spell;
 public class BaseSpell extends BaseFunctions implements Spell {
 	
 	CardImage targetedCardImage;
+	int targetSlot = -1;
 		
 	public BaseSpell(Cards game, Card card, CardImage cardImage, PlayerImage owner, PlayerImage opponent) {
 		
@@ -29,8 +30,13 @@ public class BaseSpell extends BaseFunctions implements Spell {
 	}
 	
 	public void setTargeted(CardImage target) {
-		targetedCardImage = target;
+		this.targetedCardImage = target;
 	}
+	
+	public void setTargetSlot(int index) {
+		this.targetSlot = index;
+	}
+
 
 	public void onCast() throws GameOverException {
 				
