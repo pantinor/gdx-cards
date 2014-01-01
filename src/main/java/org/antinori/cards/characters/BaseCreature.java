@@ -69,7 +69,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			String leftNeighbor = teamCards[nl].getCard().getName();
 
 			if (leftNeighbor.equalsIgnoreCase("merfolkoverlord")) {
-				Utils.attackWithNetworkEvent(this, owner.getPlayerInfo(), slotIndex);
+				onAttack();
 			}
 
 			if (leftNeighbor.equalsIgnoreCase("orcchieftain")) {
@@ -87,7 +87,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			String rightNeighbor = teamCards[nr].getCard().getName();
 
 			if (rightNeighbor.equalsIgnoreCase("merfolkoverlord")) {
-				Utils.attackWithNetworkEvent(this, owner.getPlayerInfo(), slotIndex);
+				onAttack();
 			}
 
 			if (rightNeighbor.equalsIgnoreCase("orcchieftain")) {
@@ -104,7 +104,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	public void onAttack() throws GameOverException {
 		
-		if (this.mustSkipNexAttack) return;
+		if (this.mustSkipNexAttack) {
+			this.mustSkipNexAttack = false;
+			return;
+		}
 		
 		int attack = this.card.getAttack();
 		

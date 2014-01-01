@@ -22,8 +22,6 @@ public class BattleRoundThread extends Thread {
 	CardImage summonedCardImage;
 	int summonedSlot = -1;
 	
-	AtomicBoolean opptSummoningFinished = new AtomicBoolean(false);
-
 	CardImage spellCardImage;
 	CardImage targetedCardImage;
 	int targetedSlot;;
@@ -200,15 +198,16 @@ public class BattleRoundThread extends Thread {
 						
 						Sounds.play(Sound.SUMMONED);
 						
+						final AtomicBoolean doneAction = new AtomicBoolean(false);
+						
 						opptSummons.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
 							public boolean act(float delta) {
-								opptSummoningFinished.set(true);
+								doneAction.set(true);
 								return true;
 							}
 						}));
 						
-						//wait for summoning action to end
-						while(!opptSummoningFinished.get()) {
+						while(!doneAction.get()) {
 							Thread.sleep(50);
 						}
 						

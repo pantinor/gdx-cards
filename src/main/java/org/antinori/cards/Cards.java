@@ -572,7 +572,8 @@ public class Cards extends SimpleGame {
 				clearHighlights();
 				
 				if (!selectedCard.getCard().isSpell()) {
-					
+					startTurn();
+
 					//destroy target creature
 					BaseCreature bc = (BaseCreature)targetedCard.getCreature();
 					try {
@@ -637,7 +638,8 @@ public class Cards extends SimpleGame {
 				if (canStartMyTurn() && selectedCard != null && selectedCard.isEnabled() && si.isBottomSlots()) {
 					
 					if (!selectedCard.getCard().isSpell() && selectedCard.getCard().getMustBeSummoneOnCard() == null) {
-						
+						startTurn();
+
 						final CardImage clone = selectedCard.clone();
 						
 						stage.addActor(clone);
@@ -664,6 +666,7 @@ public class Cards extends SimpleGame {
 						}));						
 
 					} else if (selectedCard.getCard().isSpell() && si.isHighlighted()) {
+						startTurn();
 						clearHighlights();
 
 						//cast the spell for empty slot target, indicate the slot for the card movement, ex. MoveFalcon spell

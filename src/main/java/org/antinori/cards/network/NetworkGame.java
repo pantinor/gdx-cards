@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.antinori.cards.Card;
 import org.antinori.cards.CardImage;
@@ -29,6 +30,7 @@ import org.antinori.cards.SpellFactory;
 import org.antinori.cards.characters.BaseCreature;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Action;
 
 
 public class NetworkGame {
@@ -315,10 +317,25 @@ public class NetworkGame {
 					ci.addListener(game.sdl);
 					ci.setBounds(0, Cards.SCREEN_HEIGHT, ci.getFrame().getWidth(), ci.getFrame().getHeight());
 					game.stage.addActor(ci);
-					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f)));
-										
-					creature.onSummoned();
+					
+					final AtomicBoolean doneAction = new AtomicBoolean(false);
 
+					ci.addAction(sequence(moveTo(slot.getX() + 5, slot.getY() + 26, 1.0f), new Action() {
+						public boolean act(float delta) {
+							doneAction.set(true);
+							return true;
+						}
+					}));
+					
+					while(!doneAction.get()) {
+						try {
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+						}
+					}
+					
+					creature.onSummoned();
+										
 					break;
 					
 				case CARD_ATTACK:
