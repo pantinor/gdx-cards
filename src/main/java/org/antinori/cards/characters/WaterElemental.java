@@ -13,10 +13,10 @@ public class WaterElemental extends BaseCreature {
 	}
 
 	public void onSummoned() throws GameOverException {
-		super.onSummoned();
 		this.card.setAttack(ownerPlayer.getStrengthWater());
 		owner.incrementLife(10, game);
 		ownerPlayer.incrementStrength(CardType.WATER, 1);
+		super.onSummoned();
 	}
 
 	public void onAttack() throws GameOverException {

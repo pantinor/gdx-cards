@@ -34,7 +34,7 @@ public class Initiate extends BaseCreature {
 			}
 		}
 
-		if (nr >= 0 && owner.getSlotCards()[nr] != null) {
+		if (nr <= 5 && owner.getSlotCards()[nr] != null) {
 			String n = owner.getSlotCards()[nr].getCard().getName();
 			if (n.equalsIgnoreCase("vampireelder")) {
 				isVampireElderStillAlve = true;

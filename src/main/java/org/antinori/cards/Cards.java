@@ -153,13 +153,13 @@ public class Cards extends SimpleGame {
 		defaultFont = new BitmapFont(Gdx.files.classpath("default.fnt"), false);
 		greenfont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"), false);
 		greenfont.setColor(Color.valueOf("105410"));
-		customFont = new BitmapFont(Gdx.files.classpath("fonts/BellMT_16.fnt"),false);
+		customFont = new BitmapFont(Gdx.files.classpath("fonts/Arial_12.fnt"),false);
 		customFont.setColor(Color.BLACK);
 
 		whiteStyle = new Label.LabelStyle(defaultFont, Color.WHITE);
 		redStyle = new Label.LabelStyle(customFont, Color.RED);
 		greenStyle = new Label.LabelStyle(customFont, Color.GREEN);
-		
+				
 		playerInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
 		opptInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
 		playerInfoLabel.setPosition(80 + 10 + 120, ydown(300));
@@ -449,7 +449,7 @@ public class Cards extends SimpleGame {
 				y1 = ydown(0);
 			}
 			
-			ci.setFont(greenfont);
+			ci.setFont(customFont);
 			ci.setFrame(ci.getCard().isSpell()?spellramka:ramka);
 			ci.addListener(sdl);
 
@@ -856,16 +856,16 @@ public class Cards extends SimpleGame {
 		gameOver = true;
 		
 		Cards.logScrollPane.add("Game Over");
+
+		if (Cards.NET_GAME != null) {
+			Cards.NET_GAME.sendYourTurnSignal();
+		}
 		
 		Dialog dialog = new Dialog("Game Over", skin, "dialog") {
 			protected void result (Object object) {
 				if (object.toString().equalsIgnoreCase("true")) {
-					//new Thread() {
-					//	public void run() {
-							chooser = new SingleDuelChooser();
-							chooser.init(Cards.this); 
-					//	}
-					//}.start();
+					chooser = new SingleDuelChooser();
+					chooser.init(Cards.this); 
 				}
 			}
 		}.text("Play Again?").button("Yes", true).button("No", false).key(Keys.ENTER, true);

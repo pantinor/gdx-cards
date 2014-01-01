@@ -7,10 +7,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class CardImage extends Actor implements Serializable {
@@ -19,6 +21,10 @@ public class CardImage extends Actor implements Serializable {
 	
 	private Sprite img;
 	private Texture frame;
+	
+	private static Texture healthBox;
+	private TextureRegion healthBar;
+	
 	private Card card;
 	private BitmapFont font;
 	private boolean enabled;
@@ -33,9 +39,24 @@ public class CardImage extends Actor implements Serializable {
 		this.card = info;
 		setName(card.getName());
 	}
+	
+	private static void initHealthBar() {
+		Pixmap p = new Pixmap(63, 4, Pixmap.Format.RGBA8888);
+		p.setColor(Color.valueOf("105410"));
+		p.fill();
+		healthBox = new Texture(p);
+	}
 
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
+		
+		if (healthBox == null) {
+			initHealthBar();
+		}
+		
+		if (this.healthBar == null) {
+			healthBar = new TextureRegion(healthBox, 0, 0, 63, 4);
+		}
 		
 		Color color = getColor();
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
@@ -50,11 +71,15 @@ public class CardImage extends Actor implements Serializable {
 		int li = card.getLife();
 
 		if (!card.isSpell()) {
-			font.draw(batch, "" + at, (at>9?x:x+3), y+7);
-			font.draw(batch, "" + co, (co>9?x+66:x+69), y+87);
-			font.draw(batch, "" + li, (li>9?x+66:x+69), y+7);
+			font.draw(batch, "" + at, (at>9?x:x+3), y+5);
+			font.draw(batch, "" + co, (co>9?x+66:x+69), y+85);
+			font.draw(batch, "" + li, (li>9?x+66:x+69), y+5);
 		} else {
 			font.draw(batch, "" + co, (co>9?x+66:x+69), y+77);
+		}
+		
+		if (creature != null) {
+			batch.draw(healthBar, x, y+82);
 		}
 
 	}
@@ -109,6 +134,12 @@ public class CardImage extends Actor implements Serializable {
 				
 		int remainingLife = card.getLife();
 		boolean died = (remainingLife < 1);
+		
+		double percent = (double) remainingLife/ (double) card.getOriginalLife();
+		double bar = percent * (double) 63;
+		if (remainingLife < 0) bar = 0;
+		if (bar > 63) bar = 63; 
+		healthBar.setRegion(0, 0, (int) bar, 4);
 		
 		return died;
 	}

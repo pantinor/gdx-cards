@@ -14,8 +14,9 @@ public class EarthElemental extends BaseCreature {
 	}
 
 	public void onSummoned() throws GameOverException {
-		super.onSummoned();
+		this.card.setAttack(ownerPlayer.getStrengthEarth());
 		ownerPlayer.incrementStrength(CardType.EARTH, 1);
+		super.onSummoned();
 	}
 
 	public void onAttack() throws GameOverException {

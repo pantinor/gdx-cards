@@ -26,7 +26,7 @@ public class GiantSpider extends BaseCreature {
 				addCreature("ForestSpider", nl, slots[nl]);
 			}
 
-			if (nr >= 0 && owner.getSlotCards()[nr] == null) {
+			if (nr <= 5 && owner.getSlotCards()[nr] == null) {
 				addCreature("ForestSpider", nr, slots[nr]);
 			}
 

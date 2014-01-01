@@ -27,7 +27,7 @@ public class VampireElder extends BaseCreature {
 				addCreature("Initiate", nl, slots[nl]);
 			}
 			
-			if (nr >= 0 && owner.getSlotCards()[nr] == null) {
+			if (nr <= 5 && owner.getSlotCards()[nr] == null) {
 				addCreature("Initiate", nr, slots[nr]);
 			}
 			

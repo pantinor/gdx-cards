@@ -13,10 +13,10 @@ public class AirElemental extends BaseCreature {
 	}
 
 	public void onSummoned() throws GameOverException {
-		super.onSummoned();
+		this.card.setAttack(ownerPlayer.getStrengthAir());
 		damageOpponent(8);
 		ownerPlayer.incrementStrength(CardType.AIR, 1);
-
+		super.onSummoned();
 	}
 
 	public void startOfTurnCheck() throws GameOverException {

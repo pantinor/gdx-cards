@@ -14,10 +14,11 @@ public class FireElemental extends BaseCreature {
 	}
 
 	public void onSummoned() throws GameOverException {
-		super.onSummoned();
+		this.card.setAttack(ownerPlayer.getStrengthFire());
 		ownerPlayer.incrementStrength(CardType.FIRE, 1);
 		damageAll(opponent, 3);
 		damagePlayer(opponent, 3);
+		super.onSummoned();
 	}
 
 	@Override

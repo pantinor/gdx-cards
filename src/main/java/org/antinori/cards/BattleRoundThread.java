@@ -147,23 +147,17 @@ public class BattleRoundThread extends Thread {
 				
 				pi.incrementStrengthAll(1);
 				
-				if (Cards.NET_GAME != null) {
-					NetworkEvent ne = new NetworkEvent(Event.PLAYER_INCR_STRENGTH_ALL, pi.getId());
-					ne.setStrengthAffected(1);
-					Cards.NET_GAME.sendEvent(ne);
-				}
+				NetworkEvent ne = new NetworkEvent(Event.PLAYER_INCR_STRENGTH_ALL, pi.getId());
+				ne.setStrengthAffected(1);
+				Cards.NET_GAME.sendEvent(ne);
 				
 				ng.sendYourTurnSignal();
-				
-				//wait until the far end has sent over all cards and player info
 				ng.read();
-				
 				
 			} else {
 				
 				//start computer turn
 				startOfTurnCheck(opponent);
-				
 				
 				//do single player duel computer turn
 				CardImage opptSummons = null;

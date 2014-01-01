@@ -62,12 +62,8 @@ public class NetworkGame {
 					public void run() {
 						try {
 							socket = serverSocket.accept();
-							
 							System.out.println("Server Socket listening on port 5000");
-							
 							bcth.setAlive(false);
-							isMyTurn = true;
-							
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -117,9 +113,8 @@ public class NetworkGame {
 			if (socket == null) {
 				
 				if (this.server) {
+					
 					System.out.println("Waiting for client to accept socket connection.");
-
-					//wait in a loop
 					while (socket == null) {
 						Thread.sleep(1000);
 					}
@@ -128,6 +123,12 @@ public class NetworkGame {
 					throw new Exception("socket is null.");
 				}
 			}
+			
+			if (this.server) {
+				isMyTurn = true;
+			}
+			
+			playersInitialized = false;
 						
 			NetworkEvent info = new NetworkEvent(Event.REMOTE_PLAYER_INFO_INIT, game.player.getPlayerInfo());
 			
@@ -139,7 +140,7 @@ public class NetworkGame {
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				Object obj = in.readObject();
 				
-				System.out.println("Received: "+ obj);
+				System.out.println("waitForPlayerInitHandshake: Received: "+ obj);
 				
 				if (obj instanceof NetworkEvent) {
 					
@@ -242,7 +243,7 @@ public class NetworkGame {
 					obj = in.readObject();
 				}
 				
-				System.out.println("Received: "+ obj);
+				System.out.println("read: Received: "+ obj);
 				
 				if (obj instanceof NetworkEvent) {
 					
@@ -364,10 +365,13 @@ public class NetworkGame {
 					break;				
 
 				default:
+					System.err.println("ReadNetworkEventThread got " + evt + " - not handling it.");
 					break;
 				
 				}
 				
+			} catch (GameOverException e) {
+				game.handleGameOver();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
