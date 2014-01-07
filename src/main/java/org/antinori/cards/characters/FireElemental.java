@@ -23,6 +23,6 @@ public class FireElemental extends BaseCreature {
 
 	@Override
 	public void startOfTurnCheck() throws GameOverException {
-		this.card.setAttack(ownerPlayer.getStrength(CardType.FIRE));
+		this.card.setAttack(ownerPlayer.getStrengthFire());
 	}
 }

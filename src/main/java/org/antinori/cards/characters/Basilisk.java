@@ -24,7 +24,7 @@ public class Basilisk extends BaseCreature {
 	}
 	
 	@Override
-	public void startOfTurnCheck() throws GameOverException {
+	public void endOfTurnCheck() throws GameOverException {
 		for (int index = 0; index < 6; index++) {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null) continue;

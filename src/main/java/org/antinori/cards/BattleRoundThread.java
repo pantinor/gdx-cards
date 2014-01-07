@@ -3,6 +3,8 @@ package org.antinori.cards;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.antinori.cards.characters.BaseCreature;
@@ -71,7 +73,6 @@ public class BattleRoundThread extends Thread {
 			
 			Cards.logScrollPane.add("________________________");
 			
-			//start of turn for player
 			startOfTurnCheck(player);
 
 			Player pi = player.getPlayerInfo();
@@ -116,16 +117,11 @@ public class BattleRoundThread extends Thread {
 			}
 			
 						
-			
-			int i = -1;
-			for (CardImage attacker : player.getSlotCards()) {
-				
-				i++;
-				
-				if (summonedCardImage != null && i == summonedSlot) continue;
-				
+			for (int index = 0; index<6; index++) {
+				CardImage attacker = player.getSlotCards()[index];
 				if (attacker == null) continue;
-				
+				if (summonedCardImage != null && index == summonedSlot) continue;
+								
 				//do not let the forest spiders attack the same time that the giant spider is summoned
 				if (isTriplicateSummon(summonedCardImage, attacker)) continue;
 				
@@ -136,11 +132,10 @@ public class BattleRoundThread extends Thread {
 				} finally {
 					if (Cards.NET_GAME != null) {
 						NetworkEvent ne = new NetworkEvent(Event.CARD_ATTACK, player.getPlayerInfo().getId());
-						ne.setSlot(i);
+						ne.setSlot(index);
 						Cards.NET_GAME.sendEvent(ne);
 					}
 				}
-				
 			}
 			
 			if (ng != null) {
@@ -237,6 +232,9 @@ public class BattleRoundThread extends Thread {
 				
 				oi.incrementStrengthAll(1);
 				pi.incrementStrengthAll(1);
+				
+				endOfTurnCheck(opponent);
+
 							
 			}
 						
@@ -246,7 +244,7 @@ public class BattleRoundThread extends Thread {
 				oi.enableDisableCards(type);
 			}
 			
-
+			endOfTurnCheck(player);	
 			
 		} catch (GameOverException e) {
 			game.handleGameOver();
@@ -268,6 +266,9 @@ public class BattleRoundThread extends Thread {
 		
 		if (summoned.getCard().getName().equalsIgnoreCase("vampireelder") && 
 				attacker.getCard().getName().equalsIgnoreCase("initiate")) return true;
+		
+		if (summoned.getCard().getName().equalsIgnoreCase("GoblinRaider") && 
+				attacker.getCard().getName().equalsIgnoreCase("GoblinRaider")) return true;
 		
 		return false;
 		
@@ -312,6 +313,29 @@ public class BattleRoundThread extends Thread {
 			} finally {
 				if (Cards.NET_GAME != null) {
 					NetworkEvent ne = new NetworkEvent(Event.CARD_START_TURN_CHECK, index, ci.getCard().getName(), player.getPlayerInfo().getId());
+					Cards.NET_GAME.sendEvent(ne);
+				}
+			}
+		}
+	}
+	
+	private void endOfTurnCheck(PlayerImage player) throws GameOverException {
+			
+		List<CardImage> cards = new ArrayList<CardImage>();
+		for (int index = 0; index<6; index++) {
+			CardImage ci = player.getSlotCards()[index];
+			if (ci == null) continue;
+			cards.add(ci);
+		}
+		
+		for (CardImage ci : cards) {
+			try {
+				ci.getCreature().endOfTurnCheck();
+			} catch (GameOverException ge) {
+				throw ge;
+			} finally {
+				if (Cards.NET_GAME != null) {
+					NetworkEvent ne = new NetworkEvent(Event.CARD_END_TURN_CHECK, 0, ci.getCard().getName(), player.getPlayerInfo().getId());
 					Cards.NET_GAME.sendEvent(ne);
 				}
 			}

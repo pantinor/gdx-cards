@@ -26,7 +26,7 @@ public class Phoenix extends BaseCreature {
 
 		try {
 			
-			if (ownerPlayer.getStrengthFire() > 9) {
+			if (ownerPlayer.getStrengthFire() >= 10) {
 				SlotImage[] slots = owner.getSlots();
 				addCreature("Phoenix", slotIndex, slots[slotIndex]);
 			}

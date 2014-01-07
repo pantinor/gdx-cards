@@ -47,7 +47,7 @@ public class SelectHostsDialog extends Window {
 
 		String[] items = {"","",""};
 		
-		Label label1 = new Label("Detected Hosts:",skin);
+		Label label1 = new Label("Autosearch:",skin);
 
 		entries = new List(items, skin);
 		ScrollPane scrollPane = new ScrollPane(entries, skin);

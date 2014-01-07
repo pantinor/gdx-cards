@@ -6,11 +6,12 @@ import org.antinori.cards.CardImage;
 import org.antinori.cards.CardType;
 import org.antinori.cards.Cards;
 import org.antinori.cards.Creature;
+import org.antinori.cards.Dice;
 import org.antinori.cards.GameOverException;
+import org.antinori.cards.Player;
 import org.antinori.cards.PlayerImage;
 import org.antinori.cards.Sound;
 import org.antinori.cards.Sounds;
-import org.antinori.cards.Utils;
 
 public class BaseCreature extends BaseFunctions implements Creature {
 
@@ -54,13 +55,18 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		CardImage[] teamCards = owner.getSlotCards();
 
 		for (int index = 0; index < 6; index++) {
-			if (index == slotIndex)
-				continue;
+			if (index == slotIndex)	continue;
 			CardImage ci = teamCards[index];
-			if (ci == null)
-				continue;
+			if (ci == null)	continue;
 			if (ci.getCard().getName().equalsIgnoreCase("minotaurcommander")) {
 				this.card.incrementAttack(1);
+			}
+		}
+		
+		if (opponent.getSlotCards()[slotIndex] != null) {
+			if (opponent.getSlotCards()[slotIndex].getCard().getName().equalsIgnoreCase("GoblinHero")) {
+				BaseCreature bc = (BaseCreature)opponent.getSlotCards()[slotIndex].getCreature();
+				bc.tryMoveToAnotherRandomOpenSlot(opponent, opponent.getSlotCards()[slotIndex], slotIndex);
 			}
 		}
 
@@ -79,6 +85,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (name.equalsIgnoreCase("orcchieftain")) {
 				teamCards[nl].getCard().incrementAttack(2);
 			}
+			
+			if (name.equalsIgnoreCase("GoblinHero")) {
+				this.card.incrementAttack(2);
+			}
 
 		}
 
@@ -96,6 +106,10 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 			if (name.equalsIgnoreCase("orcchieftain")) {
 				teamCards[nr].getCard().incrementAttack(2);
+			}
+			
+			if (name.equalsIgnoreCase("GoblinHero")) {
+				this.card.incrementAttack(2);
 			}
 
 		}
@@ -201,6 +215,9 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (name.equalsIgnoreCase("minotaurcommander")) {
 				teamCards[nl].getCard().decrementAttack(1);
 			}
+			if (teamCards[nl].getCard().getName().equalsIgnoreCase("GoblinHero")) {
+				teamCards[nl].getCard().decrementAttack(2);
+			}
 		}
 
 		if (nr <= 5 && teamCards[nr] != null) {
@@ -209,6 +226,9 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			}
 			if (name.equalsIgnoreCase("minotaurcommander")) {
 				teamCards[nr].getCard().decrementAttack(1);
+			}
+			if (teamCards[nr].getCard().getName().equalsIgnoreCase("GoblinHero")) {
+				teamCards[nr].getCard().decrementAttack(2);
 			}
 		}
 		
@@ -224,6 +244,12 @@ public class BaseCreature extends BaseFunctions implements Creature {
 				bc.ownerPlayer.incrementStrength(CardType.DEATH, 1);
 				Sounds.play(Sound.POSITIVE_EFFECT);
 			}
+			if (ci.getCard().getName().equalsIgnoreCase("goblinlooter")) {
+				Dice dice = new Dice(1,5);
+				CardType type = Player.TYPES[dice.roll() - 1];
+				opposingPlayer.incrementStrength(type, 1);
+				Sounds.play(Sound.POSITIVE_EFFECT);
+			}
 		}
 		
 		for (int index = 0; index < 6; index++) {
@@ -234,6 +260,12 @@ public class BaseCreature extends BaseFunctions implements Creature {
 				bc.ownerPlayer.incrementStrength(CardType.DEATH, 1);
 				Sounds.play(Sound.POSITIVE_EFFECT);
 			}
+			if (ci.getCard().getName().equalsIgnoreCase("goblinlooter")) {
+				Dice dice = new Dice(1,5);
+				CardType type = Player.TYPES[dice.roll() - 1];
+				ownerPlayer.incrementStrength(type, 1);
+				Sounds.play(Sound.POSITIVE_EFFECT);
+			}
 		}
 
 	}
@@ -242,9 +274,17 @@ public class BaseCreature extends BaseFunctions implements Creature {
 	public void startOfTurnCheck() throws GameOverException {
 		
 	}
+	
+	public void endOfTurnCheck() throws GameOverException {
+		
+	}
 
 	public int getIndex() {
 		return this.slotIndex;
+	}
+	
+	public void setIndex(int index) {
+		this.slotIndex = index;
 	}
 
 	public boolean mustSkipNextAttack() {
@@ -253,6 +293,7 @@ public class BaseCreature extends BaseFunctions implements Creature {
 
 	public void setSkipNextAttack(boolean flag) {
 		this.mustSkipNexAttack = flag;
+		if (flag) Sounds.play(Sound.NEGATIVE_EFFECT);
 	}
 
 }

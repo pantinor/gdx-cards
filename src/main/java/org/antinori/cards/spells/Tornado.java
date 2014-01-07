@@ -15,7 +15,7 @@ public class Tornado extends BaseSpell {
 		super.onCast();
 
 		if (this.targetedCardImage != null) {
-			disposeCardImage(opponent, targetedCardImage.getCreature().getIndex());
+			disposeCardImage(opponent, targetedCardImage.getCreature().getIndex(), true);
 		}
 
 	}

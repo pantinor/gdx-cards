@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,6 +23,7 @@ public class CardImage extends Actor implements Serializable {
 	private Sprite img;
 	private Texture frame;
 	
+	private static Texture stunned;
 	private static Texture healthBox;
 	private TextureRegion healthBar;
 	
@@ -40,18 +42,20 @@ public class CardImage extends Actor implements Serializable {
 		setName(card.getName());
 	}
 	
-	private static void initHealthBar() {
+	private static void initTextures() {
 		Pixmap p = new Pixmap(63, 4, Pixmap.Format.RGBA8888);
 		p.setColor(Color.valueOf("105410"));
 		p.fill();
 		healthBox = new Texture(p);
+		
+		stunned = new Texture(Gdx.files.classpath("images/stunned.png"));
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		
 		if (healthBox == null) {
-			initHealthBar();
+			initTextures();
 		}
 		
 		if (this.healthBar == null) {
@@ -64,6 +68,13 @@ public class CardImage extends Actor implements Serializable {
 		float x = getX();
 		float y = getY();
 		batch.draw(img, x, y);
+		
+		if (creature != null) {
+			if (creature.mustSkipNextAttack()) {
+				batch.draw(stunned, x, y);
+			}
+		}
+		
 		batch.draw(frame, x - 3, y - 12);
 		
 		int at = card.getAttack();
@@ -139,7 +150,7 @@ public class CardImage extends Actor implements Serializable {
 		double bar = percent * (double) 63;
 		if (remainingLife < 0) bar = 0;
 		if (bar > 63) bar = 63; 
-		healthBar.setRegion(0, 0, (int) bar, 4);
+		if (healthBar != null) healthBar.setRegion(0, 0, (int) bar, 4);
 		
 		return died;
 	}

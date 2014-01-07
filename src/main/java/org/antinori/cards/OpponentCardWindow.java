@@ -2,6 +2,11 @@ package org.antinori.cards;
 
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -39,30 +44,19 @@ public class OpponentCardWindow extends Window {
 			List<CardImage> special = opponent.getCards(CardType.OTHER);
 
 			for (int i = 0; i < 4; i++) {
-				CardImage clone1 = fire.get(i).clone();
-				CardImage clone2 = air.get(i).clone();
-				CardImage clone3 = water.get(i).clone();
-				CardImage clone4 = earth.get(i).clone();
-				CardImage clone5 = special.get(i).clone();
 				
-				clone1.setEnabled(fire.get(i).isEnabled());
-				clone1.setEnabled(air.get(i).isEnabled());
-				clone2.setEnabled(water.get(i).isEnabled());
-				clone4.setEnabled(earth.get(i).isEnabled());
-				clone5.setEnabled(special.get(i).isEnabled());
-				
-				clone1.setColor(fire.get(i).getColor());
-				clone2.setColor(air.get(i).getColor());
-				clone3.setColor(water.get(i).getColor());
-				clone4.setColor(earth.get(i).getColor());
-				clone5.setColor(special.get(i).getColor());
-				
+				Actor a1 = getCard(fire,i);
+				Actor a2 = getCard(air,i);
+				Actor a3 = getCard(water,i);
+				Actor a4 = getCard(earth,i);
+				Actor a5 = getCard(special,i);
+
 				add().space(3);
-				add(clone1);
-				add(clone2);
-				add(clone3);
-				add(clone4);
-				add(clone5);
+				add(a1);
+				add(a2);
+				add(a3);
+				add(a4);
+				add(a5);
 				
 				row();
 			}
@@ -77,6 +71,30 @@ public class OpponentCardWindow extends Window {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private Actor getCard(List<CardImage> cards, int index) {
+		
+		if (cards == null || cards.size() < index + 1) 
+			return getEmptySlotImage();
+		
+		CardImage ci = cards.get(index);
+		if (ci == null) {
+			return getEmptySlotImage();
+		}
+		
+		CardImage clone = ci.clone();
+		clone.setEnabled(cards.get(index).isEnabled());
+		clone.setColor(cards.get(index).getColor());
+		return clone;
+	}
+	
+	private Image getEmptySlotImage() {
+		Pixmap p = new Pixmap(89, 100, Pixmap.Format.RGBA8888);
+		p.setColor(Color.CLEAR);
+		p.fill();
+		Texture texture = new Texture(p);
+		return new Image(texture);
 	}
 
 

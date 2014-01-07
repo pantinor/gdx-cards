@@ -298,7 +298,13 @@ public class NetworkGame {
 					cardImage.getCreature().startOfTurnCheck();
 					
 					break;
+				case CARD_END_TURN_CHECK:
 					
+
+					
+					cardImage.getCreature().endOfTurnCheck();
+					
+					break;
 				case CARD_SUMMONED:
 					
 					//possibly summoned on top of another card, destroy that one
@@ -312,7 +318,7 @@ public class NetworkGame {
 										
 					cards[index] = ci;
 					slot.setOccupied(true);
-					ci.setFont(Cards.greenfont);
+					ci.setFont(Cards.customFont);
 					ci.setFrame(Cards.ramka);
 					ci.addListener(game.new TargetedCardListener(pi.getPlayerInfo().getId(), index));
 					ci.addListener(game.sdl);
@@ -455,7 +461,7 @@ public class NetworkGame {
 	private CardImage getCardImageAfterSerialization(Card card) throws Exception {
 		String name = card.getName();
 		CardImage ci = game.cs.getCardImageByName(Cards.smallCardAtlas, Cards.smallTGACardAtlas, name);
-		ci.setFont(Cards.greenfont);
+		ci.setFont(Cards.customFont);
 		ci.setFrame(ci.getCard().isSpell()?Cards.spellramka:Cards.ramka);
 		ci.addListener(game.sdl);
 		ci.setBounds(0, 0, ci.getFrame().getWidth(), ci.getFrame().getHeight());

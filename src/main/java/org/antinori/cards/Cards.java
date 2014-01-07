@@ -157,8 +157,8 @@ public class Cards extends SimpleGame {
 		customFont.setColor(Color.BLACK);
 
 		whiteStyle = new Label.LabelStyle(defaultFont, Color.WHITE);
-		redStyle = new Label.LabelStyle(customFont, Color.RED);
-		greenStyle = new Label.LabelStyle(customFont, Color.GREEN);
+		redStyle = new Label.LabelStyle(defaultFont, Color.RED);
+		greenStyle = new Label.LabelStyle(defaultFont, Color.GREEN);
 				
 		playerInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
 		opptInfoLabel = new Label(Specializations.Cleric.getTitle(), whiteStyle);
@@ -485,7 +485,7 @@ public class Cards extends SimpleGame {
 		
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			
-			if (gameOver) return true;
+			if (gameOver || !canStartMyTurn()) return true;
 
 			Actor actor = event.getListenerActor();
 			if (actor instanceof CardImage) {

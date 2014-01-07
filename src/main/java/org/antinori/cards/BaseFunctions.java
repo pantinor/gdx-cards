@@ -6,9 +6,12 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class BaseFunctions {
@@ -64,6 +67,10 @@ public class BaseFunctions {
 
 		}
 		
+		if (card.getName().equalsIgnoreCase("GoblinSaboteur")) {
+			removeRandomCheapestCard(opposingPlayer);
+		}
+		
 		pi.decrementLife(value, game);
 		
 		Cards.logScrollPane.add(cardImage.getCard().getCardname() + " dealt " + value + " damage to player.");
@@ -83,6 +90,10 @@ public class BaseFunctions {
 	
 	
 	public final void disposeCardImage(PlayerImage player, int slotIndex) throws GameOverException {
+		disposeCardImage(player, slotIndex, false);
+	}
+	
+	public final void disposeCardImage(PlayerImage player, int slotIndex, boolean destroyed) throws GameOverException {
 		
 		CardImage ci = player.getSlotCards()[slotIndex];
 		
@@ -91,7 +102,8 @@ public class BaseFunctions {
 		player.getSlots()[slotIndex].setOccupied(false);
 		player.getSlotCards()[slotIndex] = null;
 		
-		ci.getCreature().onDying();
+		if (!destroyed) ci.getCreature().onDying();
+		
 	}
 	
 	protected void damageAllExceptCurrentIndex(int attack, PlayerImage pi) throws GameOverException {
@@ -162,7 +174,7 @@ public class BaseFunctions {
 		Creature sp1 = CreatureFactory.getCreatureClass(name, game, ci1.getCard(), ci1, index, owner, opponent);
 		ci1.setCreature(sp1);
 		
-		ci1.setFont(Cards.greenfont);
+		ci1.setFont(Cards.customFont);
 		ci1.setFrame(Cards.ramka);
 		
 		ci1.addListener(game.new TargetedCardListener(owner.getPlayerInfo().getId(), index));
@@ -176,6 +188,20 @@ public class BaseFunctions {
 		
 		game.stage.addActor(ci1);
 	}
+	
+	protected void removeRandomCheapestCard(Player player) {
+		List<CardImage> cards = null;
+		do {
+			Dice dice = new Dice(1,5);
+			int roll = dice.roll();
+			CardType type = Player.TYPES[roll - 1];
+			cards = player.getCards(type);
+		} while(cards == null || cards.size() < 1) ;
+		
+		CardImage ci = cards.remove(0);
+		ci.remove();
+		Sounds.play(Sound.NEGATIVE_EFFECT);
+	}
 		
 	protected void swapCard(String newCardName, CardType type, String oldCardName, PlayerImage pi) {
 
@@ -186,7 +212,7 @@ public class BaseFunctions {
 			e.printStackTrace();
 		}
 
-		newCard.setFont(Cards.greenfont);
+		newCard.setFont(Cards.customFont);
 		newCard.setFrame(newCard.getCard().isSpell()?Cards.spellramka:Cards.ramka);
 		newCard.addListener(game.sdl);
 		newCard.addListener(game.li);
@@ -220,6 +246,28 @@ public class BaseFunctions {
 		img.addAction(sequence(scaleTo(1.05f, 1.05f, 0.30f), scaleTo(1.0f, 1.0f, 0.30f), removeActor(img)));
 	}
 	
+	protected void tryMoveToAnotherRandomOpenSlot(PlayerImage player, CardImage ci, int currentSlot) {
+		
+		List<Integer> emptySlots = new ArrayList<Integer>();
+		
+		for (int index=0;index<6;index++) {
+			SlotImage si = player.getSlots()[index];
+			if (!si.isOccupied()) emptySlots.add(index);
+		}
+		
+		if (emptySlots.size() == 0) return;
+		
+		int targetSlot = 0;
+		if (emptySlots.size() == 1) {
+			targetSlot = emptySlots.get(0);
+		} else {
+			Dice dice = new Dice(1, emptySlots.size());
+			targetSlot = emptySlots.get(dice.roll() - 1);
+		}
+
+		moveCardToAnotherSlot(player, ci, currentSlot, targetSlot);
+	}
+	
 	
 	protected void moveCardToAnotherSlot(PlayerImage player, CardImage ci, int srcIndex, int destIndex) {
 		
@@ -231,9 +279,27 @@ public class BaseFunctions {
 		slots[srcIndex].setOccupied(false);
 		slots[destIndex].setOccupied(true);
 		
+		ci.getCreature().setIndex(destIndex);
+		ci.toFront();
+		
 		Sounds.play(Sound.SUMMONED);
 		
-		ci.addAction(sequence(moveTo(slots[destIndex].getX() + 5, slots[destIndex].getY() + 26, 1.0f)));
+		final AtomicBoolean done = new AtomicBoolean(false);
+		
+		ci.addAction(sequence(moveTo(slots[destIndex].getX() + 5, slots[destIndex].getY() + 26, 1.0f), new Action() {
+			public boolean act(float delta) {
+				done.set(true);
+				return true;
+			}
+		}));
+		
+		//wait for action to end
+		while(!done.get()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 		
 

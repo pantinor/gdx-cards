@@ -24,6 +24,6 @@ public class WaterElemental extends BaseCreature {
 	}
 
 	public void startOfTurnCheck(boolean isComputer, PlayerImage player) {
-		this.card.setAttack(player.getPlayerInfo().getStrength(CardType.WATER));
+		this.card.setAttack(ownerPlayer.getStrengthWater());
 	}
 }
