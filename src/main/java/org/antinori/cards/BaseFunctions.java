@@ -21,11 +21,11 @@ public class BaseFunctions {
 	protected Cards game;
 	protected int slotIndex = -1;
 	
-	protected Player opposingPlayer ;
-	protected Player ownerPlayer ;
+	public Player opposingPlayer ;
+	public Player ownerPlayer ;
 	
-	protected PlayerImage owner ;
-	protected PlayerImage opponent ;
+	public PlayerImage owner ;
+	public PlayerImage opponent ;
 	
 	public boolean isSpell = false;
 	public boolean mustSkipNexAttack = false;

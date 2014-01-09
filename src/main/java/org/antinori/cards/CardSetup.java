@@ -97,8 +97,8 @@ public class CardSetup {
                     Boolean targetableOnEmptySlot = Boolean.parseBoolean(getAttrText( n1, "targetableOnEmptySlot" ));
                     c.setTargetableOnEmptySlotOnly(targetableOnEmptySlot);
                     
-                    Boolean damagingSpell = Boolean.parseBoolean(getAttrText( n1, "damagingSpell" ));
-                    c.setDamagingSpell(damagingSpell);
+                    Card.TargetType target = Card.fromTargetTypeString(getAttrText( n1, "target" ));
+                    c.setTargetType(target);
                     
                     int cost = getAttrNumber( n1, "summoningCost" );
                     if (spell) {
@@ -131,6 +131,8 @@ public class CardSetup {
 		}
 
 	}
+	
+
 	
 	public Card getCardByName(String name) {
 		return getCardByName(name, cardSet);

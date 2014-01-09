@@ -21,9 +21,12 @@ public class Card implements Serializable {
 	private String desc;
 	private CardType type;
 	private boolean spell = false;
-	private boolean damagingSpell = false;
 	
-	private boolean targetableOnCardOnly = false;
+	public static enum TargetType {OWNER, OPPONENT, ANY};
+	
+	private TargetType targetType = TargetType.OWNER;
+	
+	private boolean targetable = false;
 	private boolean targetableOnEmptySlotOnly = false;
 
 	private boolean wall = false;
@@ -52,9 +55,9 @@ public class Card implements Serializable {
 		c.setDesc(this.desc);
 		c.setSpell(this.spell);
 		c.setWall(this.wall);
-		c.setTargetable(this.targetableOnCardOnly);
+		c.setTargetable(this.targetable);
 		c.setTargetableOnEmptySlotOnly(this.targetableOnEmptySlotOnly);
-		c.setDamagingSpell(this.damagingSpell);
+		c.setTargetType(this.targetType);
 		c.setMustBeSummoneOnCard(this.mustBeSummoneOnCard);
 		return c;
 	}
@@ -143,11 +146,11 @@ public class Card implements Serializable {
 	}
 
 	public boolean isTargetable() {
-		return this.targetableOnCardOnly;
+		return this.targetable;
 	}
 
 	public void setTargetable(boolean targetable) {
-		this.targetableOnCardOnly = targetable;
+		this.targetable = targetable;
 	}
 
 	public boolean isWall() {
@@ -156,14 +159,6 @@ public class Card implements Serializable {
 
 	public void setWall(boolean wall) {
 		this.wall = wall;
-	}
-
-	public boolean isDamagingSpell() {
-		return damagingSpell;
-	}
-
-	public void setDamagingSpell(boolean damagingSpell) {
-		this.damagingSpell = damagingSpell;
 	}
 
 	public int getOriginalLife() {
@@ -206,5 +201,22 @@ public class Card implements Serializable {
 		this.targetableOnEmptySlotOnly = targetableOnEmptySlotOnly;
 	}
 
-	
+	public TargetType getTargetType() {
+		return targetType;
+	}
+
+	public void setTargetType(TargetType targetType) {
+		this.targetType = targetType;
+	}
+
+	public static TargetType fromTargetTypeString(String text) {
+		if (text != null) {
+			for (TargetType c : TargetType.values()) {
+				if (c.toString().equalsIgnoreCase(text)) {
+					return c;
+				}
+			}
+		}
+		return TargetType.OWNER;
+	}
 }

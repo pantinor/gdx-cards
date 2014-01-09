@@ -500,14 +500,42 @@ public class Cards extends SimpleGame {
 					
 						if (selectedCard.getCard().isTargetable()) {
 							
-							CardImage[] cards = selectedCard.getCard().isDamagingSpell()?opponent.getSlotCards():player.getSlotCards();
-							
-							//highlight target cards
-							for (CardImage ci : cards) {
-								if (ci != null) {
-									ci.setHighlighted(true);
-									ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+							CardImage[] cards;
+							switch (selectedCard.getCard().getTargetType()) {
+							case OWNER:
+								cards = player.getSlotCards();
+								for (CardImage ci : cards) {
+									if (ci != null) {
+										ci.setHighlighted(true);
+										ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+									}
 								}
+								break;
+							case OPPONENT:
+								cards = opponent.getSlotCards();
+								for (CardImage ci : cards) {
+									if (ci != null) {
+										ci.setHighlighted(true);
+										ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+									}
+								}
+								break;
+							case ANY:
+								cards = player.getSlotCards();
+								for (CardImage ci : cards) {
+									if (ci != null) {
+										ci.setHighlighted(true);
+										ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+									}
+								}
+								cards = opponent.getSlotCards();
+								for (CardImage ci : cards) {
+									if (ci != null) {
+										ci.setHighlighted(true);
+										ci.addAction(forever(sequence(color(Color.GREEN, .75f), color(Color.WHITE, .75f))));
+									}
+								}
+								break;
 							}
 							
 						} else if (selectedCard.getCard().isTargetableOnEmptySlotOnly()) {

@@ -247,7 +247,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (ci.getCard().getName().equalsIgnoreCase("goblinlooter")) {
 				Dice dice = new Dice(1,5);
 				CardType type = Player.TYPES[dice.roll() - 1];
-				opposingPlayer.incrementStrength(type, 1);
+				BaseCreature bc = (BaseCreature)ci.getCreature();
+				bc.ownerPlayer.incrementStrength(type, 1);
 				Sounds.play(Sound.POSITIVE_EFFECT);
 			}
 		}
@@ -263,7 +264,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			if (ci.getCard().getName().equalsIgnoreCase("goblinlooter")) {
 				Dice dice = new Dice(1,5);
 				CardType type = Player.TYPES[dice.roll() - 1];
-				ownerPlayer.incrementStrength(type, 1);
+				BaseCreature bc = (BaseCreature)ci.getCreature();
+				bc.ownerPlayer.incrementStrength(type, 1);
 				Sounds.play(Sound.POSITIVE_EFFECT);
 			}
 		}
