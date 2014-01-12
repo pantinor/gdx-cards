@@ -35,7 +35,9 @@ public class BaseCreature extends BaseFunctions implements Creature {
 		
 		Cards.logScrollPane.add(this.owner.getPlayerInfo().getPlayerClass().getTitle() + " summoned " + cardImage.getCard().getCardname() + ".");
 
-		ownerPlayer.decrementStrength(card.getType(), card.getCost());
+		int cost = card.getCost();
+		
+		ownerPlayer.decrementStrength(card.getType(), cost);
 		
 		if (card.getSelfInflictingDamage() > 0) {
 			Cards.logScrollPane.add(cardImage.getCard().getCardname() + " inflicts " + card.getSelfInflictingDamage() + " damage to owner.");
@@ -123,6 +125,20 @@ public class BaseCreature extends BaseFunctions implements Creature {
 			return;
 		}
 		
+		for (int index = 0; index < 6; index++) {
+			CardImage ci = opponent.getSlotCards()[index];
+			if (ci == null) continue;
+			if (ci.getCard().getName().equalsIgnoreCase("ancienthorror")) {
+				int cost = this.card.getCost();
+				int opptControlStrength = opposingPlayer.getStrengthSpecial();
+				if (cost < opptControlStrength) {
+					Cards.logScrollPane.add(card.getName() + " skips the attack.");
+					Sounds.play(Sound.NEGATIVE_EFFECT);
+					return;
+				}
+			}
+		}
+		
 		int attack = this.card.getAttack();
 		
 		CardImage[] enemyCards = opponent.getSlotCards();
@@ -142,6 +158,8 @@ public class BaseCreature extends BaseFunctions implements Creature {
 				ci.getCard().decrementLife(attack);
 			}
 		}
+		
+
 		
 		
 	}

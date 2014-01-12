@@ -14,16 +14,19 @@ public class Inferno extends BaseSpell {
 	}
 
 	public void onCast() throws GameOverException {
+		
+		if (this.targetedCardImage != null) {
+			damageSlot(targetedCardImage, targetedCardImage.getCreature().getIndex(), opponent, adjustDamage(18));
+		}
 
 		for (int i = 0; i < 6; i++) {
 
 			CardImage ci = opponent.getSlotCards()[i];
 			if (ci == null)	continue;
 
-			int value = adjustDamage(10);
-			if (i == slotIndex) value = adjustDamage(18);
+			if (i == targetedCardImage.getCreature().getIndex()) continue;
 
-			damageSlot(ci, i, opponent, value);
+			damageSlot(ci, i, opponent, adjustDamage(10));
 
 		}
 

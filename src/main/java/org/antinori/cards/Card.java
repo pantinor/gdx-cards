@@ -33,10 +33,6 @@ public class Card implements Serializable {
 	
 	private String mustBeSummoneOnCard;
 
-	@Override
-	public String toString() {
-		return String.format("%s type=%s attack=%s life=%s cost=%s spell=%s", cardname, type, attack, life, cost, spell);
-	}
 
 	public Card(CardType type) {
 		this.type = type;
@@ -111,8 +107,6 @@ public class Card implements Serializable {
 	public void decrementLife(int dec) {
 		this.life -= dec;
 	}
-	
-	
 	
 	public int getCost() {
 		return cost;
@@ -219,4 +213,36 @@ public class Card implements Serializable {
 		}
 		return TargetType.OWNER;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s\t\t\t%s\tattack=%s\tlife=%s\tcost=%s\tspell=%s", cardname, type, attack, life, cost, spell);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Card other = (Card) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+	
+	
 }

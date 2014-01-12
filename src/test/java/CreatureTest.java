@@ -16,6 +16,7 @@ import org.antinori.cards.Sound;
 import org.antinori.cards.Sounds;
 import org.antinori.cards.Spell;
 import org.antinori.cards.SpellFactory;
+import org.antinori.cards.spells.FlameWave;
 import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -80,17 +81,19 @@ public class CreatureTest implements ApplicationListener {
 			//creature.onSummoned();
 			//creature.onAttack();
 			
-			Sounds.play(Sound.MAGIC);
+			//Sounds.play(Sound.MAGIC);
+			Sounds.play(new FlameWave(null, null, ci2, opponent, opponent));
+
 					
-			for (Card card : cs.getSpellCards()) {
-				String name = card.getName();
-				Spell spell = SpellFactory.getSpellClass(name, null, null, null, new PlayerImage(null, null, new Player()), new PlayerImage(null, null, new Player()));	
-				Music m = Sounds.play(spell);
-				
-				//while (m.isPlaying()) {
-					Thread.sleep(3000);
-				//}
-			}
+//			for (Card card : cs.getSpellCards()) {
+//				String name = card.getName();
+//				Spell spell = SpellFactory.getSpellClass(name, null, null, null, new PlayerImage(null, null, new Player()), new PlayerImage(null, null, new Player()));	
+//				Music m = Sounds.play(spell);
+//				
+//				//while (m.isPlaying()) {
+//					Thread.sleep(3000);
+//				//}
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

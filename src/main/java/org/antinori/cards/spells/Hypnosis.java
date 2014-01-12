@@ -47,7 +47,7 @@ public class Hypnosis extends BaseSpell {
 			
 			scaleImage(ci);
 			
-			damagePlayer(opponent, ci.getCard().getAttack());
+			damagePlayer(opponent, adjustDamage(ci.getCard().getAttack()));
 		}
 		
 	}

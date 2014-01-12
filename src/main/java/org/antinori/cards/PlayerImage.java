@@ -1,5 +1,6 @@
 package org.antinori.cards;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,6 +17,10 @@ public class PlayerImage extends Actor {
 	
 	private SlotImage[] slots = new SlotImage[6];
 	private CardImage[] slotCards = new CardImage[6];
+	
+	public boolean mustSkipNexAttack = false;
+	private static Texture stunned;
+
 		
 	public PlayerImage(Sprite img, Texture frame, Player info) {
 		this.img = img;
@@ -32,9 +37,17 @@ public class PlayerImage extends Actor {
 		setX(x);
 		setY(y);
 	}
+	
+	private static void initTextures() {
+		stunned = new Texture(Gdx.files.classpath("images/stunned.png"));
+	}
 
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
+		
+		if (stunned == null) {
+			initTextures();
+		}
 		
 		Color color = getColor();
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
@@ -42,7 +55,13 @@ public class PlayerImage extends Actor {
 		float x = getX();
 		float y = getY();
 		batch.draw(img, x, y);
+		
+		if (this.mustSkipNexAttack) {
+			batch.draw(stunned, x+10, y-10);
+		}
+		
 		batch.draw(frame, x - 6, y - 6);
+		
 		
 	}
 	

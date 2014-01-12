@@ -19,7 +19,7 @@ public class PortalJumper extends BaseCreature {
 			opponent.getSlotCards()[slotIndex].getCreature().setSkipNextAttack(true);
 		}
 		
-		tryMoveToAnotherRandomOpenSlot(owner, cardImage, slotIndex);
+		tryMoveToAnotherRandomSlot(owner, cardImage, slotIndex, false);
 
 	}
 }

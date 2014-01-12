@@ -29,8 +29,7 @@ public class Player implements Serializable {
 	private List<CardImage> waterCards = new ArrayList<CardImage>();
 	private List<CardImage> earthCards = new ArrayList<CardImage>();
 	private List<CardImage> specialCards = new ArrayList<CardImage>();
-
-	
+		
 	public Player() {
 		init();
 	}

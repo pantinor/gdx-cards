@@ -39,8 +39,10 @@ public class BaseSpell extends BaseFunctions implements Spell {
 
 
 	public void onCast() throws GameOverException {
+		
+		int cost = card.getCost();
 				
-		ownerPlayer.decrementStrength(card.getType(), card.getCost());
+		ownerPlayer.decrementStrength(card.getType(), cost);
 		
 		for (int index = 0; index < 6; index++) {
 			CardImage ci = owner.getSlotCards()[index];

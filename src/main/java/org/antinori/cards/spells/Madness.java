@@ -14,7 +14,7 @@ public class Madness extends BaseSpell {
 
 	public void onCast() throws GameOverException {
 		super.onCast();
-		
+				
 		for (int index = 0; index < 6; index++) {
 			CardImage ci = opponent.getSlotCards()[index];
 			if (ci == null)	continue;

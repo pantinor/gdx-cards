@@ -14,6 +14,7 @@ public class FlameWave extends BaseSpell {
 	}
 
 	public void onCast() throws GameOverException {
+		super.onCast();
 		damageAll(opponent, adjustDamage(9));
 	}
 

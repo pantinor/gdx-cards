@@ -36,10 +36,7 @@ public class CardSetup {
 		
 		Card result = cs.getCardByName("GoblinBerserker");
         System.out.println(result.toString());
-        
-    	List<Card> set = cs.getCardsByType(CardType.FIRE);
-        System.out.println(set.size());
-        
+    
     	List<Card> picks = cs.getCardsByType(CardType.FIRE, 4);
         System.out.println(picks.size());
        
@@ -140,13 +137,9 @@ public class CardSetup {
 	
 	public Card getCardByName(String name, Set<Card> set) {
 		Card result = (Card)CollectionUtils.find(set, new CardPredicate(name.toLowerCase()));
-		return result;
+		return result.clone();
 	}
-	
-	public List<Card> getCardsByType(CardType type) {
-		List<Card> result = (List<Card>) CollectionUtils.select(cardSet, new CardPredicate(type));
-		return result;
-	}
+
 	
 	/**
 	 * Get shuffled selection of cards of the number indicated.
@@ -240,7 +233,7 @@ public class CardSetup {
 		for (int i=0;i<maxNumber;i++) {
 			do {
 				int rand = new Random().nextInt(result.size());
-				Card c = result.get(rand);
+				Card c = result.get(rand).clone();
 				if (picks.contains(c)) continue;
 				picks.add(c);
 				break;

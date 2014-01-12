@@ -82,9 +82,11 @@ public class CardImage extends Actor implements Serializable {
 		int li = card.getLife();
 
 		if (!card.isSpell()) {
-			font.draw(batch, "" + at, (at>9?x:x+3), y+5);
-			font.draw(batch, "" + co, (co>9?x+66:x+69), y+85);
-			font.draw(batch, "" + li, (li>9?x+66:x+69), y+5);
+			if (li > 0) {
+				font.draw(batch, "" + at, (at>9?x:x+3), y+5);
+				font.draw(batch, "" + co, (co>9?x+66:x+69), y+85);
+				font.draw(batch, "" + li, (li>9?x+66:x+69), y+5);
+			}
 		} else {
 			font.draw(batch, "" + co, (co>9?x+66:x+69), y+77);
 		}

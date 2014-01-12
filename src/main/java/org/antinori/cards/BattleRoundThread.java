@@ -163,7 +163,8 @@ public class BattleRoundThread extends Thread {
 					
 					CardImage opptPick = null;
 					do {
-						opptPick = oi.pickBestEnabledCard();
+						//opptPick = oi.pickBestEnabledCard();
+						opptPick = oi.pickRandomEnabledCard();
 					} while (opptPick == null);
 					
 					if (!opptPick.getCard().isSpell()) {

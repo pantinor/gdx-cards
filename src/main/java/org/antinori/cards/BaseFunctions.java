@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class BaseFunctions {
 	
-	protected Card card;
-	protected CardImage cardImage;
-	protected Cards game;
-	protected int slotIndex = -1;
+	public Card card;
+	public CardImage cardImage;
+	public Cards game;
+	public int slotIndex = -1;
 	
 	public Player opposingPlayer ;
 	public Player ownerPlayer ;
@@ -247,37 +247,59 @@ public class BaseFunctions {
 	}
 	
 	protected void tryMoveToAnotherRandomOpenSlot(PlayerImage player, CardImage ci, int currentSlot) {
+		tryMoveToAnotherRandomSlot(player, ci, currentSlot, true);
+	}
+	
+	protected void tryMoveToAnotherRandomSlot(PlayerImage player, CardImage ci, int currentSlot, boolean mustBeOpenSlot) {
 		
-		List<Integer> emptySlots = new ArrayList<Integer>();
+		List<Integer> slots = new ArrayList<Integer>();
 		
 		for (int index=0;index<6;index++) {
 			SlotImage si = player.getSlots()[index];
-			if (!si.isOccupied()) emptySlots.add(index);
+			if (mustBeOpenSlot && !si.isOccupied()) {
+				slots.add(index);
+			} else {
+				slots.add(index);
+			}
 		}
 		
-		if (emptySlots.size() == 0) return;
+		if (slots.size() == 0) return;
 		
 		int targetSlot = 0;
-		if (emptySlots.size() == 1) {
-			targetSlot = emptySlots.get(0);
+		if (slots.size() == 1) {
+			targetSlot = slots.get(0);
 		} else {
-			Dice dice = new Dice(1, emptySlots.size());
-			targetSlot = emptySlots.get(dice.roll() - 1);
+			Dice dice = new Dice(1, slots.size());
+			targetSlot = slots.get(dice.roll() - 1);
 		}
 
 		moveCardToAnotherSlot(player, ci, currentSlot, targetSlot);
+
 	}
 	
 	
 	protected void moveCardToAnotherSlot(PlayerImage player, CardImage ci, int srcIndex, int destIndex) {
 		
 		CardImage[] cards = player.getSlotCards();
-		cards[srcIndex] = null;
-		cards[destIndex] = ci;
-		
 		SlotImage[] slots = player.getSlots();
-		slots[srcIndex].setOccupied(false);
-		slots[destIndex].setOccupied(true);
+
+		boolean swap = (cards[destIndex] != null && slots[destIndex].isOccupied());
+		if (swap) {
+			CardImage ci1 = cards[srcIndex];
+			CardImage ci2 = cards[destIndex];
+			cards[srcIndex] = ci2;
+			cards[destIndex] = ci1;
+			slots[srcIndex].setOccupied(true);
+			slots[destIndex].setOccupied(true);
+			
+			ci2.getCreature().setIndex(srcIndex);
+			ci2.addAction(sequence(moveTo(slots[srcIndex].getX() + 5, slots[srcIndex].getY() + 26, 1.0f)));
+		} else {
+			cards[srcIndex] = null;
+			cards[destIndex] = ci;
+			slots[srcIndex].setOccupied(false);
+			slots[destIndex].setOccupied(true);
+		}
 		
 		ci.getCreature().setIndex(destIndex);
 		ci.toFront();
@@ -293,7 +315,6 @@ public class BaseFunctions {
 			}
 		}));
 		
-		//wait for action to end
 		while(!done.get()) {
 			try {
 				Thread.sleep(50);
