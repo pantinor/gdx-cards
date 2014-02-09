@@ -36,13 +36,13 @@ public class Player implements Serializable {
 	
 	public void init() {
 		Dice dice = new Dice(1,6);
-		strengthFire = 30;//dice.roll();
-		strengthAir = 30;//dice.roll();
-		strengthEarth = 30;//dice.roll();
-		strengthWater = 30;//dice.roll();
-		strengthSpecial = 30;//dice.roll();
+		strengthFire = dice.roll();
+		strengthAir = dice.roll();
+		strengthEarth = dice.roll();
+		strengthWater = dice.roll();
+		strengthSpecial = dice.roll();
 		
-		life = 120;
+		life = 60;
 	}
 	
 	public String getImgName() {
