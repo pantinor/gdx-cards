@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Set;
 
 import org.antinori.cards.Card;
@@ -12,15 +11,11 @@ import org.antinori.cards.CreatureFactory;
 import org.antinori.cards.LogScrollPane;
 import org.antinori.cards.Player;
 import org.antinori.cards.PlayerImage;
-import org.antinori.cards.Sound;
 import org.antinori.cards.Sounds;
-import org.antinori.cards.Spell;
-import org.antinori.cards.SpellFactory;
 import org.antinori.cards.spells.FlameWave;
 import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;

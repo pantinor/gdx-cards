@@ -190,6 +190,8 @@ public class BattleRoundThread extends Thread {
 						
 						final AtomicBoolean doneAction = new AtomicBoolean(false);
 						
+						
+						//ActionMoveCircular circle = ActionMoveCircular.actionEllipse(si.getX() + 5, si.getY() + 26, 100, 50, 2.0f);
 						opptSummons.addAction(sequence(moveTo(si.getX() + 5, si.getY() + 26, 1.0f), new Action() {
 							public boolean act(float delta) {
 								doneAction.set(true);
