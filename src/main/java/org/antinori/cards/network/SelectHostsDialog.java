@@ -23,157 +23,161 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class SelectHostsDialog extends Window {
-	
-	private Cards game;
-	private java.util.List<String> foundHosts = new ArrayList<String>();
-	private List entries;
-	private boolean alive = true;
-	private EventListener closeListener;
 
-	
-	public SelectHostsDialog(String title, Cards game, final Stage stage, Skin skin) {
-		
-		super(title, skin);
-		this.game = game;
-		final Skin skinTemp = skin;
+    private Cards game;
+    private java.util.List<String> foundHosts = new ArrayList();
+    private List<String> entries;
+    private boolean alive = true;
+    private EventListener closeListener;
 
-		Thread listener = new Thread(new HostsListenerThread());
-		listener.start();
+    public SelectHostsDialog(String title, Cards game, final Stage stage, Skin skin) {
 
-		defaults().padTop(2);
-		defaults().padBottom(2);
-		defaults().padLeft(2);
-		defaults().padRight(2);
+        super(title, skin);
+        this.game = game;
+        final Skin skinTemp = skin;
 
-		String[] items = {"","",""};
-		
-		Label label1 = new Label("Autosearch:",skin);
+        Thread listener = new Thread(new HostsListenerThread());
+        listener.start();
 
-		entries = new List(items, skin);
-		ScrollPane scrollPane = new ScrollPane(entries, skin);
-		scrollPane.setFlickScroll(false);
-		
-		Label label2 = new Label("Enter Host:",skin);
-		final TextField textfield = new TextField("", skin);
-		
-		Button connect = new TextButton("Connect", skin, "default");
-		
-		connect.addListener(new ChangeListener() {
-			String selectedHost;
-			public void changed (ChangeEvent event, Actor actor) {
-				
-				selectedHost = textfield.getText();
-				if (selectedHost == null || selectedHost.length() < 1) {
-					selectedHost = entries.getSelection();
-				}
-				
-				if (selectedHost == null || selectedHost.length() < 1) {
-					return;
-				}
-				
-				Dialog dialog = new Dialog("Connect", skinTemp, "dialog") {
-					protected void result (Object object) {
-						Boolean ret = false;
-						if (object instanceof Boolean) {
-							ret = (Boolean)object;
-						}
-						if (ret)  {
-							doConnection(selectedHost);
-						}
-					}
-				}.text("Connect to "+selectedHost+"?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
-				
-				dialog.show(stage);
-			}
-		});
+        defaults().padTop(2);
+        defaults().padBottom(2);
+        defaults().padLeft(2);
+        defaults().padRight(2);
 
-		try {
-			
-			add().space(3);
-			add(label1);
-			add(scrollPane).fill().expand().colspan(4).maxHeight(200);
-			add().space(3);
-			row();
-			
-			add().space(3);
-			add(label2);
-			add(textfield).expandX().fillX().colspan(4);
-			add().space(3);
-			row();
-			
-			add().space(3).expandX().fillX().colspan(5);
-			add(connect).expandX().fillX();
-			add().space(3);
-			row();
-			pack();
+        String[] items = {"", "", ""};
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        Label label1 = new Label("Autosearch:", skin);
 
-	}
-	
-	public void doConnection(String host) {
-		Cards.NET_GAME = new NetworkGame(this.game, false);
-		boolean connected = Cards.NET_GAME.connectToServer(host);
-		if (connected) {
-			setAlive(false);
-			this.remove();
-			if (this.closeListener != null) closeListener.handle(null);
-		}
-	}
-		
-	public void addCloseListener(EventListener l) {
-		this.closeListener = l;
-	}
+        entries = new List<String>(skin);
+        entries.setItems(items);
 
+        ScrollPane scrollPane = new ScrollPane(entries, skin);
+        scrollPane.setFlickScroll(false);
 
-	class HostsListenerThread implements Runnable {
+        Label label2 = new Label("Enter Host:", skin);
+        final TextField textfield = new TextField("", skin);
 
-		public void run() {
+        Button connect = new TextButton("Connect", skin, "default");
 
-			try {
-				
-				System.out.println("HostsListenerThread started on subnet");
+        connect.addListener(new ChangeListener() {
+            String selectedHost;
 
+            public void changed(ChangeEvent event, Actor actor) {
 
-				MulticastSocket socket = new MulticastSocket(4446);
-				InetAddress group = InetAddress.getByName("239.255.255.255");
-				socket.joinGroup(group);
+                selectedHost = textfield.getText();
+                if (selectedHost == null || selectedHost.length() < 1) {
+                    selectedHost = entries.getSelected();
+                }
 
-				DatagramPacket packet;
-				while (alive) {
-					byte[] buf = new byte[256];
-					packet = new DatagramPacket(buf, buf.length);
-					socket.receive(packet);
+                if (selectedHost == null || selectedHost.length() < 1) {
+                    return;
+                }
 
-					String host = packet.getAddress().getHostAddress();
+                Dialog dialog = new Dialog("Connect", skinTemp, "dialog") {
+                    protected void result(Object object) {
+                        Boolean ret = false;
+                        if (object instanceof Boolean) {
+                            ret = (Boolean) object;
+                        }
+                        if (ret) {
+                            doConnection(selectedHost);
+                        }
+                    }
+                }.text("Connect to " + selectedHost + "?").button("Yes", true).button("No", false).key(Keys.ENTER, true);
 
-					System.out.println("Found host: " + host);
+                dialog.show(stage);
+            }
+        });
 
-					if (!foundHosts.contains(host)) 
-						foundHosts.add(host);
-					
-					Object[] items = foundHosts.toArray();
-					entries.setItems(items);
-					SelectHostsDialog.this.pack();
-				}
+        try {
 
-				socket.leaveGroup(group);
-				socket.close();
+            add().space(3);
+            add(label1);
+            add(scrollPane).fill().expand().colspan(4).maxHeight(200);
+            add().space(3);
+            row();
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			System.out.println("HostsListenerThread done");
+            add().space(3);
+            add(label2);
+            add(textfield).expandX().fillX().colspan(4);
+            add().space(3);
+            row();
 
-		}
-	}
-	
+            add().space(3).expandX().fillX().colspan(5);
+            add(connect).expandX().fillX();
+            add().space(3);
+            row();
+            pack();
 
-	public void setAlive(boolean alive) {
-		this.alive = alive;
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void doConnection(String host) {
+        Cards.NET_GAME = new NetworkGame(this.game, false);
+        boolean connected = Cards.NET_GAME.connectToServer(host);
+        if (connected) {
+            setAlive(false);
+            this.remove();
+            if (this.closeListener != null) {
+                closeListener.handle(null);
+            }
+        }
+    }
+
+    public void addCloseListener(EventListener l) {
+        this.closeListener = l;
+    }
+
+    class HostsListenerThread implements Runnable {
+
+        public void run() {
+
+            try {
+
+                System.out.println("HostsListenerThread started on subnet");
+
+                MulticastSocket socket = new MulticastSocket(4446);
+                InetAddress group = InetAddress.getByName("239.255.255.255");
+                socket.joinGroup(group);
+
+                DatagramPacket packet;
+                while (alive) {
+                    byte[] buf = new byte[256];
+                    packet = new DatagramPacket(buf, buf.length);
+                    socket.receive(packet);
+
+                    String host = packet.getAddress().getHostAddress();
+
+                    System.out.println("Found host: " + host);
+
+                    if (!foundHosts.contains(host)) {
+                        foundHosts.add(host);
+                    }
+
+                    String[] items = new String[foundHosts.size()];
+                    foundHosts.toArray(items);
+                    entries.setItems(items);
+                    
+                    SelectHostsDialog.this.pack();
+                }
+
+                socket.leaveGroup(group);
+                socket.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("HostsListenerThread done");
+
+        }
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 
 }

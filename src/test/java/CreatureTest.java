@@ -28,7 +28,6 @@ public class CreatureTest implements ApplicationListener {
 
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "test";
-		cfg.useGL20 = true;
 		cfg.width = 1280;
 		cfg.height = 768;
 		new LwjglApplication(new CreatureTest(), cfg);

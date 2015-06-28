@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class SimpleGame extends InputAdapter implements ApplicationListener {
 
@@ -40,8 +41,7 @@ public abstract class SimpleGame extends InputAdapter implements ApplicationList
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
 		
-		stage = new Stage();
-		stage.setCamera(camera);
+		stage = new Stage(new ScreenViewport(camera));
 		
 		cursor = new Texture(Gdx.files.classpath("images/cursor.png"));
 		xHotspot = 0;

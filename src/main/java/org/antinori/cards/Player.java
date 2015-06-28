@@ -34,6 +34,8 @@ public class Player implements Serializable {
 		init();
 	}
 	
+
+
 	public void init() {
 		Dice dice = new Dice(1,6);
 		strengthFire = dice.roll();
@@ -272,6 +274,37 @@ public class Player implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public Player cloneForEvaluation() {
+		
+		Player p = new Player();
+		p.life = life;
+		p.playerClass = playerClass;
+		p.strengthFire = strengthFire;
+		p.strengthAir = strengthAir;
+		p.strengthEarth = strengthEarth;
+		p.strengthWater = strengthWater;
+		p.strengthSpecial = strengthSpecial;
+		
+//		//deep copy
+//		for (CardImage ci : fireCards) p.fireCards.add(ci.clone());
+//		for (CardImage ci : airCards) p.airCards.add(ci.clone());
+//		for (CardImage ci : waterCards) p.waterCards.add(ci.clone());
+//		for (CardImage ci : earthCards) p.earthCards.add(ci.clone());
+//		for (CardImage ci : specialCards) p.specialCards.add(ci.clone());
+//		
+//		CardImage.sort(p.fireCards);
+//		CardImage.sort(p.airCards);
+//		CardImage.sort(p.waterCards);
+//		CardImage.sort(p.earthCards);
+//		CardImage.sort(p.specialCards);
+//		
+//		for (CardType type : Player.TYPES) {
+//			p.enableDisableCards(type);
+//		}
+
+		return p;
 	}
 
 

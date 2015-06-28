@@ -9,90 +9,91 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class CardDescriptionImage extends Actor {
 
-	Sprite img;
-	Texture frame;
-	Card card;
-	BitmapFont font;
-	
-	public CardDescriptionImage(float x, float y) {
-		setX(x);
-		setY(y);
-	}
-	
-	public CardDescriptionImage(Sprite img, Card info) {
-		this.img = img;
-		this.card = info;
-	}
+    Sprite img;
+    Texture frame;
+    Card card;
+    BitmapFont font;
 
-	public CardDescriptionImage(Sprite img, Texture frame, BitmapFont font, Card info, float x, float y) {
-		this.img = img;
-		this.frame = frame;
-		this.card = info;
-		this.font = font;
-		setX(x);
-		setY(y);
-	}
+    public CardDescriptionImage(float x, float y) {
+        setX(x);
+        setY(y);
+    }
 
-	@Override
-	public void draw(SpriteBatch batch, float parentAlpha) {
-		
-		if (img == null || frame == null || card == null || font == null) return;
+    public CardDescriptionImage(Sprite img, Card info) {
+        this.img = img;
+        this.card = info;
+    }
 
-		Color color = getColor();
-		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-		
-		float x = getX();
-		float y = getY();
-		batch.draw(img, x, y);
-		batch.draw(frame, x -11, y - 12);
-		
-		int at = card.getAttack();
-		int co = card.getCost();
-		int li = card.getLife();
-		
-		if (!card.isSpell()) {
-			font.draw(batch, "" + at, (at>9?x+5:x+7), y+15);
-			font.draw(batch, "" + co,(co>9?x+132:x+130), y+150);
-			font.draw(batch, "" + li, (li>9?x+131:x+134), y+15);
-		} else {
-			font.draw(batch, "" + co,(co>9?x+132:x+130), y+15);
-		}
-		
-		font.draw(batch, card.getCardname(), x+190, y + 150);
-		font.drawWrapped(batch, card.getDesc(), x+190, y+125, 240);
+    public CardDescriptionImage(Sprite img, Texture frame, BitmapFont font, Card info, float x, float y) {
+        this.img = img;
+        this.frame = frame;
+        this.card = info;
+        this.font = font;
+        setX(x);
+        setY(y);
+    }
 
-	}
+    public void draw(SpriteBatch batch, float parentAlpha) {
 
-	public Sprite getImg() {
-		return img;
-	}
+        if (img == null || frame == null || card == null || font == null) {
+            return;
+        }
 
-	public Texture getFrame() {
-		return frame;
-	}
+        Color color = getColor();
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
-	public Card getCard() {
-		return card;
-	}
+        float x = getX();
+        float y = getY();
+        batch.draw(img, x, y);
+        batch.draw(frame, x - 11, y - 12);
 
-	public BitmapFont getFont() {
-		return font;
-	}
+        int at = card.getAttack();
+        int co = card.getCost();
+        int li = card.getLife();
 
-	public void setImg(Sprite img) {
-		this.img = img;
-	}
+        if (!card.isSpell()) {
+            font.draw(batch, "" + at, (at > 9 ? x + 5 : x + 7), y + 15);
+            font.draw(batch, "" + co, (co > 9 ? x + 132 : x + 130), y + 150);
+            font.draw(batch, "" + li, (li > 9 ? x + 131 : x + 134), y + 15);
+        } else {
+            font.draw(batch, "" + co, (co > 9 ? x + 132 : x + 130), y + 15);
+        }
 
-	public void setFrame(Texture frame) {
-		this.frame = frame;
-	}
+        font.draw(batch, card.getCardname(), x + 190, y + 150);
+        font.draw(batch, card.getDesc(), x + 190, y + 125); //should draw this wrapped width of 240
 
-	public void setCard(Card card) {
-		this.card = card;
-	}
+    }
 
-	public void setFont(BitmapFont font) {
-		this.font = font;
-	}
+    public Sprite getImg() {
+        return img;
+    }
+
+    public Texture getFrame() {
+        return frame;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public BitmapFont getFont() {
+        return font;
+    }
+
+    public void setImg(Sprite img) {
+        this.img = img;
+    }
+
+    public void setFrame(Texture frame) {
+        this.frame = frame;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
+    public void setFont(BitmapFont font) {
+        this.font = font;
+    }
 
 }
